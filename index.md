@@ -12,6 +12,7 @@ publication.
 
 - [Volume overview](sandbox/ephemeral-sandbox/volume-1/README.md)
 - [Part 0 manuscript — Overview of Agent Sandboxes in Practice](sandbox/ephemeral-sandbox/volume-1/chapters/PART-0.md)
+- [Part 0 manuscript — 智能体沙箱实践概览（简体中文）](sandbox/ephemeral-sandbox/volume-1/chapters/PART-0.zh-CN.md)
 - [Product requirements](sandbox/ephemeral-sandbox/volume-1/PRD.md)
 - [Detailed volume outline](sandbox/ephemeral-sandbox/volume-1/outline.md)
 

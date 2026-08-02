@@ -1,8 +1,8 @@
 # Chapter Workspace
 
 Part 0 is available as the complete [Overview of Agent Sandboxes in Practice
-manuscript](PART-0.md). Later chapters will become Markdown manuscript files as
-they are drafted.
+manuscript](PART-0.md) and as a [Simplified Chinese edition](PART-0.zh-CN.md).
+Later chapters will become Markdown manuscript files as they are drafted.
 
 Use [PART-0-WRITING-TEMPLATE.md](PART-0-WRITING-TEMPLATE.md) for the Part 0
 eight-chapter sandbox-landscape survey, workshop analogy, product profile

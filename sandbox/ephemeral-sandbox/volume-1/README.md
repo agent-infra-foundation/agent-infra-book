@@ -39,6 +39,7 @@ Part 0 manuscript complete; later parts remain in editorial planning.
 - [Detailed outline](outline.md)
 - [Chapter workspace](chapters/README.md)
 - [Part 0 manuscript](chapters/PART-0.md)
+- [Part 0 manuscript — 简体中文版](chapters/PART-0.zh-CN.md)
 - [Part 0 editorial blueprint](chapters/PART-0-WRITING-TEMPLATE.md)
 - [Part I editorial blueprint](chapters/PART-I-WRITING-TEMPLATE.md)
 - [Part 0 visual assets](assets/README.md)
