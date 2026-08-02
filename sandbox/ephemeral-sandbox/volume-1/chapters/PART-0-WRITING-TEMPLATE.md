@@ -17,12 +17,12 @@ chapters, not by cutting an essential category.
 | Coding-agent product walkthroughs | Cut to examples | Use Codex, Claude Code, Docker Sandboxes, and brief supporting examples to distinguish policy, worktree, process, container, and microVM boundaries. |
 | Cloud sandbox profiles | Merge by lifecycle choice | Compare fresh allocation, pause/resume, snapshot, and return paths; avoid one mini-chapter per vendor. |
 | Browser product list | Cut to examples | Keep profile persistence, live interaction, audit, and output as the category story; products illustrate those choices. |
-| RL product list | Merge by system layer | Organize around episode, environment, verifier, rollout service, and trainer instead of seven consecutive profiles. |
+| RL product list | Cut to CubeSandbox and DeltaBox | Use the two systems to explain service-level microVM branching and coordinated file/process rewind; keep search policy, verifier, and trainer as separate layers. |
 | Filesystem and checkpoint products | Merge by state coverage | Contrast file history, process checkpoints, and external effects; retain products only where they make one boundary concrete. |
 | Meta-agent, control-plane, and fleet inventories | Keep distinction, cut catalog | The three roles must remain separate, but a single scenario and compact comparison can establish them. |
 | Publication chapter | Keep and focus | It supplies the return-path conclusion and the transition to Ephemeral Sandbox without duplicating later LayerStack internals. |
 | Comparison tables | Cut from 18 to 8 | One table per chapter is enough; tables are reserved for repeated fields that are genuinely clearer side by side. |
-| Figures | Cut from 13 to 10 | Remove rollout branching, shared-base/private-delta, and failure-reassignment figures because their conclusions are covered by the RL, state-coverage, and control-plane/publication figures. |
+| Figures | Cut from 13 to 10 | Fold rollout branching into the Chapter 4 MCTS figure; remove the redundant shared-base/private-delta and failure-reassignment figures. |
 | Formal product-profile template | Keep as an editorial check | Apply its nine required questions to any named profile, but express most products as short, sourced examples rather than form-like subsections. |
 
 ### Revised Part 0 Structure and Prose Budget
@@ -89,15 +89,15 @@ placement modes. Sandbox-as-a-Service is a delivery model, not a third mode.
 | 1.1 Isolation Boundaries | Which boundary prevents which kind of collision? | 5 | Keep the five boundary choices but remove the dense per-boundary matrix and decorative icons. |
 | 2.1 Sandbox Lifecycle | Which state transitions decide whether private work survives? | 5 | Merge template and allocation, merge pause with retained state, and move exceptional detail into the caption. |
 | 3.1 Browser Session State | Which interactive state is temporary, which is retained, and what can leave? | 5 | Merge browser, display, shell, and files into one sandbox environment; merge takeover into the access boundary. |
-| 4.1 RL Environment Stack | What turns a sandboxed attempt into a scored episode? | 5 | Merge parallel runtime boxes and evidence detail into environment, verifier, and episode record. |
-| 4.2 Rollout Branching and Selection | How are alternative attempts selected? | 0 — cut | Remove the figure; the same conclusion fits in the RL stack caption and a short scenario. |
+| 4.1 MCTS Rollouts over Checkpointed Sandboxes | How do selection, restore, private expansion, evaluation, and backpropagation reuse sandbox state? | 5 | Replace the incorrect linear stack with one search tree, one external control loop, one verifier, and a substrate boundary naming CubeSandbox and DeltaBox. |
+| 4.2 Rollout Branching and Selection | How are alternative attempts selected? | 0 — merged | Merge its unique conclusion into Figure 4.1 rather than keeping a second RL figure. |
 | 5.1 Shared Base and Private Deltas | How can sessions share a base without sharing unfinished edits? | 0 — cut | Remove the figure; Chapter 7's publication figure covers this relationship where it matters. |
 | 5.2 State Coverage and External Effects | What can a restore operation rewind? | 5 | Merge conversation and tool metadata, combine file/process/runtime state into a checkpoint domain, and group irreversible effects as the external world. |
-| 6.1 Meta-Agent, Control Plane, and Fleet | Which component supervises, manages lifecycle, and places work? | 5 | Remove worker cards, meters, queues, and evidence sidebars; keep three distinct control roles, sandbox environments, and session history. |
+| 6.1 Meta-Agent over a Reversible Worker Trace | How can a supervisor observe, intercept, revert, and fork a worker? | 6 | Use the supplied SHEPHERD Figure 1 directly with attribution; keep lifecycle control and fleet placement separate in the surrounding prose. |
 | 6.2 Failure Recovery and State Reassignment | What survives a worker failure? | 0 — cut | Remove the figure; retained workspace and session history are already explicit in Figure 6.1 and the prose scenario. |
 | 7.1 Publication and Provenance | How does private work become—or fail to become—shared history? | 5 | Merge capture and comparison, merge provenance boxes into session history, and keep accepted/rejected outcomes as one decision component. |
 
-The final inventory is one raster illustration and nine editable SVG diagrams:
+The final inventory is two raster illustrations and eight editable SVG diagrams:
 ten figures total. Every SVG retains a machine-readable `title`, `desc`, and
 ARIA references, uses the existing palette, and carries implementation detail
 in its caption and surrounding prose rather than in the drawing.
@@ -556,13 +556,10 @@ large-scale rollouts, and repeated agent exploration.
 
 ## Representative Systems
 
-- TencentCloud CubeSandbox;
-- ByteDance SandboxFusion;
-- AgentScope Training Sandbox;
-- NVIDIA NeMo Gym and Polar;
-- AEnvironment;
-- AgentENV;
-- DeltaBox as a research example of rapid checkpoint and rollback.
+- TencentCloud CubeSandbox as a hardware-isolated sandbox service with
+  snapshot, clone, and rollback operations;
+- DeltaBox as a research system for coordinated file and process checkpoint
+  and rollback during high-frequency state exploration.
 
 CubeSandbox belongs here as well as in Chapter 2 because it bridges two
 categories: it exposes a task-sandbox-compatible API while adding state
@@ -581,25 +578,26 @@ and reset them without contaminating the next attempt.
 Explain dataset sample, initial state, observation, action, environment step,
 reward, verifier, termination, and trajectory in plain language.
 
-### 4.3 Why a Fast Sandbox Is Not Automatically RL-Ready
+### 4.3 MCTS over Materialized Sandbox State
 
-Add deterministic initialization, episode identity, reward integrity,
-trajectory capture, concurrency control, and reset/fork semantics.
+Explain select, restore, expand, rollout, evaluate, and backpropagate. Make clear
+that a tree node may name a materialized sandbox checkpoint, while the search
+policy and statistics remain outside the sandbox.
 
-### 4.4 CubeSandbox and AgentENV: The Sandbox Substrate
+### 4.4 CubeSandbox: Isolated Branches as a Service
 
-Explain high-density microVM environments, templates, pause/resume, snapshots,
-and fan-out. Qualify project-reported performance numbers.
+Explain KVM microVM isolation, templates, cluster lifecycle, snapshots, clones,
+and rollback. Qualify all project-reported performance claims.
 
-### 4.5 SandboxFusion and AgentScope: Execution and Evaluation
+### 4.5 DeltaBox: Rewinding Files and Processes Together
 
-Show the difference between a code execution/reward backend and a dataset-backed
-step/evaluate environment service.
+Explain coordinated filesystem and process checkpoint/rollback for MCTS and RL
+fan-out. Qualify all author-reported latency and scaling results.
 
-### 4.6 NeMo Gym, Polar, and the Rollout Fabric
+### 4.6 What the Sandbox Substrate Does Not Supply
 
-Explain how environment, harness, verifier, rollout service, and trainer fit
-together.
+Keep dataset, external agent runtime, selection policy, verifier, reward,
+episode record, rollout scheduler, and trainer outside the two product claims.
 
 ### 4.7 Auditability at Training Scale
 
@@ -615,8 +613,9 @@ the chapter into a general AI-safety survey.
 
 ## Diagrams
 
-- **Figure 4.1 — The RL Environment Stack:** trainer → rollout service → agent
-  harness → environment → sandbox runtime.
+- **Figure 4.1 — MCTS Rollouts over Checkpointed Sandboxes:** select a node,
+  restore its checkpoint, fork a private branch, evaluate the leaf, and
+  backpropagate the result.
 
 ## Comparison Table
 
@@ -793,9 +792,10 @@ filesystem, checkpoint, and artifact state
 
 ## Diagrams
 
-- **Figure 6.1 — Meta-Agent, Control Plane, and Fleet Components:** a meta-agent,
-  sandbox lifecycle control plane, fleet scheduler, sandbox environments, and
-  session history.
+- **Figure 6.1 — Meta-Agent over a Reversible Worker Trace:** a meta-agent
+  creates and observes a worker, intercepts a proposed action, and chooses
+  revert or fork. Use SHEPHERD Figure 1 directly and explain lifecycle control
+  and fleet placement separately in the text.
 
 ## Comparison Table
 
@@ -1063,14 +1063,11 @@ Research baseline: 2026-08-02. Verify again when drafting each manuscript.
 
 ### RL and evaluation environments
 
-- SandboxFusion: <https://github.com/bytedance/SandboxFusion>
-- AgentScope Training Sandbox:
-  <https://runtime.agentscope.io/en/sandbox/training_sandbox.html>
-- NVIDIA NeMo Gym:
-  <https://docs.nvidia.com/nemo/gym/main/about/concepts/environments>
-- Polar: <https://github.com/NVIDIA-NeMo/ProRL-Agent-Server>
-- AEnvironment: <https://github.com/inclusionAI/AEnvironment>
-- AgentENV: <https://github.com/kvcache-ai/AgentENV>
+- CubeSandbox snapshot, clone, and rollback:
+  <https://github.com/TencentCloud/CubeSandbox>
+- DeltaBox paper and project page:
+  <https://arxiv.org/abs/2605.22781>
+  <https://dongyunpeng-sjtu.github.io/deltabox/>
 
 ### State, branching, and checkpoint systems
 
@@ -1083,6 +1080,7 @@ Research baseline: 2026-08-02. Verify again when drafting each manuscript.
 ### Meta-agents, control planes, and fleets
 
 - SHEPHERD paper: <https://arxiv.org/abs/2605.10913>
+- SHEPHERD project page and Figure 1: <https://shepherd-agents.ai/>
 - SHEPHERD project: <https://github.com/shepherd-agents/shepherd>
 - Kubernetes Agent Sandbox:
   <https://github.com/kubernetes-sigs/agent-sandbox>

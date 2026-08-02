@@ -159,10 +159,10 @@ Sandbox. Explain authenticated state, recordings, downloads, and human takeover.
 
 ### 4. RL and Evaluation Sandboxes
 
-Explain RL and evaluation environments through CubeSandbox, SandboxFusion,
-AgentScope Training Sandbox, NeMo Gym/Polar, AEnvironment, AgentENV, and
-DeltaBox. Distinguish a one-task sandbox from an episode, verifier, reward, and
-rollout fabric.
+Explain RL and evaluation environments through CubeSandbox and DeltaBox.
+Use MCTS rollouts to show why checkpoint, restore, and private branching matter.
+Distinguish the sandbox substrate from the external search policy, episode,
+verifier, reward, and rollout fabric.
 
 ### 5. Filesystem Branching and Runtime Checkpointing
 

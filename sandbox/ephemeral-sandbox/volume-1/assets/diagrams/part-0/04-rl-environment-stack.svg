@@ -1,21 +1,95 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
-  <title id="title">The five-part RL environment stack</title>
-  <desc id="desc">A trainer requests attempts from a rollout service, which runs the agent runtime and task state in a sandbox environment. A verifier produces reward, and an episode record preserves the evidence.</desc>
+  <title id="title">MCTS rollouts over checkpointed sandboxes</title>
+  <desc id="desc">An external MCTS controller bootstraps a clean root checkpoint, restores a selected node, forks three private sandbox branches for parallel rollouts, evaluates their leaves, and backpropagates scores. CubeSandbox and DeltaBox are shown as alternative state substrates rather than search policies or verifiers.</desc>
   <defs>
     <style>
-      .bg{fill:#f7f9fc}.trainer{fill:#e0f2fe;stroke:#2563eb;stroke-width:4}.rollout{fill:#faf5ff;stroke:#7c3aed;stroke-width:4}.sandbox{fill:#ecfeff;stroke:#0891b2;stroke-width:4}.verify{fill:#ecfdf5;stroke:#16a34a;stroke-width:4}.record{fill:#fff7ed;stroke:#d97706;stroke-width:4}.title{font:700 42px 'Segoe UI',Arial,sans-serif;fill:#102a43}.subtitle{font:20px 'Segoe UI',Arial,sans-serif;fill:#52667a}.label{font:700 27px 'Segoe UI',Arial,sans-serif;fill:#102a43}.small{font:18px 'Segoe UI',Arial,sans-serif;fill:#52667a}.edge{stroke:#52667a;stroke-width:4;fill:none;marker-end:url(#arrow)}
+      .bg{fill:#f7f9fc}.panel{fill:#ffffff;stroke:#cbd5e1;stroke-width:3}.step{fill:#e0f2fe;stroke:#2563eb;stroke-width:3}.root{fill:#ecfeff;stroke:#0891b2;stroke-width:4}.selected{fill:#faf5ff;stroke:#7c3aed;stroke-width:5}.branch{fill:#fff7ed;stroke:#d97706;stroke-width:4}.leaf{fill:#ecfdf5;stroke:#16a34a;stroke-width:4}.verifier{fill:#ecfdf5;stroke:#16a34a;stroke-width:4}.substrate{fill:#eef2ff;stroke:#6366f1;stroke-width:3}.title{font:700 42px 'Segoe UI',Arial,sans-serif;fill:#102a43}.subtitle{font:20px 'Segoe UI',Arial,sans-serif;fill:#52667a}.section{font:700 23px 'Segoe UI',Arial,sans-serif;fill:#102a43}.label{font:700 21px 'Segoe UI',Arial,sans-serif;fill:#102a43}.small{font:17px 'Segoe UI',Arial,sans-serif;fill:#52667a}.tiny{font:15px 'Segoe UI',Arial,sans-serif;fill:#52667a}.score{font:700 18px 'Segoe UI',Arial,sans-serif;fill:#166534}.edge{stroke:#52667a;stroke-width:3.5;fill:none;marker-end:url(#arrow)}.tree{stroke:#7c3aed;stroke-width:4;fill:none;marker-end:url(#purpleArrow)}.feedback{stroke:#2563eb;stroke-width:4;fill:none;stroke-dasharray:10 8;marker-end:url(#blueArrow)}.state{stroke:#d97706;stroke-width:4;fill:none;marker-end:url(#orangeArrow)}
     </style>
     <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#52667a"/></marker>
+    <marker id="purpleArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#7c3aed"/></marker>
+    <marker id="blueArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#2563eb"/></marker>
+    <marker id="orangeArrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#d97706"/></marker>
   </defs>
+
   <rect class="bg" width="1600" height="900"/>
-  <text class="title" x="70" y="78">What Turns an Attempt into an Episode?</text>
-  <text class="subtitle" x="70" y="116">Fast execution is only one layer; training also needs reset, verification, reward, and durable evidence.</text>
+  <text class="title" x="70" y="70">Fork One State into Parallel MCTS Rollouts</text>
+  <text class="subtitle" x="70" y="108">The controller owns search; the sandbox substrate makes clean bootstrap, branch fan-out, and rewind practical.</text>
 
-  <rect class="trainer" x="65" y="335" width="250" height="150" rx="24"/><text class="label" x="190" y="405" text-anchor="middle">Trainer</text><text class="small" x="190" y="445" text-anchor="middle">updates the policy</text>
-  <rect class="rollout" x="375" y="335" width="270" height="150" rx="24"/><text class="label" x="510" y="405" text-anchor="middle">Rollout service</text><text class="small" x="510" y="445" text-anchor="middle">fans out attempts</text>
-  <rect class="sandbox" x="705" y="270" width="350" height="280" rx="28"/><text class="label" x="880" y="350" text-anchor="middle">Sandbox environment</text><text class="small" x="880" y="410" text-anchor="middle">Agent runtime + tools</text><text class="small" x="880" y="450" text-anchor="middle">Task state + reset</text>
-  <rect class="verify" x="1115" y="335" width="250" height="150" rx="24"/><text class="label" x="1240" y="405" text-anchor="middle">Verifier</text><text class="small" x="1240" y="445" text-anchor="middle">score + reward</text>
-  <rect class="record" x="705" y="660" width="350" height="140" rx="24"/><text class="label" x="880" y="725" text-anchor="middle">Episode record</text><text class="small" x="880" y="765" text-anchor="middle">base + trace + outcome</text>
+  <text class="section" x="72" y="157">External MCTS / rollout controller</text>
+  <rect class="step" x="70" y="176" width="300" height="84" rx="18"/>
+  <text class="label" x="220" y="211" text-anchor="middle">1  Bootstrap</text>
+  <text class="small" x="220" y="239" text-anchor="middle">clean root checkpoint</text>
+  <rect class="step" x="430" y="176" width="300" height="84" rx="18"/>
+  <text class="label" x="580" y="211" text-anchor="middle">2  Select + restore</text>
+  <text class="small" x="580" y="239" text-anchor="middle">promising tree node</text>
+  <rect class="step" x="790" y="176" width="300" height="84" rx="18"/>
+  <text class="label" x="940" y="211" text-anchor="middle">3  Fork + rollout</text>
+  <text class="small" x="940" y="239" text-anchor="middle">parallel private branches</text>
+  <rect class="step" x="1150" y="176" width="380" height="84" rx="18"/>
+  <text class="label" x="1340" y="211" text-anchor="middle">4  Evaluate + backpropagate</text>
+  <text class="small" x="1340" y="239" text-anchor="middle">scores, values, and visit counts</text>
+  <path class="edge" d="M370 218H420"/>
+  <path class="edge" d="M730 218H780"/>
+  <path class="edge" d="M1090 218H1140"/>
 
-  <path class="edge" d="M315 410H365"/><path class="edge" d="M645 410H695"/><path class="edge" d="M1055 410H1105"/><path class="edge" d="M1240 495C1240 610 1055 600 955 650"/><path class="edge" d="M805 650C685 600 510 610 510 495"/>
+  <rect class="panel" x="70" y="295" width="1460" height="405" rx="24"/>
+  <text class="section" x="100" y="333">Checkpointed sandbox state tree</text>
+  <text class="small" x="1495" y="333" text-anchor="end">one logical node → one named restorable state</text>
+
+  <circle class="root" cx="205" cy="495" r="67"/>
+  <text class="label" x="205" y="481" text-anchor="middle">Root s₀</text>
+  <text class="small" x="205" y="510" text-anchor="middle">base + setup</text>
+  <text class="tiny" x="205" y="535" text-anchor="middle">clean checkpoint</text>
+
+  <circle class="selected" cx="485" cy="495" r="67"/>
+  <text class="label" x="485" y="481" text-anchor="middle">Selected s*</text>
+  <text class="small" x="485" y="510" text-anchor="middle">restore here</text>
+  <text class="tiny" x="485" y="535" text-anchor="middle">shared prefix</text>
+  <path class="tree" d="M272 495H408"/>
+  <text class="tiny" x="340" y="476" text-anchor="middle">actions + observations</text>
+
+  <rect class="branch" x="685" y="353" width="255" height="80" rx="18"/>
+  <text class="label" x="812" y="386" text-anchor="middle">Rollout A</text>
+  <text class="small" x="812" y="414" text-anchor="middle">private files + processes</text>
+  <rect class="branch" x="685" y="455" width="255" height="80" rx="18"/>
+  <text class="label" x="812" y="488" text-anchor="middle">Rollout B</text>
+  <text class="small" x="812" y="516" text-anchor="middle">private files + processes</text>
+  <rect class="branch" x="685" y="557" width="255" height="80" rx="18"/>
+  <text class="label" x="812" y="590" text-anchor="middle">Rollout C</text>
+  <text class="small" x="812" y="618" text-anchor="middle">private files + processes</text>
+  <path class="state" d="M547 458C595 405 627 393 675 393"/>
+  <path class="state" d="M552 495H675"/>
+  <path class="state" d="M547 532C595 585 627 597 675 597"/>
+  <text class="label" x="610" y="380" text-anchor="middle">fork N</text>
+
+  <circle class="leaf" cx="1065" cy="393" r="48"/>
+  <text class="label" x="1065" y="400" text-anchor="middle">leaf A</text>
+  <circle class="leaf" cx="1065" cy="495" r="48"/>
+  <text class="label" x="1065" y="502" text-anchor="middle">leaf B</text>
+  <circle class="leaf" cx="1065" cy="597" r="48"/>
+  <text class="label" x="1065" y="604" text-anchor="middle">leaf C</text>
+  <path class="edge" d="M940 393H1007"/>
+  <path class="edge" d="M940 495H1007"/>
+  <path class="edge" d="M940 597H1007"/>
+
+  <rect class="verifier" x="1215" y="363" width="255" height="264" rx="22"/>
+  <text class="label" x="1342" y="405" text-anchor="middle">Verifier</text>
+  <text class="score" x="1342" y="457" text-anchor="middle">A  reward r_A</text>
+  <text class="score" x="1342" y="509" text-anchor="middle">B  reward r_B</text>
+  <text class="score" x="1342" y="561" text-anchor="middle">C  reward r_C</text>
+  <text class="tiny" x="1342" y="601" text-anchor="middle">typed outcome + evidence</text>
+  <path class="edge" d="M1113 393H1205"/>
+  <path class="edge" d="M1113 495H1205"/>
+  <path class="edge" d="M1113 597H1205"/>
+  <path class="feedback" d="M1342 353C1342 292 1120 286 940 286C760 286 580 296 510 418"/>
+  <text class="small" x="920" y="317" text-anchor="middle">backpropagate scores; select the next checkpoint</text>
+
+  <rect class="substrate" x="70" y="735" width="1460" height="120" rx="22"/>
+  <text class="section" x="105" y="778">State substrate</text>
+  <rect class="root" x="330" y="758" width="300" height="68" rx="16"/>
+  <text class="label" x="480" y="799" text-anchor="middle">CubeSandbox</text>
+  <rect class="selected" x="680" y="758" width="300" height="68" rx="16"/>
+  <text class="label" x="830" y="799" text-anchor="middle">DeltaBox</text>
+  <text class="small" x="1020" y="783">checkpoint · clone/fork · rollback</text>
+  <text class="small" x="1020" y="813">not policy · reward · verifier · trainer</text>
 </svg>

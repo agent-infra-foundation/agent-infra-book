@@ -473,90 +473,112 @@ approved project change.
 
 ## Chapter 4 — RL and Evaluation Sandboxes
 
-### From one run to a population of attempts
+### Fork one state into a population of rollouts
 
-Now repeat the dependency task ten thousand times. Vary the prompt, agent
-runtime, or model. Reset the repository before every attempt. Score the tests.
-Preserve enough evidence to explain each reward. Prevent one attempt's server,
-cache, or database mutation from contaminating the next.
+Now repeat the dependency task ten thousand times. Some attempts should begin
+from the same repository and process state, then diverge at one model decision.
+The infrastructure should not rebuild the operating system, reinstall packages,
+and warm the same caches for every candidate. It should bootstrap one clean
+root, preserve it as a named checkpoint, and fork private branches for parallel
+rollouts.
 
-This is no longer just fast task execution. An RL or evaluation environment
-adds an **episode contract**. A dataset item names the task and initial state.
-The agent runtime produces actions. The environment returns observations and
-changes its private state. A verifier decides what counts as success and
-produces a score or reward. A termination reason closes the attempt. An episode
-record ties the starting state, policy, actions, observations, verifier, and
-outcome together.
+Monte Carlo tree search makes the requirement concrete. The controller selects
+a promising node, restores the sandbox state associated with that node, expands
+one or more candidate actions, and rolls each branch forward. A verifier scores
+the resulting leaves. The controller then backpropagates rewards and visit
+counts through the logical search tree before selecting again. The expensive
+work is not only model inference. It is repeatedly materializing a consistent
+world at the exact point where alternatives diverge.
 
-![A scored episode requires five cooperating components](../assets/diagrams/part-0/04-rl-environment-stack.svg)
+![MCTS forks a bootstrapped sandbox state into parallel private rollouts](../assets/diagrams/part-0/04-rl-environment-stack.svg)
 
-*Figure 4.1 — A sandbox environment executes an attempt; a rollout service,
-verifier, and episode record turn that attempt into training or evaluation
-evidence.*
+*Figure 4.1 — An external MCTS controller bootstraps one clean checkpoint,
+restores a selected state, forks private sandboxes for parallel rollouts,
+evaluates the leaves, and backpropagates their scores. CubeSandbox or DeltaBox
+can accelerate state reuse; neither supplies the search policy or verifier.*
 
-The placement rule remains unchanged. NeMo Gym documents the model as external
-to the environment: it produces actions, the environment processes them, and
-returns observations and reward. That topology is an external agent with
-sandboxed tool execution. The environment includes dataset, agent harness,
-verifier, and state as conceptual components, while the sandbox provider may
-be swapped underneath. Its documentation also requires each attempt to start
-from clean state so rewards remain attributable. [NeMo Gym environment
-concepts](https://docs.nvidia.com/nemo/gym/main/about/concepts/environments/)
+The figure shows stateful agent search, where selected tree nodes are
+materialized as sandbox checkpoints. It does not claim that every MCTS
+implementation must preserve every node as a full machine image. A system may
+checkpoint only branch points, reconstruct cheap nodes by replay, or evict old
+states under memory pressure. The invariant is that a rollout begins from the
+state named by its selected node, not from whatever state a reused worker
+happens to contain.
 
-SandboxFusion shows a narrower but useful layer. It provides a multi-language
-code runner and online-judge support for evaluation and RL datasets that need
-code execution. An external harness calls it as an execution and scoring
-backend. It is not, by that fact alone, a trainer, rollout scheduler, or
-complete reproducibility system. [SandboxFusion
-repository](https://github.com/bytedance/SandboxFusion)
+CubeSandbox provides the service-shaped substrate. Its project documents a
+RustVMM/KVM microVM sandbox, an E2B-compatible API, single-node and clustered
+deployment, and snapshot operations that can checkpoint a running sandbox,
+clone parallel environments, and roll a branch back. In an MCTS deployment,
+the external controller can bootstrap a root from a template, clone several
+hardware-isolated branches, stream actions into each, and retain only the
+checkpoints worth exploring further. These capabilities are project-reported;
+they do not by themselves define the dataset, rollout policy, reward, or
+trainer. [CubeSandbox repository](https://github.com/TencentCloud/CubeSandbox)
+and [lifecycle documentation](https://cubesandbox.com/guide/lifecycle.html)
 
-| System shape | Unit and placement | State and lifecycle | Concurrency and evidence | Return and non-guarantee |
+DeltaBox focuses on the checkpoint path itself. The research system coordinates
+filesystem changes with process state so a controller can return to a prior
+agent state without rebuilding the entire environment or replaying the whole
+prefix. Its paper evaluates this mechanism on SWE-bench tree search and RL
+fan-out. The authors report millisecond-level checkpoint and rollback latency;
+those are research results, not independent service guarantees. DeltaBox is
+therefore useful here as an architectural example of change-based state reuse,
+not as a complete training stack. [DeltaBox paper](https://arxiv.org/abs/2605.22781)
+and [project page](https://dongyunpeng-sjtu.github.io/deltabox/)
+
+The two systems illuminate complementary layers. CubeSandbox presents a
+hardware-isolated sandbox service with templates, lifecycle, networking, and
+cluster-oriented fan-out. DeltaBox concentrates on coordinated file-and-process
+rewind under high-frequency branching. A deployment could choose either state
+substrate according to its isolation, maturity, and checkpoint requirements;
+the manuscript does not need a longer product catalog to establish that
+boundary.
+
+| Sandbox substrate | Unit and placement | Fork and rollback state | Parallel rollout role | Return and non-guarantee |
 | --- | --- | --- | --- | --- |
-| Task sandbox | Job or session; either placement mode | Private workspace and processes for one task | Parallel jobs may be supported; stdout and files are common evidence | Returns results, but need not define reward or clean reset |
-| NeMo Gym environment | Task attempt; external agent | Clean per-attempt state with environment observations | Rollouts produce attributable verifier scores and rewards | Returns an episode outcome; sandbox provider does not define the whole environment |
-| SandboxFusion backend | Code execution or judge request; external agent | Per-request code and runner state | Concurrency is caller-managed; execution and judge results are returned | Returns execution or score; not a rollout fabric |
+| CubeSandbox | KVM microVM sandbox; commonly an external agent with sandboxed tool execution | Templates and running-state snapshot, clone, and rollback operations | A controller can fan out private microVM branches across a service or cluster | Returns execution and sandbox state; does not define MCTS, reward, or training |
+| DeltaBox | Stateful agent sandbox controlled by an external search or training loop | Coordinated filesystem and process checkpoint/rollback using changed state | Reduces repeated state materialization during tree search and RL fan-out | Restores agent state; does not define the verifier, search policy, or fleet service |
 
-The clean-state rule is easy to state and difficult to enforce. Suppose attempt
-A upgrades the dependency and warms a compiler cache. Attempt B begins from
-the same repository files but inherits that cache. If B now finishes faster,
-the timing difference is partly environmental. Worse, suppose A leaves a test
-server or database row behind and B's verifier accepts it. B receives reward
-for work performed by A. The apparent model improvement is an isolation bug.
+The placement rule remains unchanged. In the topology shown, the model → tool →
+observation → next-model-call cycle is controlled outside each sandbox, so this
+is an external agent with sandboxed tool execution. An in-sandbox agent is also
+possible, but it still needs a controller above the branches to assign episode
+identity, collect scores, and select the next node.
 
-Reset may mean rebuilding the entire environment, restoring a named snapshot,
-or rolling back a branch. Rebuilding is conceptually simple but expensive.
-Snapshot restore is faster but requires confidence that the snapshot contains
-every relevant state domain. Branch rollback is efficient for files but does
-not reset processes or remote systems. A rigorous episode record therefore
-names the reset mechanism and its base, not only the task identifier.
+Bootstrap must be explicit. The root checkpoint should name the base image,
+repository revision, dependency state, initialization procedure, tool policy,
+and any retained process state. If rollout A warms a compiler cache and rollout
+B silently inherits it, timing and behavior are no longer attributable to the
+candidate action. If A leaves a test server or database row behind and B's
+verifier accepts it, B receives reward for work performed by A. The apparent
+model improvement is an isolation bug.
 
-Forking introduces a related distinction. A rollout service may copy one
-prefix of an agent trajectory and explore several next actions. Each child
-needs its own episode identity even though the children share history. The
-shared prefix should be recorded once or referenced immutably; child rewards
-must attach to the state from which they actually diverged. Otherwise a
-seemingly helpful retry can blur independent samples into one mutable session.
+Forks also need identities. Child rollouts share an immutable prefix but own
+their later files, processes, action trace, termination reason, and reward. A
+checkpoint reference records where each child diverged. A branch that loses the
+search can be destroyed; a promising leaf can become a new checkpoint for the
+next fan-out. Promotion changes which state is retained, but it must not merge
+unfinished child state back into its siblings.
 
-Failure is data too. A sandbox allocation timeout, tool protocol error, verifier
-crash, policy denial, and model-selected termination do not mean the same
-thing. Treating all of them as reward zero teaches the trainer about
-infrastructure availability as if it were agent quality. Treating all of them
-as invisible retries biases the dataset toward eventual successes. The rollout
-fabric needs typed termination and retry policy so evaluators can decide which
-outcomes belong in a metric or training batch.
+Failure is data too. Allocation timeout, restore failure, tool protocol error,
+verifier crash, policy denial, and model-selected termination do not mean the
+same thing. Treating all of them as reward zero teaches the trainer about
+infrastructure availability as if it were agent quality. Hiding all of them as
+retries biases the dataset toward eventual successes. The rollout fabric needs
+typed termination and retry policy so evaluators can decide which outcomes
+belong in a metric or training batch.
 
-Scale makes auditability part of correctness. A reward without the exact base
-revision, model, agent-runtime version, tool policy, verifier version, and
-termination reason is ambiguous training data. Silent retries can overcount
-easy successes. A stale process can leak state between episodes. A verifier
-with broader credentials than the environment can become a target for reward
-hacking. Because a policy explores systematically, a small loophole may be
-found thousands of times.
+Scale makes auditability part of correctness. A reward without the exact root,
+selected checkpoint, model and agent-runtime versions, actions, verifier
+version, and termination reason is ambiguous training data. A verifier with
+broader credentials than the sandbox can become a target for reward hacking.
+Because search fans out systematically, a small state leak or scoring loophole
+can be exploited thousands of times.
 
-The infrastructure must therefore isolate episode state, protect verifier
-integrity, bound egress and resources, and record failures as carefully as
-successes. Branching and checkpoints can make that exploration cheaper, but
-only if the saved state is named precisely.
+Fast checkpointing is therefore an enabling primitive, not the episode
+contract. The complete system must still isolate branches, protect verifier
+integrity, bound egress and resources, record every fork and restore, and make
+the winning trajectory reproducible from its bootstrapped root.
 
 ## Chapter 5 — Filesystem Branching and Runtime Checkpointing
 
@@ -647,12 +669,13 @@ provenance.
 
 ## Chapter 6 — Meta-Agent Runtimes, Control Planes, and Fleets
 
-### Three managers, not one
+### A supervisor over a reversible trace
 
-At fleet scale, a worker disappears halfway through the dependency update. A
-replacement environment can be allocated, but somebody must know which state
-to restore and which event to resume. That sentence hides three different
-control roles.
+A worker is about to issue a tool call that would edit the wrong dependency.
+A meta-agent observes the proposed action, intercepts it before execution, and
+forks a corrected branch. If the original branch has already run, the
+meta-agent reverts to the preceding event and tries again. This simple story
+hides three different control roles.
 
 A **meta-agent** observes or redirects another agent's decisions. A **sandbox
 lifecycle control plane** creates, pauses, restores, routes, and destroys
@@ -661,17 +684,19 @@ and manages queues or warm capacity. One product may implement more than one
 role, but the roles remain distinct. A sandbox-side daemon that executes a
 command is still an execution worker, not a placement mode.
 
-![Supervision, lifecycle, and placement are separate control roles](../assets/diagrams/part-0/06-agent-control-plane-fleet.svg)
+![A meta-agent creates, observes, intercepts, reverts, and forks a worker trace](../assets/illustrations/part-0/06-shepherd-meta-agent.png)
 
-*Figure 6.1 — A fleet becomes recoverable when control roles share durable
-identity and session history without collapsing into one component.*
+*Figure 6.1 — A meta-agent creates and observes a worker, intercepts a proposed
+action, then reverts or forks the reversible trace. Source: [SHEPHERD Figure
+1](https://shepherd-agents.ai/). Lifecycle control and fleet placement remain
+separate roles described below.*
 
 SHEPHERD focuses on meta-agent semantics. Its project describes reversible,
-Git-like agent execution traces that can be observed, forked, replayed, and
-reverted. The repository also labels the software early alpha with changing
-APIs. It should therefore be read as a research-driven trace substrate, not
-mistaken for a mature fleet scheduler or an isolation boundary. [SHEPHERD
-repository](https://github.com/shepherd-agents/shepherd)
+Git-like agent execution traces that can be created, observed, intercepted,
+forked, replayed, and reverted. The repository also labels the software early
+alpha with changing APIs. It should therefore be read as a research-driven
+trace substrate, not mistaken for a mature fleet scheduler or an isolation
+boundary. [SHEPHERD repository](https://github.com/shepherd-agents/shepherd)
 
 Kubernetes Agent Sandbox focuses on lifecycle orchestration. It defines a
 Sandbox custom resource for a stateful singleton workload with stable identity

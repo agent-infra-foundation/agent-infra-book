@@ -31,8 +31,8 @@ Sandbox.
 ### 4. RL and Evaluation Sandboxes
 
 Explain how RL and evaluation sandboxes turn one environment into many scored,
-repeatable attempts. Compare CubeSandbox, SandboxFusion, AgentScope, NeMo
-Gym/Polar, AEnvironment, AgentENV, and DeltaBox.
+repeatable attempts. Focus on CubeSandbox and DeltaBox, using MCTS rollouts to
+connect checkpoint, restore, branching, verification, and backpropagation.
 
 ### 5. Filesystem Branching and Runtime Checkpointing
 
