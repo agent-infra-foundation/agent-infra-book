@@ -1,6 +1,6 @@
 # Volume I Outline
 
-## Part 0 — Agent Sandbox Architectures
+## Part 0 — Overview of Agent Sandboxes in Practice
 
 ### 0. Agent Workloads and the Runtime Substrate
 

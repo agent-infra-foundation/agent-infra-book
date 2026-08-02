@@ -1,37 +1,36 @@
-# Part 0 — Agent Sandbox Architectures
+# Part 0 — Overview of Agent Sandboxes in Practice
 
-Landscape sources checked 2026-08-02. Product capabilities below are described
-from primary documentation and project repositories. Performance or maturity
-claims are attributed to their authors. Capabilities reported by a vendor are
-vendor-reported, not independent guarantees.
+*A comparative case study of isolation, state, rollouts, recovery, and
+publication across agent runtimes.*
+
+“Agent sandbox” sounds like one category. In practice, the label covers command
+policies, private workspaces, containers, microVMs, browser sessions, rollout
+environments, checkpoints, and fleet control. This part follows one dependency
+update across those boundaries to show what each layer protects, retains, and
+returns.
+
+Together, these distinctions let operators compare systems without assuming
+that speed, isolation, recovery, and publication arrive as one inseparable
+package within a single product.
 
 ## Chapter 0 — Agent Workloads and the Runtime Substrate
 
 ### The computer that worked for one person
 
-A developer opens a familiar laptop and asks three coding agents to help with
-one dependency update. The first agent edits the manifest. The second changes a
-source file against the old dependency. The third starts the test server on the
-same port the first agent is using. Minutes later, every agent reports progress.
-The checkout contains a mixture of their edits, the lockfile reflects only one
-attempt, and nobody can say which server produced the screenshot in the final
-message.
+A developer asks three coding agents to update one dependency. They edit the
+same checkout, produce incompatible lockfiles, and start test servers on the
+same port. Every agent reports progress; nobody can attribute the final state.
 
-Nothing exotic failed. The operating system did exactly what it was designed
-to do: it let one user start processes and modify files. The filesystem kept
-the latest bytes. The shell inherited the user's environment. Git recorded
-nothing until somebody chose to commit. The missing component was the human
-who normally notices collisions, remembers which terminal owns a process, and
-decides what work is safe to keep.
+The operating system behaved normally: one user could start processes and
+modify files. What disappeared was the human coordination that assigns
+ownership and decides what to keep. At agent scale, each attempt instead needs
+private execution, stable identity, bounded resources, a named starting state,
+history, and a controlled return path.
 
-Hundreds of agents turn those informal human duties into infrastructure
-requirements. Each attempt needs a private place to edit and run tools, a
-stable identity, bounded resources, a reconstructable starting state, a useful
-history, and a deliberate route back to shared work. A sandbox environment
-provides part of that answer. It contains the tools, processes, browser state,
-and workspace state that belong to an execution. An agent runtime calls the
-model, chooses actions, and incorporates observations. The two are related,
-but they are not the same component.
+A **sandbox environment** contains an execution's tools, processes, browser
+state, and workspace. An **agent runtime** calls the model, chooses actions,
+and incorporates observations. They cooperate, but they are not the same
+component.
 
 > *💡 **Core principle:** A sandbox environment contains execution state; an
 > agent runtime owns the decision cycle.*
@@ -77,46 +76,23 @@ model service and a sandbox-side worker do not create another mode.*
 | Main cost | Larger image and coupled lifecycle | Transport, serialization, and remote-tool semantics |
 | Important non-guarantee | Locality does not imply strong isolation | External orchestration does not imply durable or publishable state |
 
-Neither placement is the default winner. An in-sandbox agent is attractive
-when the agent runtime expects ordinary local CLIs, PTYs, sockets, and files.
-Tool calls can be direct, interactive programs behave naturally, and the
-sandbox image contains one self-sufficient worker. The cost is coupling. If the
-environment freezes, the decision cycle may freeze with it. Model or service
-credentials may enter the environment unless a proxy keeps them outside.
-Updating the agent runtime can also require rebuilding or replacing sandbox
-images.
+Neither placement always wins. An in-sandbox runtime works naturally with
+local CLIs, PTYs, sockets, and files, but its lifecycle and credentials may be
+coupled to the environment. An external runtime can retain history, replace
+environments, and keep credentials outside generated-code execution, but its
+protocol must represent streaming, stdin, PTY resize, long-running processes,
+ports, artifacts, disconnects, and idempotent retries.
 
-An external agent runtime centralizes decisions and durable history. It can
-replace an execution environment, coordinate several environments, and keep
-high-value credentials outside code execution. The cost is an execution
-protocol that must faithfully represent real tools. A command is not only a
-string and a final exit code: it may stream output, accept stdin, resize a PTY,
-spawn a long-running process, expose a port, produce artifacts, or survive a
-temporary disconnection. If the protocol omits those semantics, tools that
-worked locally become unreliable remotely.
+Across that protocol, completion must also define when output is flushed, a
+process has exited, artifacts are captured, and workspace mutations are
+visible. Operation identities prevent a lost response from duplicating a
+package publish or migration. These are distributed-systems obligations of the
+external boundary, not a third placement mode.
 
-Placement also shapes observation ordering. Inside one environment, the agent
-runtime can read a file immediately after a command writes it. Across a
-protocol, the system must define whether the result means output was flushed,
-the process exited, artifacts were captured, and workspace mutations are now
-visible. Retries need operation identities so a lost response does not cause a
-second package publish or database migration. These are distributed-systems
-concerns introduced by the boundary, not reasons to invent another placement
-mode.
-
-Sandbox-as-a-Service is a delivery model, not an agent-placement mode. A
-managed service can start an environment containing an agent runtime, or it can
-offer an API to an external agent runtime. The placement test still returns one
-of the same two answers.
-
-Anthropic's Managed Agents architecture is a useful supporting example of the
-second mode, not a new category. Anthropic describes a harness outside the
-sandbox, a durable session log outside the harness, and an execute interface
-that makes sandbox environments replaceable. The execution worker is the
-“hands,” while the external harness owns the decision cycle. That separation
-also keeps some credentials outside generated-code execution. The point here is
-the boundary, not the Claude product: another agent runtime and another
-sandbox provider could implement the same interfaces. [Anthropic engineering
+Sandbox-as-a-Service is a delivery model, not a third placement mode. Anthropic's
+Managed Agents architecture illustrates the external mode: an outside harness
+owns the decision cycle and durable log, while a replaceable execution worker
+acts as its “hands.” [Anthropic engineering
 description](https://www.anthropic.com/engineering/managed-agents)
 
 ### A private room is not a runtime
@@ -137,31 +113,17 @@ demands explicit templates and bases. **Recovery and exploration** demand
 snapshots, forks, or replay. **Publication** demands a decision that turns
 private results into shared truth.
 
-Consider the changed file from the opening incident. Its contents look
-reasonable, and the test output beside it says “passed.” That is not enough to
-trust it. The result needs a chain of answers: Which agent and session wrote
-the file? Which project revision did that session begin from? Which dependency
-lockfile was present when the test started? Did the test run inside the same
-workspace that produced the edit? Was another server already listening on the
-port? Did the agent retry after changing its environment? Which exact bytes are
-being proposed for return?
+A plausible file plus “tests passed” is insufficient. Trust requires structured
+causality: the agent and session, starting revision, policy, commands,
+processes, artifacts, and exact proposed bytes. With that record, recovery can
+distinguish rerunning from the base, resuming retained workspace state, and
+reconnecting to a live process.
 
-Ordinary development tools contain fragments of this record. Git can identify
-a committed diff and its parent. Shell history may show commands. A CI system
-may retain logs and artifacts. An agent runtime must connect those fragments
-before a human has reconstructed the story manually. The useful record is not
-an undifferentiated video of everything. It is structured identity and
-causality: session S-17 started at base B-4, command C-9 ran with policy P-2,
-artifact A-3 came from process E-8, and changeset D-6 contains the files now
-under review.
-
-That record also changes recovery. If the environment dies after the test, the
-runtime can distinguish “rerun from the same base” from “continue from retained
-workspace state.” If the agent runtime dies, durable session history can tell a
-replacement what was observed and what remains private. If only the connection
-drops, the execution protocol can reconnect to a still-running process instead
-of starting a duplicate. Recovery is no longer a vague retry; it is a
-transition from named state.
+Git, shell history, and CI each hold fragments of that story. Session history
+must join them before a human reconstructs the run manually. It should record
+named transitions: environment loss after a test, runtime replacement from a
+retained workspace, or reconnection after transport failure. Recovery then
+means resuming from explicit state rather than issuing an ambiguous retry.
 
 Security crosses all six, but “contains hostile code” is too narrow a
 definition of an agent sandbox. A system may strongly separate a guest kernel
@@ -175,30 +137,16 @@ a boundary, a state model, and a return path.
 *Figure 0.3 — Private execution becomes dependable only when policy and session
 history surround a controlled path from action to return or publication.*
 
-The minimum substrate is therefore small enough to remember. An agent runtime
-acts through a sandbox environment. The environment contains a private
-workspace and tools. Session history and policy surround the interaction.
-Return or publication is an explicit transition. Lifecycle controllers,
-schedulers, checkpoint stores, credential brokers, and fleet managers may be
-needed at scale, but they refine this path rather than replace it.
+The minimum substrate is an agent runtime acting through a sandbox environment
+over private tools and workspace, surrounded by policy and session history,
+with explicit return or publication. Controllers, schedulers, checkpoint
+stores, and credential brokers refine that path at scale.
 
-A compact evaluation can now follow the task from end to end. First name the
-unit: command, session, machine, browser, episode, branch, or workspace. Locate
-the agent runtime with the placement test. Identify what enforces separation
-and which resources remain shared. Name the private state and its base. Follow
-the lifecycle through allocation, pause, restore, completion, and destruction.
-Ask how simultaneous attempts contend for resources. Locate session history
-and determine whether it records identity, inputs, events, outputs, and
-failures. Finally, follow the result across the boundary and state the most
-important guarantee the system does not make.
-
-This checklist prevents two common comparison errors. The first is comparing a
-filesystem to a VM as though one should replace the other; they govern
-different state and trust boundaries. The second is treating a feature list as
-an architecture. Two services may both advertise snapshots while one captures
-only files and the other retains processes. Two coding agents may both use
-worktrees while only one adds an OS-enforced command boundary. Precise nouns
-make these distinctions visible before product names enter the discussion.
+Evaluate any system by naming its unit, placement, boundary, private state and
+base, lifecycle, concurrency model, evidence, return path, and most important
+non-guarantee. This prevents comparing filesystems with VMs or treating a
+feature list as an architecture: similarly named snapshots, worktrees, and
+sandboxes may cover different state and trust boundaries.
 
 The next chapters follow one task—update a dependency, change a source file,
 run tests, open the application, and return the proposal—through different
@@ -270,27 +218,9 @@ documentation](https://docs.docker.com/ai/sandboxes/)
 | Claude Code local | Bash execution; external agent | OS-enforced filesystem and network restrictions | Session plus working-directory changes; exceptions follow permission flow | Permission approval is not isolation |
 | Docker Sandboxes | MicroVM; in-sandbox agent | Guest kernel, private Docker daemon, filesystem, and network | Environment persists for the sandbox session; work leaves through Git or exported files | MicroVM isolation does not resolve competing changes |
 
-Run the dependency task once through each row and the differences become
-concrete. In a Codex worktree, the agent can edit without touching the
-developer's checkout, but a command sandbox still decides whether it may read
-outside the project or reach the network. If the test opens a local port, that
-port may still belong to the host's network context unless another boundary
-separates it. The worktree answers “whose files?” while the command sandbox
-answers “which operations?”
-
-In Claude Code's local sandbox, a package-manager command and every child it
-spawns inherit filesystem and network restrictions. If installation needs a
-new domain or an out-of-bound path, the regular permission flow becomes
-visible. That is useful evidence: the task did not simply “have network.” It
-crossed a named policy boundary for a reason. The same approval would be much
-less meaningful if it silently granted unrelated tools permanent access.
-
-Inside a Docker Sandbox, the agent can start nested containers through its
-private Docker daemon without controlling the host daemon. That changes the
-blast radius of build scripts and container lifecycle. Yet the proposed change
-still needs to leave the microVM. A Git commit, patch, or copied artifact can
-carry it out, and each preserves different context. The stronger execution
-boundary does not choose the correct return form.
+The task exposes the distinction: a worktree answers “whose files?”, a command
+sandbox answers “which operations?”, and a microVM limits host exposure. None
+chooses whether the result should return as a commit, patch, or artifact.
 
 These examples also clarify concurrency. Ten private worktrees can prevent ten
 agents from overwriting source files, while all ten still compete for host CPU,
@@ -366,33 +296,12 @@ machine. [Modal Sandbox documentation](https://modal.com/docs/guide/sandboxes)
 | Daytona | Sandbox from an image or snapshot; usually external agent | Private filesystem and experimental process-memory snapshot | Create, pause, resume, snapshot; many sandboxes are API-managed | Files and command results; snapshot is not publication |
 | Modal | Sandbox process environment; external agent in the common API use | Filesystem plus attached volumes or snapshots | Bounded run with retained filesystem options | Function results and files; lifetime limits remain |
 
-Follow one environment through the task to see why these fields belong
-together. The service starts from template T-12 and checks out revision B-7.
-The external agent runtime sends an install command through the execution
-protocol. The command streams output for six minutes and leaves a package cache,
-modified lockfile, and background development server. The agent then changes a
-source file and receives a preview URL.
-
-At this point, “pause the sandbox” is underspecified. Are processes frozen or
-terminated? Does the private filesystem remain attached? Does the preview URL
-survive? Is billed compute released? Can another process reconnect to the same
-session identity? A provider may answer these questions differently for pause,
-snapshot, and stop. The caller must record the actual transition rather than
-infer it from a familiar verb.
-
-Return has the same ambiguity. Capturing stdout preserves neither the lockfile
-nor the source edit. Downloading the two changed files may miss a deletion or a
-generated migration. Keeping a full snapshot aids later debugging but makes
-code review awkward and can retain secrets or caches unnecessarily. A Git
-patch is compact but assumes a compatible base. The safest design usually
-separates a diagnostic snapshot from a reviewable change proposal.
-
-Timeout policy should follow that distinction. An inactive environment may be
-cheap to pause but dangerous to retain indefinitely if it contains credentials.
-A completed environment may be safe to destroy only after outputs and history
-are durably linked. Cleanup is therefore part of the correctness path:
-“destroyed after capture D-8” is a stronger event than “worker disappeared
-around 14:03.”
+Lifecycle verbs need exact semantics. “Pause” may freeze processes or retain
+only files; a preview URL, billing state, and reconnectable identity may follow
+different rules. Return is equally specific: stdout omits edits, selected files
+may omit deletions, a snapshot may retain secrets, and a patch assumes a base.
+A robust workflow separates diagnostic retention from a reviewable proposal
+and destroys the environment only after outputs and history are linked.
 
 The common non-guarantee is decisive: **a task sandbox generally returns
 material, not shared truth.** Stdout can say the tests passed while the useful
@@ -447,28 +356,15 @@ repository](https://github.com/agent-infra/sandbox)
 | Browserbase | Remote browser session; external agent | Fresh session data or a retained Context | Context identity plus browser automation results | A retained login is sensitive state, not proof of authorization |
 | AIO Sandbox | Tool-rich container; external agent in its client topology | Browser, display, tools, and workspace share one container | Tool results, files, screenshots, and remote views | One container does not imply hostile-tenant isolation or code publication |
 
-A short browser timeline shows why an interactive session needs its own state
-model. At 10:00 the agent attaches profile P-4 and opens the staging site. At
-10:02 it downloads report R-1 into the shared workspace. At 10:04 a human takes
-over and confirms a dialog. At 10:05 the agent resumes, reads the resulting
-page state, and edits the application so the same dialog is clearer. At 10:09
-the environment closes.
+A session can produce a report, screenshots, browser events, source edits, a
+human decision, and an updated profile. They need distinct return and retention
+rules: artifacts leave, evidence remains attributable, code becomes a
+changeset, and authenticated state stays bound to its owner and policy.
 
-Several outputs now exist: the report file, screenshots, browser events, the
-human decision, changed source, and an updated profile. They should not all
-follow the same route. The report may be a task artifact. The screenshots may
-be audit evidence. The source edit may become a changeset. The profile may be
-retained for a later session, but only under the same identity and policy. The
-human action needs an explicit marker so it is not attributed to the agent.
-
-Teardown must address both confidentiality and reproducibility. Deleting a
-container while retaining its browser Context can preserve precisely the
-authenticated state the next run needs. It can also preserve a compromised
-session or an unintended preference change. Conversely, discarding every
-profile after every run reduces risk but may make workflows unusable and
-encourage agents to handle raw credentials repeatedly. The infrastructure
-needs an explicit profile owner, retention rule, revocation path, and event
-history.
+Teardown must balance confidentiality and reproducibility. A retained profile
+may preserve a needed login or a compromised session; deleting every profile
+may force repeated credential handling. The system needs an owner, retention
+rule, revocation path, and event history.
 
 The visual surface creates one more trap: **a screenshot is an observation, not
 the state itself.** Two pages can look identical while cookies, permissions,
@@ -476,32 +372,26 @@ downloads, and open connections differ. Reliable computer-use evaluation and
 replay therefore require structured browser and session facts alongside
 pixels.
 
-Credentials make the teardown problem sharper. A profile that survives may
-contain authority long after a task ends. A screenshot may expose a secret that
-filesystem cleanup cannot erase. A human takeover may perform an action that
-the automated trace alone cannot explain. Useful browser infrastructure
-therefore binds session identity, policy, redaction, retained evidence, and
-profile lifecycle. Its return path must distinguish an observation from an
-approved project change.
+Because profiles and screenshots can retain authority or secrets, browser
+infrastructure must bind identity, redaction, evidence, and profile lifecycle.
+A human takeover must be marked explicitly, and an observation must not be
+mistaken for an approved project change.
 
 ## Chapter 4 — RL and Evaluation Sandboxes
 
 ### Fork one state into a population of rollouts
 
-Now repeat the dependency task ten thousand times. Some attempts should begin
-from the same repository and process state, then diverge at one model decision.
-The infrastructure should not rebuild the operating system, reinstall packages,
-and warm the same caches for every candidate. It should bootstrap one clean
-root, preserve it as a named checkpoint, and fork private branches for parallel
-rollouts.
+Repeated attempts should share an initialized root, then diverge at a model
+decision without rebuilding the operating system and caches. In Monte Carlo
+tree search, a controller selects and restores a node, expands actions, rolls
+private branches forward, scores their leaves, and backpropagates rewards and
+visit counts.
 
-Monte Carlo tree search makes the requirement concrete. The controller selects
-a promising node, restores the sandbox state associated with that node, expands
-one or more candidate actions, and rolls each branch forward. A verifier scores
-the resulting leaves. The controller then backpropagates rewards and visit
-counts through the logical search tree before selecting again. The expensive
-work is not only model inference. It is repeatedly materializing a consistent
-world at the exact point where alternatives diverge.
+RL and evaluation add an **episode contract** to execution. A dataset item
+names the task and initial state; the agent produces actions; the environment
+returns observations and changes private state; a verifier produces reward;
+and a typed termination closes the attempt. The episode record connects that
+outcome to the exact policy, trajectory, verifier, and starting checkpoint.
 
 > *🌲 **Rollout rule:** Bootstrap one named root, fork private branches, score
 > leaves, and record the exact checkpoint behind every reward.*
@@ -513,83 +403,55 @@ restores a selected state, forks private sandboxes for parallel rollouts,
 evaluates the leaves, and backpropagates their scores. CubeSandbox or DeltaBox
 can accelerate state reuse; neither supplies the search policy or verifier.*
 
-The figure shows stateful agent search, where selected tree nodes are
-materialized as sandbox checkpoints. It does not claim that every MCTS
-implementation must preserve every node as a full machine image. A system may
-checkpoint only branch points, reconstruct cheap nodes by replay, or evict old
-states under memory pressure. The invariant is that a rollout begins from the
-state named by its selected node, not from whatever state a reused worker
-happens to contain.
+The figure materializes selected nodes as checkpoints, but an implementation
+may save only branch points, replay cheap nodes, or evict old states. Each
+rollout must still begin from the state named by its selected node.
 
-CubeSandbox provides the service-shaped substrate. Its project documents a
-RustVMM/KVM microVM sandbox, an E2B-compatible API, single-node and clustered
-deployment, and snapshot operations that can checkpoint a running sandbox,
-clone parallel environments, and roll a branch back. In an MCTS deployment,
-the external controller can bootstrap a root from a template, clone several
-hardware-isolated branches, stream actions into each, and retain only the
-checkpoints worth exploring further. These capabilities are project-reported;
-they do not by themselves define the dataset, rollout policy, reward, or
-trainer. [CubeSandbox repository](https://github.com/TencentCloud/CubeSandbox)
+CubeSandbox documents RustVMM/KVM microVMs, an E2B-compatible API, clustered
+deployment, and operations to checkpoint, clone, and roll back running
+sandboxes. An external controller can therefore bootstrap a template, fan out
+isolated branches, and retain selected checkpoints. These are project-reported
+capabilities, not a dataset, search policy, reward, or trainer. [CubeSandbox
+repository](https://github.com/TencentCloud/CubeSandbox)
 and [lifecycle documentation](https://cubesandbox.com/guide/lifecycle.html)
 
-DeltaBox focuses on the checkpoint path itself. The research system coordinates
-filesystem changes with process state so a controller can return to a prior
-agent state without rebuilding the entire environment or replaying the whole
-prefix. Its paper evaluates this mechanism on SWE-bench tree search and RL
-fan-out. The authors report millisecond-level checkpoint and rollback latency;
-those are research results, not independent service guarantees. DeltaBox is
-therefore useful here as an architectural example of change-based state reuse,
-not as a complete training stack. [DeltaBox paper](https://arxiv.org/abs/2605.22781)
+DeltaBox coordinates filesystem changes with process state for change-based
+checkpoint and rollback. Its authors report millisecond-level latency in
+SWE-bench tree search and RL fan-out experiments; those research results are
+not service guarantees or a complete training stack. [DeltaBox
+paper](https://arxiv.org/abs/2605.22781)
 and [project page](https://dongyunpeng-sjtu.github.io/deltabox/)
-
-The two systems illuminate complementary layers. CubeSandbox presents a
-hardware-isolated sandbox service with templates, lifecycle, networking, and
-cluster-oriented fan-out. DeltaBox concentrates on coordinated file-and-process
-rewind under high-frequency branching. A deployment could choose either state
-substrate according to its isolation, maturity, and checkpoint requirements;
-the manuscript does not need a longer product catalog to establish that
-boundary.
 
 | Sandbox substrate | Unit and placement | Fork and rollback state | Parallel rollout role | Return and non-guarantee |
 | --- | --- | --- | --- | --- |
 | CubeSandbox | KVM microVM sandbox; commonly an external agent with sandboxed tool execution | Templates and running-state snapshot, clone, and rollback operations | A controller can fan out private microVM branches across a service or cluster | Returns execution and sandbox state; does not define MCTS, reward, or training |
 | DeltaBox | Stateful agent sandbox controlled by an external search or training loop | Coordinated filesystem and process checkpoint/rollback using changed state | Reduces repeated state materialization during tree search and RL fan-out | Restores agent state; does not define the verifier, search policy, or fleet service |
 
-The placement rule remains unchanged. In the topology shown, the model → tool →
-observation → next-model-call cycle is controlled outside each sandbox, so this
-is an external agent with sandboxed tool execution. An in-sandbox agent is also
-possible, but it still needs a controller above the branches to assign episode
-identity, collect scores, and select the next node.
+The shown controller is an external agent with sandboxed tool execution. An
+in-sandbox agent remains possible, but a controller must still assign episode
+identity, collect scores, and select nodes.
 
-Bootstrap must be explicit. The root checkpoint should name the base image,
-repository revision, dependency state, initialization procedure, tool policy,
-and any retained process state. If rollout A warms a compiler cache and rollout
-B silently inherits it, timing and behavior are no longer attributable to the
-candidate action. If A leaves a test server or database row behind and B's
-verifier accepts it, B receives reward for work performed by A. The apparent
-model improvement is an isolation bug.
+Reset semantics determine whether rewards are attributable. Rebuilding is
+simple but expensive; restoring a snapshot is faster only if it covers every
+relevant state domain. A file rollback does not stop stale processes or undo a
+remote database write. The episode record must therefore name the reset
+mechanism, checkpoint, and uncaptured external effects.
 
-Forks also need identities. Child rollouts share an immutable prefix but own
-their later files, processes, action trace, termination reason, and reward. A
-checkpoint reference records where each child diverged. A branch that loses the
-search can be destroyed; a promising leaf can become a new checkpoint for the
-next fan-out. Promotion changes which state is retained, but it must not merge
-unfinished child state back into its siblings.
+The root must name its image, repository revision, initialization, policy, and
+retained process state. Each child then owns its files, processes, trace,
+termination, and reward while referencing the shared prefix. Otherwise caches,
+servers, or database rows can leak work between branches and corrupt rewards.
 
-Failure is data too. Allocation timeout, restore failure, tool protocol error,
-verifier crash, policy denial, and model-selected termination do not mean the
-same thing. Treating all of them as reward zero teaches the trainer about
-infrastructure availability as if it were agent quality. Hiding all of them as
-retries biases the dataset toward eventual successes. The rollout fabric needs
-typed termination and retry policy so evaluators can decide which outcomes
-belong in a metric or training batch.
+A losing branch may be destroyed while a promising leaf becomes the next
+checkpoint. That promotion changes retained state; it must not merge unfinished
+child state into siblings. Fork ancestry keeps shared history immutable while
+attaching each reward to the point where its rollout diverged.
 
-Scale makes auditability part of correctness. A reward without the exact root,
-selected checkpoint, model and agent-runtime versions, actions, verifier
-version, and termination reason is ambiguous training data. A verifier with
-broader credentials than the sandbox can become a target for reward hacking.
-Because search fans out systematically, a small state leak or scoring loophole
-can be exploited thousands of times.
+Infrastructure failure is not agent failure. Allocation, restore, protocol,
+verifier, policy, and model termination need typed outcomes and retry rules.
+Every reward must reference the exact checkpoint, model, runtime, actions,
+verifier, and termination reason; systematic fan-out amplifies any leak or
+scoring loophole.
 
 **Fast checkpointing is an enabling primitive, not the episode contract.** The
 complete system must still isolate branches, protect verifier
@@ -651,33 +513,20 @@ not independently reproduced numbers here. The architectural lesson is that
 | BranchFS | Copy-on-write filesystem branch; either placement mode | Snapshot view plus private delta; commit or abort | Parallel branch paths with explicit parent relationships | Filesystem merge to parent; no external-side-effect rollback |
 | DeltaBox | Filesystem-and-process state node; external controller in the described design | Coordinated filesystem and memory checkpoint or rollback | Designed for branching exploration with state pairs | Restored execution state; no undo of remote effects and no publication contract |
 
-Imagine three save operations during the same task. After the dependency is
-installed, the agent snapshots the workspace. After the development server
-loads the new package, it checkpoints processes and files. After a human
-approves the rendered result, the system captures a changeset. All three are
-valuable, but they answer different recovery questions.
+Three save operations answer different questions. A workspace snapshot retains
+source and lockfile; a process checkpoint also retains runtime state but depends
+on a compatible environment; a changeset excludes ephemeral state and captures
+a proposal against a named base. Calling all three “state” hides their purpose.
 
-The workspace snapshot can reproduce the source and lockfile, then restart the
-server from scratch. The process checkpoint may resume more quickly and retain
-in-memory caches or interpreter state, but it is tied to a compatible runtime
-and kernel context. The changeset is the reviewable proposal: it should exclude
-ephemeral caches and memory while retaining enough base and provenance data to
-compare with shared history. Calling all three “state” would hide the reason
-each exists.
+Coverage and consistency are separate questions. A checkpoint may include both
+files and memory yet capture them at incompatible moments, leaving processes
+with descriptors or caches that disagree with disk. Coordinated restore must
+name which domains form one recoverable state and which must be rebuilt.
 
-Branch relationships need the same precision. A child branch inherits a parent
-view at a point in time. If its parent advances, the child may continue against
-its captured view or be rebased according to explicit rules. Commit-to-parent
-can be atomic at the filesystem layer while still overwriting a semantically
-incompatible configuration. Publication against a moving project base needs
-conflict detection above storage mechanics.
-
-External effects should appear in the history even when they cannot appear in
-the checkpoint. If the agent pushed a branch, changed a ticket, or sent a test
-notification, recovery should not repeat the effect blindly. An idempotency
-key, compensating operation, or human decision may be required. The honest
-runtime says “restored internal state; external action X may already have
-occurred” rather than promising a rewind it cannot perform.
+Branch operations need the same precision: atomic commit-to-parent does not
+resolve semantic conflicts with an advancing base. External effects belong in
+history even though they cannot enter a checkpoint; retry may require an
+idempotency key, compensation, or human decision.
 
 A checkpoint selects a point inside one execution history. **Publication is a
 different operation against shared history that may have advanced.** Restoring a
@@ -742,48 +591,29 @@ repository](https://github.com/SWE-agent/swe-rex)
 | Kubernetes Agent Sandbox | Stateful sandbox resource; supports either of the two placement modes | Declarative create, identity, storage, claim, and warm-pool management | Kubernetes reconciliation and workload identity | Delegates the actual isolation mechanism |
 | SWE-ReX remote execution | Execution environment; external agent | Backend-specific acquire, command, and release | Parallel remote commands and returned execution evidence | Remote access is not publication or meta-agent supervision |
 
-Walk the worker failure through these roles. The scheduler first notices that
-worker W-3 stopped heartbeating. It marks the placement unavailable and stops
-sending new sessions there. The lifecycle control plane consults the session's
-retention policy: workspace snapshot Q-8 exists, but its process tree was not
-checkpointed. It allocates a replacement environment, attaches Q-8, and gives
-the environment a new execution identity while preserving the logical session
-identity.
+On worker failure, the scheduler stops placement, the lifecycle controller
+restores retained state into a replacement, and the runtime reports the
+discontinuity. A structured event must distinguish worker loss from command
+timeout, name the restored boundary, and flag uncertain external effects. A
+lease prevents the old worker from publishing stale work.
 
-The agent runtime then needs an observation that describes the discontinuity.
-“Command timed out” would be misleading if the worker vanished. A structured
-event can say that process E-11 has unknown completion status, workspace state
-is restored through command C-10, and external effects after that command may
-need reconciliation. The agent can inspect before deciding whether to retry.
-A meta-agent may instead fork two recovery strategies or stop the run for
-review.
+The replacement receives a new execution identity while preserving the
+logical session identity. If process state was not checkpointed, the runtime
+must say which command completed last and whether later effects are unknown. A
+meta-agent can then retry, fork recovery strategies, or stop for review without
+pretending continuity.
 
-This trace prevents a common fleet error: continuing successfully while losing
-the reason a result should be distrusted. If the replacement reruns tests and
-passes, the final evidence still records the worker loss and the restored base.
-If a cost report shows two environments, the session history explains why. If
-the first worker returns late, the lease prevents it from publishing stale work
-under the current session identity.
+Warm pools may retain an image and dependencies, never a previous owner's
+private workspace. Claim attaches session identity and policy; release must
+clean private state. Audit events then distinguish failures in the runtime,
+protocol, worker, or tool. Reassigning files is not restoring processes, and
+replaying history cannot undo an external API call; the control plane must show
+those boundaries instead of hiding them behind “running.”
 
-Warm pools add a second layer of state. A warm environment can contain a
-prepared image and dependencies without containing a user's private workspace.
-Once claimed, it must acquire a session identity and policy before tool
-execution. On release, cleanup must remove private state before the environment
-returns to the pool. Fast reuse without this ownership transition turns a
-performance optimization into cross-session contamination.
-
-Auditability becomes a control input at this scale. Identity tells the
-controller which session owned a workspace. Events show whether a failure
-occurred in the agent runtime, execution protocol, worker, or tool. Resource
-records support quotas and scheduling. Retained evidence lets a replacement
-continue without pretending the failed work never happened.
-
-Recovery also requires honesty about state. Reassigning a durable workspace is
-not the same as restoring its processes. Replaying session history is not the
-same as undoing an external API call. A warm environment reduces startup time
-but may weaken reproducibility if its base is not named. The control plane must
-make those distinctions visible instead of hiding them behind a single
-“running” status.
+At fleet scale, this evidence becomes control input rather than debugging
+output. Identity drives ownership, events drive recovery, and resource records
+drive quotas and placement. Fast reuse without those links turns a performance
+optimization into cross-session contamination.
 
 ## Chapter 7 — Workspace Isolation, Changesets, and Publication
 
@@ -808,37 +638,27 @@ Return mechanisms carry different meanings.
 | Changeset | Captured mutations plus explicit base and identity | Can be compared and resolved | Acceptance into shared history |
 | Publication | Accepted all-or-reject transition | Rejects unresolved or forbidden change | Hostile-tenant isolation |
 
-Consider a concrete conflict. Session A begins at base B-10 and changes a
-configuration line from timeout 30 to timeout 60. Session B also begins at
-B-10 and replaces the same setting with a structured retry policy. B publishes
-first, producing shared base B-11. A's tests still pass in its private
-workspace, but publishing A as a blind overwrite would silently erase B's
-policy.
+Suppose sessions A and B start at B-10 and edit the same setting. B publishes
+first as B-11; blindly applying A would erase B's policy even if A's private
+tests pass. A changeset lets the resolver compare B-10, A, and B-11, then reject,
+resolve, or prepare a new proposal without discarding A's evidence.
 
-A changeset gives the resolver three relevant states: B-10, A's private result,
-and current B-11. It can identify the overlapping semantic region and reject
-publication, request resolution, or prepare a new proposal. Rejection is not
-task failure. A's commands, artifacts, and rationale remain useful evidence,
-and the private workspace can be rebased or inspected. The shared project
-remains internally consistent.
-
-All-or-reject publication also protects multi-file changes. A dependency update
-may require a manifest, lockfile, source edit, and generated metadata to move
-together. Applying only the easy files can leave a build that no agent actually
-tested. The publication transaction either accepts the resolved set and records
-its provenance or leaves shared history untouched.
-
-Provenance should follow the accepted result rather than live only in a log
-archive. A reviewer asking “why is this line here?” should be able to reach the
-changeset, session, starting base, commands, test evidence, agent identity, and
-publication decision. That chain does not prove the code is correct, but it
-makes the decision inspectable and reversible at the project-history level.
+All-or-reject publication keeps related manifest, lockfile, source, and
+generated changes together. Provenance should connect each accepted line to
+its changeset, session, starting base, commands, tests, agent, and decision. It
+does not prove correctness, but makes acceptance inspectable.
 
 A sound workspace contract separates four events. **Finish** means the agent
 runtime stopped or returned. **Capture** turns private filesystem mutations
 into a reviewable proposal. **Resolve** compares that proposal with the
 currently accepted base and policy. **Publish** makes the accepted result shared
 history. Any step may fail without erasing the earlier evidence.
+
+Capture should freeze the proposal and its base. Resolve may read newer shared
+history but should not mutate either side while deciding. Publish then applies
+the accepted set atomically with its decision record; rejection leaves the
+proposal private and inspectable. This separation prevents a retry from
+silently changing what reviewers approved.
 
 Container Use is a concrete branch-oriented example. Its environments combine
 a dedicated Git branch, a container, and tracked command and file history. A
@@ -889,21 +709,12 @@ tenant code still needs an appropriate container, VM, or microVM boundary,
 credential controls, network policy, and a fleet layer. The publication
 contract can compose with those systems; it does not replace them.
 
-Composition works only when adjacent contracts stay explicit. A microVM
-provider may supply the sandbox environment while Ephemeral Sandbox manages
-several private workspace sessions inside it. An external agent runtime may
-send commands through a remote-execution protocol, while a lifecycle control
-plane replaces the microVM after failure. A browser service may attach an
-interactive session whose downloads enter one workspace. A scheduler may place
-the whole unit on a warm worker. Publication still has one job: decide whether
-a captured private proposal becomes shared project history.
-
-Each layer must pass stable identity to the next. The fleet knows a worker and
-lease. The lifecycle controller knows a sandbox environment. The runtime knows
-a workspace session and execution. Session history knows an agent and its
-observations. The changeset knows its base. The publication decision knows the
-accepted shared revision. Without those links, operators receive many logs but
-cannot answer which execution produced a line of code.
+Adjacent contracts must remain explicit. A microVM may provide isolation, a
+controller may replace it, a scheduler may place it, and Ephemeral Sandbox may
+manage private workspaces inside it. Stable identities must link worker, lease,
+sandbox, session, execution, agent, changeset base, and accepted revision.
+Publication still has one job: decide whether a captured proposal becomes
+shared history.
 
 The same explicitness prevents capability inflation. Adding a microVM does not
 make workspace publication conflict-aware. Adding provenance does not stop
@@ -915,17 +726,11 @@ composed.
 
 ### From landscape to implementation
 
-Today's sandbox landscape already supplies many pieces of an agent-facing
-runtime: coding-tool policies, disposable computers, persistent browser
-profiles, repeatable evaluation environments, branching state, checkpoints,
-reversible histories, lifecycle controllers, schedulers, and remote execution.
-The remaining engineering challenge is to compose the pieces without losing
-their boundaries.
+The landscape supplies policies, disposable computers, browser profiles,
+rollout environments, branching state, reversible histories, controllers, and
+schedulers. The challenge is composition without capability inflation.
 
-Volume I now narrows its focus. It is not a general design for every hostile
-workload or thousand-node fleet. It follows one problem in depth: how
-cooperating coding agents can receive private parallel workspaces over shared
-project truth, how their activity can remain observable, and how one result can
-be captured, resolved, rejected, or published without exposing another
-agent's unfinished state. That is the path from a sandbox environment to an
+Volume I now follows one narrower problem: private parallel workspaces for
+cooperating coding agents, observable execution, and all-or-reject publication
+over shared project truth. That is the path from a sandbox environment to an
 agent workspace.

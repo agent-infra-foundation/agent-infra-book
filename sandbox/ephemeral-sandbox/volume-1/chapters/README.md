@@ -1,6 +1,6 @@
 # Chapter Workspace
 
-Part 0 is available as the complete [Agent Sandbox Architectures
+Part 0 is available as the complete [Overview of Agent Sandboxes in Practice
 manuscript](PART-0.md). Later chapters will become Markdown manuscript files as
 they are drafted.
 

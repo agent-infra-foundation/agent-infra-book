@@ -1,12 +1,13 @@
-# Part 0 Editorial Blueprint: Agent Sandbox Architectures
+# Part 0 Editorial Blueprint: Overview of Agent Sandboxes in Practice
 
 ## Phase 1 Editorial Decision Record
 
 Part 0 remains an eight-chapter landscape survey, numbered 0–7. The category
 boundaries are useful, and removing a chapter would either blur a real
 architectural distinction or force unnecessary renumbering throughout Volume I.
-The reading-time target is met by cutting repeated explanation inside the
-chapters, not by cutting an essential category.
+A later request to reduce prose by 30% is met by cutting repeated explanation
+inside the chapters, not by cutting an essential category, source, table, or
+figure.
 
 | Topic | Keep / cut / merge | Reason |
 | --- | --- | --- |
@@ -23,25 +24,26 @@ chapters, not by cutting an essential category.
 | Publication chapter | Keep and focus | It supplies the return-path conclusion and the transition to Ephemeral Sandbox without duplicating later LayerStack internals. |
 | Comparison tables | Cut from 18 to 8 | One table per chapter is enough; tables are reserved for repeated fields that are genuinely clearer side by side. |
 | Figures | Cut from 13 to 10 | Fold rollout branching into the Chapter 4 MCTS figure; remove the redundant shared-base/private-delta and failure-reassignment figures. |
+| Final prose compression | Reduce by 30% | Merge repeated scenarios and adjacent explanations while preserving evidence-bearing product claims, citations, tables, figures, and highlighted rules. |
 | Formal product-profile template | Keep as an editorial check | Apply its nine required questions to any named profile, but express most products as short, sourced examples rather than form-like subsections. |
 
 ### Revised Part 0 Structure and Prose Budget
 
 | Chapter | Technical title | Narrative job | Prose target |
 | ---: | --- | --- | ---: |
-| 0 | Agent Workloads and the Runtime Substrate | Hook, two placement modes, and the minimum runtime contract | 1,100 words |
-| 1 | Sandboxing in Coding-Agent Products | Separate permissions, workspaces, and execution boundaries | 850 words |
-| 2 | On-Demand Cloud Sandboxes | Explain template, lifecycle, private state, and return path | 850 words |
-| 3 | Browser and Computer-Use Sandboxes | Show why interactive identity and UI state extend the sandbox | 750 words |
-| 4 | RL and Evaluation Sandboxes | Distinguish a task sandbox from an episode and rollout fabric | 850 words |
-| 5 | Filesystem Branching and Runtime Checkpointing | Compare save domains and expose irreversible side effects | 850 words |
-| 6 | Meta-Agent Runtimes, Control Planes, and Fleets | Separate supervision, lifecycle, and placement at scale | 850 words |
-| 7 | Workspace Isolation, Changesets, and Publication | Make controlled return the conclusion and enter the case study | 1,000 words |
-| **Total** |  |  | **7,100 words** |
+| 0 | Agent Workloads and the Runtime Substrate | Hook, two placement modes, and the minimum runtime contract | 900 words |
+| 1 | Sandboxing in Coding-Agent Products | Separate permissions, workspaces, and execution boundaries | 610 words |
+| 2 | On-Demand Cloud Sandboxes | Explain template, lifecycle, private state, and return path | 470 words |
+| 3 | Browser and Computer-Use Sandboxes | Show why interactive identity and UI state extend the sandbox | 440 words |
+| 4 | RL and Evaluation Sandboxes | Distinguish a task sandbox from an episode and rollout fabric | 540 words |
+| 5 | Filesystem Branching and Runtime Checkpointing | Compare save domains and expose irreversible side effects | 500 words |
+| 6 | Meta-Agent Runtimes, Control Planes, and Fleets | Separate supervision, lifecycle, and placement at scale | 550 words |
+| 7 | Workspace Isolation, Changesets, and Publication | Make controlled return the conclusion and enter the case study | 770 words |
+| **Total** |  |  | **about 4,800 chapter words** |
 
-At roughly 160 words per minute, 7,100 words take about 44 minutes to read.
-Ten figures and eight compact tables add approximately 5–8 minutes of visual
-reading, producing the requested 45–55 minute experience.
+The strict clean-prose count is 4,841 words, exactly 30% below the prior 6,916
+words. At roughly 160 words per minute, prose takes about 30 minutes; ten
+figures and eight compact tables add approximately 5–8 minutes.
 
 ## Part 0 Decision
 

@@ -121,7 +121,7 @@ Use the following labels whenever needed:
 
 ## 8. Part and Chapter Requirements
 
-## Part 0 — Agent Sandbox Architectures
+## Part 0 — Overview of Agent Sandboxes in Practice
 
 Part 0 is an eight-chapter, beginner-friendly landscape survey. It uses the
 analogy of a personal workshop becoming a workplace for hundreds or thousands
