@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Isolation boundaries solve different problems</title>
+  <desc id="desc">Five boundaries progress from permission policy through private workspace, process sandbox, container, and virtual machine or microVM. Each changes a different sharing relationship and no single label describes all guarantees.</desc>
+  <defs>
+    <style>
+      .bg{fill:#f7f9fc}.card{fill:#fff;stroke:#cbd5e1;stroke-width:3}.strong{stroke:#2563eb;stroke-width:4}.title{font:700 42px 'Segoe UI',Arial,sans-serif;fill:#102a43}.subtitle{font:20px 'Segoe UI',Arial,sans-serif;fill:#52667a}.num{font:700 22px 'Segoe UI',Arial,sans-serif;fill:#2563eb}.label{font:700 27px 'Segoe UI',Arial,sans-serif;fill:#102a43}.body{font:19px 'Segoe UI',Arial,sans-serif;fill:#52667a}.axis{stroke:#334e68;stroke-width:4;marker-end:url(#arrow)}
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#334e68"/></marker>
+  </defs>
+  <rect class="bg" width="1600" height="900"/>
+  <text class="title" x="70" y="78">Isolation Boundaries Solve Different Problems</text>
+  <text class="subtitle" x="70" y="116">A policy, private workspace, restricted process, container, and VM do not make the same promise.</text>
+  <line class="axis" x1="130" y1="730" x2="1470" y2="730"/>
+  <text class="body" x="130" y="780">fewer shared resources</text>
+  <text class="body" x="1470" y="780" text-anchor="end">stronger host separation</text>
+
+  <rect class="card" x="70" y="220" width="270" height="410" rx="24"/>
+  <text class="num" x="105" y="270">01</text><text class="label" x="205" y="345" text-anchor="middle">Permission</text><text class="label" x="205" y="380" text-anchor="middle">policy</text>
+  <text class="body" x="205" y="465" text-anchor="middle">Controls allowed</text><text class="body" x="205" y="495" text-anchor="middle">operations</text>
+
+  <rect class="card" x="365" y="220" width="270" height="410" rx="24"/>
+  <text class="num" x="400" y="270">02</text><text class="label" x="500" y="345" text-anchor="middle">Private</text><text class="label" x="500" y="380" text-anchor="middle">workspace</text>
+  <text class="body" x="500" y="465" text-anchor="middle">Separates unfinished</text><text class="body" x="500" y="495" text-anchor="middle">file edits</text>
+
+  <rect class="card" x="660" y="220" width="270" height="410" rx="24"/>
+  <text class="num" x="695" y="270">03</text><text class="label" x="795" y="345" text-anchor="middle">Process</text><text class="label" x="795" y="380" text-anchor="middle">sandbox</text>
+  <text class="body" x="795" y="465" text-anchor="middle">Restricts system</text><text class="body" x="795" y="495" text-anchor="middle">access</text>
+
+  <rect class="card" x="955" y="220" width="270" height="410" rx="24"/>
+  <text class="num" x="990" y="270">04</text><text class="label" x="1090" y="363" text-anchor="middle">Container</text>
+  <text class="body" x="1090" y="465" text-anchor="middle">Namespaces resources;</text><text class="body" x="1090" y="495" text-anchor="middle">shares the host kernel</text>
+
+  <rect class="card strong" x="1250" y="220" width="280" height="410" rx="24"/>
+  <text class="num" x="1285" y="270">05</text><text class="label" x="1390" y="345" text-anchor="middle">VM /</text><text class="label" x="1390" y="380" text-anchor="middle">microVM</text>
+  <text class="body" x="1390" y="465" text-anchor="middle">Adds a guest-kernel</text><text class="body" x="1390" y="495" text-anchor="middle">boundary</text>
+</svg>

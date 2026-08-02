@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Supervision, lifecycle, and placement are separate roles</title>
+  <desc id="desc">A meta-agent supervises decisions, a lifecycle control plane manages sandbox environments, and a scheduler with a warm pool places them. Sandbox environments execute work while session history provides durable evidence.</desc>
+  <defs>
+    <style>
+      .bg{fill:#f7f9fc}.meta{fill:#faf5ff;stroke:#7c3aed;stroke-width:4}.control{fill:#e0f2fe;stroke:#2563eb;stroke-width:4}.schedule{fill:#ecfeff;stroke:#0891b2;stroke-width:4}.sandboxes{fill:#fff7ed;stroke:#d97706;stroke-width:4}.history{fill:#ecfdf5;stroke:#16a34a;stroke-width:4}.title{font:700 42px 'Segoe UI',Arial,sans-serif;fill:#102a43}.subtitle{font:20px 'Segoe UI',Arial,sans-serif;fill:#52667a}.label{font:700 27px 'Segoe UI',Arial,sans-serif;fill:#102a43}.small{font:18px 'Segoe UI',Arial,sans-serif;fill:#52667a}.edge{stroke:#52667a;stroke-width:4;fill:none;marker-end:url(#arrow)}
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#52667a"/></marker>
+  </defs>
+  <rect class="bg" width="1600" height="900"/>
+  <text class="title" x="70" y="78">Three Control Roles, One Execution Fleet</text>
+  <text class="subtitle" x="70" y="116">Supervising an agent, managing sandbox lifecycle, and placing work are different responsibilities.</text>
+
+  <rect class="meta" x="70" y="265" width="300" height="175" rx="24"/><text class="label" x="220" y="340" text-anchor="middle">Meta-agent</text><text class="small" x="220" y="385" text-anchor="middle">observe + redirect</text>
+  <rect class="control" x="470" y="265" width="330" height="175" rx="24"/><text class="label" x="635" y="335" text-anchor="middle">Lifecycle control</text><text class="small" x="635" y="380" text-anchor="middle">create + pause + restore</text>
+  <rect class="schedule" x="900" y="265" width="330" height="175" rx="24"/><text class="label" x="1065" y="335" text-anchor="middle">Scheduler + pool</text><text class="small" x="1065" y="380" text-anchor="middle">place + warm + replace</text>
+  <rect class="sandboxes" x="900" y="600" width="560" height="155" rx="24"/><text class="label" x="1180" y="665" text-anchor="middle">Sandbox environments</text><text class="small" x="1180" y="710" text-anchor="middle">private execution + workspaces</text>
+  <rect class="history" x="120" y="600" width="560" height="155" rx="24"/><text class="label" x="400" y="665" text-anchor="middle">Session history</text><text class="small" x="400" y="710" text-anchor="middle">identity + events + retained evidence</text>
+
+  <path class="edge" d="M370 352H460"/><path class="edge" d="M800 352H890"/><path class="edge" d="M1065 450V590"/><path class="edge" d="M900 677H690"/><path class="edge" d="M400 590C400 510 220 520 220 450"/>
+</svg>

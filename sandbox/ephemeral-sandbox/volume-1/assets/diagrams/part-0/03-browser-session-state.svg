@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Browser sandbox state and return paths</title>
+  <desc id="desc">A browser sandbox environment combines the browser, display, tools, and files. A persistent profile may attach to it, human access may cross into it, selected output leaves it, and session history records activity.</desc>
+  <defs>
+    <style>
+      .bg{fill:#f7f9fc}.sandbox{fill:#ecfeff;stroke:#0891b2;stroke-width:4}.profile{fill:#faf5ff;stroke:#7c3aed;stroke-width:4}.access{fill:#e0f2fe;stroke:#2563eb;stroke-width:4}.output{fill:#ecfdf5;stroke:#16a34a;stroke-width:4}.history{fill:#fff7ed;stroke:#d97706;stroke-width:4}.title{font:700 42px 'Segoe UI',Arial,sans-serif;fill:#102a43}.subtitle{font:20px 'Segoe UI',Arial,sans-serif;fill:#52667a}.label{font:700 27px 'Segoe UI',Arial,sans-serif;fill:#102a43}.small{font:18px 'Segoe UI',Arial,sans-serif;fill:#52667a}.edge{stroke:#52667a;stroke-width:4;fill:none;marker-end:url(#arrow)}.both{marker-start:url(#arrow)}
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#52667a"/></marker>
+  </defs>
+  <rect class="bg" width="1600" height="900"/>
+  <text class="title" x="70" y="78">Browser Sandbox State and Return Paths</text>
+  <text class="subtitle" x="70" y="116">A browser session carries interactive identity and evidence, not just a process.</text>
+
+  <rect class="profile" x="90" y="280" width="310" height="180" rx="24"/><text class="label" x="245" y="355" text-anchor="middle">Persistent profile</text><text class="small" x="245" y="395" text-anchor="middle">cookies + local storage</text>
+  <rect class="sandbox" x="535" y="220" width="530" height="310" rx="28"/><text class="label" x="800" y="285" text-anchor="middle">Sandbox environment</text><text class="small" x="800" y="350" text-anchor="middle">Browser + display</text><text class="small" x="800" y="390" text-anchor="middle">Tools + workspace</text><text class="small" x="800" y="450" text-anchor="middle">temporary interactive state</text>
+  <rect class="access" x="1200" y="280" width="310" height="180" rx="24"/><text class="label" x="1355" y="355" text-anchor="middle">Human access</text><text class="small" x="1355" y="395" text-anchor="middle">live view + takeover</text>
+  <rect class="output" x="535" y="645" width="530" height="140" rx="24"/><text class="label" x="800" y="710" text-anchor="middle">Selected output</text><text class="small" x="800" y="750" text-anchor="middle">data + screenshots + downloads</text>
+  <rect class="history" x="90" y="645" width="310" height="140" rx="24"/><text class="label" x="245" y="710" text-anchor="middle">Session history</text><text class="small" x="245" y="750" text-anchor="middle">events + recordings</text>
+
+  <path class="edge both" d="M410 370H525"/><path class="edge both" d="M1075 370H1190"/><path class="edge" d="M800 540V635"/><path class="edge" d="M535 700H410"/>
+</svg>

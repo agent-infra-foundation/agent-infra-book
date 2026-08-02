@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Minimum agent runtime substrate</title>
+  <desc id="desc">An agent runtime acts through a sandbox environment over a private workspace and tools, then reaches a controlled return or publication boundary. Session history and policy surround the whole system.</desc>
+  <defs>
+    <style>
+      .bg{fill:#f7f9fc}.frame{fill:#faf5ff;stroke:#7c3aed;stroke-width:4;stroke-dasharray:12 10}.runtime{fill:#e0f2fe;stroke:#2563eb;stroke-width:4}.sandbox{fill:#ecfeff;stroke:#0891b2;stroke-width:4}.state{fill:#fff7ed;stroke:#d97706;stroke-width:4}.publish{fill:#ecfdf5;stroke:#16a34a;stroke-width:4}.title{font:700 42px 'Segoe UI',Arial,sans-serif;fill:#102a43}.subtitle{font:20px 'Segoe UI',Arial,sans-serif;fill:#52667a}.frameLabel{font:700 23px 'Segoe UI',Arial,sans-serif;fill:#6b4f9e}.label{font:700 29px 'Segoe UI',Arial,sans-serif;fill:#102a43}.small{font:18px 'Segoe UI',Arial,sans-serif;fill:#52667a}.arrow{stroke:#334e68;stroke-width:5;fill:none;marker-end:url(#arrow)}
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#334e68"/></marker>
+  </defs>
+  <rect class="bg" width="1600" height="900"/>
+  <text class="title" x="70" y="78">Minimum Agent Runtime Substrate</text>
+  <text class="subtitle" x="70" y="116">Private execution is useful only when its history, policy, and return boundary are explicit.</text>
+  <rect class="frame" x="220" y="165" width="1160" height="650" rx="34"/>
+  <rect x="550" y="144" width="500" height="48" rx="22" fill="#faf5ff"/>
+  <text class="frameLabel" x="800" y="177" text-anchor="middle">Session history + policy</text>
+
+  <rect class="runtime" x="485" y="225" width="630" height="105" rx="22"/>
+  <text class="label" x="800" y="288" text-anchor="middle">Agent runtime</text>
+  <path class="arrow" d="M800 332V375"/>
+  <rect class="sandbox" x="485" y="380" width="630" height="105" rx="22"/>
+  <text class="label" x="800" y="443" text-anchor="middle">Sandbox environment</text>
+  <path class="arrow" d="M800 487V530"/>
+  <rect class="state" x="485" y="535" width="630" height="105" rx="22"/>
+  <text class="label" x="800" y="598" text-anchor="middle">Workspace + tools</text>
+  <path class="arrow" d="M800 642V685"/>
+  <rect class="publish" x="485" y="690" width="630" height="105" rx="22"/>
+  <text class="label" x="800" y="753" text-anchor="middle">Return / publication</text>
+
+  <text class="small" x="800" y="858" text-anchor="middle">The substrate controls the path from private action to shared result.</text>
+</svg>

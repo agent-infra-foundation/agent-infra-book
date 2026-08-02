@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Sandbox lifecycle and retained work</title>
+  <desc id="desc">A template creates an active sandbox environment. Active work may be retained and resumed, returned, or destroyed. The lifecycle choice determines what survives.</desc>
+  <defs>
+    <style>
+      .bg{fill:#f7f9fc}.template{fill:#e0f2fe;stroke:#2563eb;stroke-width:4}.active{fill:#ecfeff;stroke:#0891b2;stroke-width:4}.retained{fill:#fff7ed;stroke:#d97706;stroke-width:4}.return{fill:#ecfdf5;stroke:#16a34a;stroke-width:4}.destroy{fill:#fff1f2;stroke:#dc2626;stroke-width:4}.title{font:700 42px 'Segoe UI',Arial,sans-serif;fill:#102a43}.subtitle{font:20px 'Segoe UI',Arial,sans-serif;fill:#52667a}.label{font:700 27px 'Segoe UI',Arial,sans-serif;fill:#102a43}.small{font:18px 'Segoe UI',Arial,sans-serif;fill:#52667a}.edge{stroke:#52667a;stroke-width:4;fill:none;marker-end:url(#arrow)}.green{stroke:#16a34a}.red{stroke:#dc2626}
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#52667a"/></marker>
+  </defs>
+  <rect class="bg" width="1600" height="900"/>
+  <text class="title" x="70" y="78">Sandbox Lifecycle and Retained Work</text>
+  <text class="subtitle" x="70" y="116">The important lifecycle question is not whether a sandbox stops, but which private state survives.</text>
+
+  <rect class="template" x="80" y="350" width="250" height="145" rx="24"/><text class="label" x="205" y="420" text-anchor="middle">Template</text><text class="small" x="205" y="457" text-anchor="middle">prepared starting state</text>
+  <rect class="active" x="420" y="350" width="280" height="145" rx="24"/><text class="label" x="560" y="420" text-anchor="middle">Active</text><text class="small" x="560" y="457" text-anchor="middle">processes + workspace</text>
+  <rect class="retained" x="820" y="210" width="300" height="145" rx="24"/><text class="label" x="970" y="280" text-anchor="middle">Retained state</text><text class="small" x="970" y="317" text-anchor="middle">pause / snapshot</text>
+  <rect class="return" x="820" y="500" width="300" height="145" rx="24"/><text class="label" x="970" y="570" text-anchor="middle">Return</text><text class="small" x="970" y="607" text-anchor="middle">value / file / artifact</text>
+  <rect class="destroy" x="1250" y="350" width="270" height="145" rx="24"/><text class="label" x="1385" y="420" text-anchor="middle">Destroyed</text><text class="small" x="1385" y="457" text-anchor="middle">uncaptured state ends</text>
+
+  <path class="edge" d="M330 422H410"/><text class="small" x="370" y="405" text-anchor="middle">create</text>
+  <path class="edge" d="M700 390C755 360 770 315 810 290"/><text class="small" x="750" y="320">retain</text>
+  <path class="edge" d="M820 335C760 355 750 395 710 410"/><text class="small" x="755" y="382">resume</text>
+  <path class="edge green" d="M700 455C760 485 775 545 810 570"/><text class="small" x="750" y="525">export</text>
+  <path class="edge red" d="M1120 282C1210 290 1210 375 1240 400"/><path class="edge red" d="M1120 575C1210 565 1210 475 1240 445"/>
+</svg>

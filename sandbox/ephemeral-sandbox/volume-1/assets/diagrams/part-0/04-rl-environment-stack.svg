@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">The five-part RL environment stack</title>
+  <desc id="desc">A trainer requests attempts from a rollout service, which runs the agent runtime and task state in a sandbox environment. A verifier produces reward, and an episode record preserves the evidence.</desc>
+  <defs>
+    <style>
+      .bg{fill:#f7f9fc}.trainer{fill:#e0f2fe;stroke:#2563eb;stroke-width:4}.rollout{fill:#faf5ff;stroke:#7c3aed;stroke-width:4}.sandbox{fill:#ecfeff;stroke:#0891b2;stroke-width:4}.verify{fill:#ecfdf5;stroke:#16a34a;stroke-width:4}.record{fill:#fff7ed;stroke:#d97706;stroke-width:4}.title{font:700 42px 'Segoe UI',Arial,sans-serif;fill:#102a43}.subtitle{font:20px 'Segoe UI',Arial,sans-serif;fill:#52667a}.label{font:700 27px 'Segoe UI',Arial,sans-serif;fill:#102a43}.small{font:18px 'Segoe UI',Arial,sans-serif;fill:#52667a}.edge{stroke:#52667a;stroke-width:4;fill:none;marker-end:url(#arrow)}
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#52667a"/></marker>
+  </defs>
+  <rect class="bg" width="1600" height="900"/>
+  <text class="title" x="70" y="78">What Turns an Attempt into an Episode?</text>
+  <text class="subtitle" x="70" y="116">Fast execution is only one layer; training also needs reset, verification, reward, and durable evidence.</text>
+
+  <rect class="trainer" x="65" y="335" width="250" height="150" rx="24"/><text class="label" x="190" y="405" text-anchor="middle">Trainer</text><text class="small" x="190" y="445" text-anchor="middle">updates the policy</text>
+  <rect class="rollout" x="375" y="335" width="270" height="150" rx="24"/><text class="label" x="510" y="405" text-anchor="middle">Rollout service</text><text class="small" x="510" y="445" text-anchor="middle">fans out attempts</text>
+  <rect class="sandbox" x="705" y="270" width="350" height="280" rx="28"/><text class="label" x="880" y="350" text-anchor="middle">Sandbox environment</text><text class="small" x="880" y="410" text-anchor="middle">Agent runtime + tools</text><text class="small" x="880" y="450" text-anchor="middle">Task state + reset</text>
+  <rect class="verify" x="1115" y="335" width="250" height="150" rx="24"/><text class="label" x="1240" y="405" text-anchor="middle">Verifier</text><text class="small" x="1240" y="445" text-anchor="middle">score + reward</text>
+  <rect class="record" x="705" y="660" width="350" height="140" rx="24"/><text class="label" x="880" y="725" text-anchor="middle">Episode record</text><text class="small" x="880" y="765" text-anchor="middle">base + trace + outcome</text>
+
+  <path class="edge" d="M315 410H365"/><path class="edge" d="M645 410H695"/><path class="edge" d="M1055 410H1105"/><path class="edge" d="M1240 495C1240 610 1055 600 955 650"/><path class="edge" d="M805 650C685 600 510 610 510 495"/>
+</svg>

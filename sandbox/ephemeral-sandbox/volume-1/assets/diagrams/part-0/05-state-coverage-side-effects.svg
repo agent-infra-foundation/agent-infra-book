@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Restore boundaries stop at the external world</title>
+  <desc id="desc">Session history, workspace files, and a process checkpoint cover progressively more internal state. They do not rewind external effects such as messages, payments, database writes, or disclosed credentials.</desc>
+  <defs>
+    <style>
+      .bg{fill:#f7f9fc}.history{fill:#faf5ff;stroke:#7c3aed;stroke-width:4}.workspace{fill:#ecfeff;stroke:#0891b2;stroke-width:4}.process{fill:#e0f2fe;stroke:#2563eb;stroke-width:4}.external{fill:#fff1f2;stroke:#dc2626;stroke-width:4}.title{font:700 42px 'Segoe UI',Arial,sans-serif;fill:#102a43}.subtitle{font:20px 'Segoe UI',Arial,sans-serif;fill:#52667a}.label{font:700 27px 'Segoe UI',Arial,sans-serif;fill:#102a43}.small{font:18px 'Segoe UI',Arial,sans-serif;fill:#52667a}.boundary{stroke:#dc2626;stroke-width:5;stroke-dasharray:14 12}.axis{stroke:#334e68;stroke-width:4;marker-end:url(#arrow)}
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#334e68"/></marker>
+  </defs>
+  <rect class="bg" width="1600" height="900"/>
+  <text class="title" x="70" y="78">Restore Boundaries Stop at the External World</text>
+  <text class="subtitle" x="70" y="116">Saving more runtime state improves recovery, but it cannot undo effects in another system.</text>
+  <line class="axis" x1="115" y1="720" x2="1090" y2="720"/><text class="small" x="115" y="765">increasing internal state coverage</text>
+
+  <rect class="history" x="80" y="255" width="290" height="360" rx="26"/><text class="label" x="225" y="340" text-anchor="middle">Session history</text><text class="small" x="225" y="400" text-anchor="middle">model calls</text><text class="small" x="225" y="435" text-anchor="middle">tool events</text><text class="small" x="225" y="470" text-anchor="middle">observations</text>
+  <rect class="workspace" x="410" y="255" width="290" height="360" rx="26"/><text class="label" x="555" y="340" text-anchor="middle">Workspace</text><text class="small" x="555" y="400" text-anchor="middle">files</text><text class="small" x="555" y="435" text-anchor="middle">private deltas</text><text class="small" x="555" y="470" text-anchor="middle">artifacts</text>
+  <rect class="process" x="740" y="255" width="290" height="360" rx="26"/><text class="label" x="885" y="340" text-anchor="middle">Process checkpoint</text><text class="small" x="885" y="400" text-anchor="middle">memory</text><text class="small" x="885" y="435" text-anchor="middle">process tree</text><text class="small" x="885" y="470" text-anchor="middle">attached state</text>
+  <line class="boundary" x1="1090" y1="190" x2="1090" y2="690"/><text class="small" x="1090" y="170" text-anchor="middle" fill="#dc2626">restore boundary</text>
+  <rect class="external" x="1150" y="255" width="370" height="360" rx="26"/><text class="label" x="1335" y="335" text-anchor="middle">External world</text><text class="small" x="1335" y="395" text-anchor="middle">messages + payments</text><text class="small" x="1335" y="435" text-anchor="middle">database writes</text><text class="small" x="1335" y="475" text-anchor="middle">disclosed credentials</text><text class="small" x="1335" y="535" text-anchor="middle">not rewound</text>
+</svg>

@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Publication is an explicit transition</title>
+  <desc id="desc">A private workspace starts from a shared base. Its captured changeset reaches a publication decision. Accepted work becomes shared history with provenance; rejected work remains private.</desc>
+  <defs>
+    <style>
+      .bg{fill:#f7f9fc}.base{fill:#e0f2fe;stroke:#2563eb;stroke-width:4}.workspace{fill:#ecfeff;stroke:#0891b2;stroke-width:4}.change{fill:#faf5ff;stroke:#7c3aed;stroke-width:4}.decision{fill:#fff7ed;stroke:#d97706;stroke-width:4}.history{fill:#ecfdf5;stroke:#16a34a;stroke-width:4}.title{font:700 42px 'Segoe UI',Arial,sans-serif;fill:#102a43}.subtitle{font:20px 'Segoe UI',Arial,sans-serif;fill:#52667a}.label{font:700 27px 'Segoe UI',Arial,sans-serif;fill:#102a43}.small{font:18px 'Segoe UI',Arial,sans-serif;fill:#52667a}.edge{stroke:#52667a;stroke-width:4;fill:none;marker-end:url(#arrow)}.accept{stroke:#16a34a}.reject{stroke:#dc2626;stroke-dasharray:12 9}
+    </style>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="9" markerHeight="9" orient="auto"><path d="M0 0L10 5L0 10Z" fill="#52667a"/></marker>
+  </defs>
+  <rect class="bg" width="1600" height="900"/>
+  <text class="title" x="70" y="78">Publication Is an Explicit Transition</text>
+  <text class="subtitle" x="70" y="116">Isolation protects unfinished work; a publication decision protects shared history.</text>
+
+  <rect class="base" x="60" y="325" width="250" height="160" rx="24"/><text class="label" x="185" y="395" text-anchor="middle">Shared base</text><text class="small" x="185" y="438" text-anchor="middle">immutable starting state</text>
+  <rect class="workspace" x="370" y="325" width="270" height="160" rx="24"/><text class="label" x="505" y="395" text-anchor="middle">Private workspace</text><text class="small" x="505" y="438" text-anchor="middle">unfinished agent work</text>
+  <rect class="change" x="700" y="325" width="250" height="160" rx="24"/><text class="label" x="825" y="395" text-anchor="middle">Changeset</text><text class="small" x="825" y="438" text-anchor="middle">captured proposal</text>
+  <rect class="decision" x="1010" y="325" width="250" height="160" rx="24"/><text class="label" x="1135" y="395" text-anchor="middle">Publish?</text><text class="small" x="1135" y="438" text-anchor="middle">resolve or reject</text>
+  <rect class="history" x="1320" y="325" width="250" height="160" rx="24"/><text class="label" x="1445" y="395" text-anchor="middle">Shared history</text><text class="small" x="1445" y="438" text-anchor="middle">accepted state + provenance</text>
+
+  <path class="edge" d="M310 405H360"/><path class="edge" d="M640 405H690"/><path class="edge" d="M950 405H1000"/><path class="edge accept" d="M1260 405H1310"/>
+  <path class="edge reject" d="M1135 495V650H520V495"/><text class="small" x="825" y="690" text-anchor="middle" fill="#dc2626">rejected work stays private and reviewable</text>
+  <text class="small" x="1445" y="545" text-anchor="middle">agent + base + session + decision</text>
+</svg>
