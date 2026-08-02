@@ -33,6 +33,9 @@ and workspace state that belong to an execution. An agent runtime calls the
 model, chooses actions, and incorporates observations. The two are related,
 but they are not the same component.
 
+> *💡 **Core principle:** A sandbox environment contains execution state; an
+> agent runtime owns the decision cycle.*
+
 ![A personal computer becomes a managed population of agent workspaces](../assets/illustrations/part-0/00-human-to-agent-runtime.png)
 
 *Figure 0.1 — One human can coordinate a personal computer informally; a
@@ -42,9 +45,10 @@ population of agents needs explicit private work, control, and return paths.*
 
 The first architectural question is where the agent runtime runs. Use one test:
 
-> Where does the model → tool → observation → next-model-call cycle run?
+> *🧭 **Placement test:** Where does the model → tool → observation →
+> next-model-call cycle run?*
 
-There are exactly two answers.
+**There are exactly two answers.**
 
 In an **in-sandbox agent**, the agent runtime runs inside the sandbox
 environment with its tools, processes, and workspace. Calls to a remote model
@@ -218,10 +222,13 @@ Coding-agent products combine several boundaries that are easy to blur:
 - A container namespaces resources but normally shares the host kernel.
 - A VM or microVM adds a guest-kernel boundary.
 
-These controls compose. They do not form a universal strength score. A
+**These controls compose; they do not form a universal strength score.** A
 worktree may solve the collision that matters most for cooperative coding,
 while a microVM may be necessary when executed code is untrusted. Conversely,
 a microVM alone says nothing about how two good patches are compared or merged.
+
+> *🧱 **Boundary rule:** Ask what is separated—files, processes, network,
+> kernel, or policy—and what still remains shared.*
 
 ![Isolation mechanisms answer different questions](../assets/diagrams/part-0/01-isolation-boundaries.svg)
 
@@ -319,10 +326,13 @@ and ports. A pause or snapshot may retain some state. A timeout or destroy
 operation ends the rest. Finally, a return path carries selected values, files,
 artifacts, URLs, snapshots, or patches to another system.
 
+> *🔄 **Lifecycle rule:** Isolation protects a running sandbox; retention and
+> return protect the work it produces.*
+
 “Fresh” can mean a new process, a clean filesystem, a cached template, a
 restored snapshot, or a resumed machine. Those states are operationally
-different. Reproducibility depends on naming the base, not merely calling the
-result new.
+different. **Reproducibility depends on naming the base**, not merely calling
+the result new.
 
 ![Lifecycle choices determine whether private work survives](../assets/diagrams/part-0/02-sandbox-lifecycle.svg)
 
@@ -384,8 +394,8 @@ are durably linked. Cleanup is therefore part of the correctness path:
 “destroyed after capture D-8” is a stronger event than “worker disappeared
 around 14:03.”
 
-The common non-guarantee is decisive: a task sandbox generally returns
-material, not shared truth. Stdout can say the tests passed while the useful
+The common non-guarantee is decisive: **a task sandbox generally returns
+material, not shared truth.** Stdout can say the tests passed while the useful
 patch remains inside. A file download can omit deletions. A snapshot can
 preserve too much state for review. A branch can conflict with a newer base.
 The caller still needs capture, comparison, and publication.
@@ -406,6 +416,9 @@ display state, and input state can all affect the next action. A disposable
 browser session may attach to a durable profile. Human live view or takeover
 crosses into the same state. Screenshots, recordings, extracted data, and
 downloads can leave even when the session itself disappears.
+
+> *🔐 **State rule:** A browser process may be disposable while its authenticated
+> profile, evidence, and downloads persist.*
 
 ![Browser state has several lifetimes and return paths](../assets/diagrams/part-0/03-browser-session-state.svg)
 
@@ -457,8 +470,8 @@ encourage agents to handle raw credentials repeatedly. The infrastructure
 needs an explicit profile owner, retention rule, revocation path, and event
 history.
 
-The visual surface creates one more trap: a screenshot is an observation, not
-the state itself. Two pages can look identical while cookies, permissions,
+The visual surface creates one more trap: **a screenshot is an observation, not
+the state itself.** Two pages can look identical while cookies, permissions,
 downloads, and open connections differ. Reliable computer-use evaluation and
 replay therefore require structured browser and session facts alongside
 pixels.
@@ -489,6 +502,9 @@ the resulting leaves. The controller then backpropagates rewards and visit
 counts through the logical search tree before selecting again. The expensive
 work is not only model inference. It is repeatedly materializing a consistent
 world at the exact point where alternatives diverge.
+
+> *🌲 **Rollout rule:** Bootstrap one named root, fork private branches, score
+> leaves, and record the exact checkpoint behind every reward.*
 
 ![MCTS forks a bootstrapped sandbox state into parallel private rollouts](../assets/diagrams/part-0/04-rl-environment-stack.svg)
 
@@ -575,8 +591,8 @@ broader credentials than the sandbox can become a target for reward hacking.
 Because search fans out systematically, a small state leak or scoring loophole
 can be exploited thousands of times.
 
-Fast checkpointing is therefore an enabling primitive, not the episode
-contract. The complete system must still isolate branches, protect verifier
+**Fast checkpointing is an enabling primitive, not the episode contract.** The
+complete system must still isolate branches, protect verifier
 integrity, bound egress and resources, record every fork and restore, and make
 the winning trajectory reproducible from its bootstrapped root.
 
@@ -597,6 +613,9 @@ filesystem snapshot captures no more than its filesystem domain. A
 process-aware checkpoint may preserve memory and a process tree. Neither can
 undo an email, payment, database write, published message, or disclosed
 credential.
+
+> *⏪ **Restore rule:** A checkpoint can rewind only the state domains it
+> captured; external effects remain real.*
 
 ![Restore operations stop at external effects](../assets/diagrams/part-0/05-state-coverage-side-effects.svg)
 
@@ -623,7 +642,7 @@ state for checkpoint and rollback. The authors report millisecond-level
 checkpoint and restore in their evaluated setup by combining OverlayFS changes
 with CRIU-coordinated process state. Those are author-reported research results,
 not independently reproduced numbers here. The architectural lesson is that
-“checkpoint” must name both its coverage and consistency boundary.
+**“checkpoint” must name both its coverage and consistency boundary.**
 [DeltaBox project page](https://dongyunpeng-sjtu.github.io/deltabox/)
 
 | Example | Unit and placement | Private state and lifecycle | Concurrency and audit | Return and non-guarantee |
@@ -660,8 +679,8 @@ key, compensating operation, or human decision may be required. The honest
 runtime says “restored internal state; external action X may already have
 occurred” rather than promising a rewind it cannot perform.
 
-A checkpoint selects a point inside one execution history. Publication is a
-different operation against shared history that may have advanced. Restoring a
+A checkpoint selects a point inside one execution history. **Publication is a
+different operation against shared history that may have advanced.** Restoring a
 successful test run does not decide whether its edits are compatible with
 another accepted patch. Filesystem branching supplies private alternatives;
 the return boundary still needs capture, comparison, conflict semantics, and
@@ -683,6 +702,9 @@ sandbox environments. A **scheduler** places those environments on machines
 and manages queues or warm capacity. One product may implement more than one
 role, but the roles remain distinct. A sandbox-side daemon that executes a
 command is still an execution worker, not a placement mode.
+
+> *🧭 **Control rule:** Meta-agent supervision, sandbox lifecycle, and fleet
+> placement may cooperate, but they are not the same responsibility.*
 
 ![A meta-agent creates, observes, intercepts, reverts, and forks a worker trace](../assets/illustrations/part-0/06-shepherd-meta-agent.png)
 
@@ -771,6 +793,9 @@ The agents have now produced three plausible fixes. One changed the dependency
 with a small adapter. One pinned an older transitive package. One rewrote the
 affected module. All pass their private tests. Isolation kept the attempts
 clean; it did not decide which result belongs in the project.
+
+> *🚦 **Publication rule:** Finishing creates a private result; publishing makes
+> an accepted result shared truth.*
 
 Return mechanisms carry different meanings.
 
@@ -884,7 +909,7 @@ The same explicitness prevents capability inflation. Adding a microVM does not
 make workspace publication conflict-aware. Adding provenance does not stop
 kernel exploits. Adding process checkpointing does not revoke a leaked token.
 Adding a scheduler does not turn an execution worker into an agent runtime.
-The useful architecture is not one giant box labeled “agent sandbox.” It is a
+**The useful architecture is not one giant box labeled “agent sandbox.”** It is a
 set of boundaries whose guarantees can be checked independently and then
 composed.
 
