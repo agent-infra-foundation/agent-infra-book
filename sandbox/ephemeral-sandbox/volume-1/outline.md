@@ -57,20 +57,23 @@ for private parallel workspaces and explicit publication.
 
 Why agents need filesystem, process, network, and resource boundaries.
 
-### 9. Why Parallel Coding Agents Collide
+### 9. Why Coding Agents Hit a Concurrency Ceiling
 
-Shared checkouts, dependency changes, port conflicts, stale tests, and
-ambiguous ownership.
+Compare two failure modes: direct interference when agents share one mutable
+workspace, and partial observability with late integration when isolated agents
+coordinate only through A2A messages. Use CooperBench as evidence for the
+second mode, then derive the workspace-runtime requirements.
 
-### 10. The Workspace Contract
+### 10. The Workspace Contract: One Tool Call, One Session
 
-Define project base, LayerStack, sandbox, workspace session, private delta,
-changeset, publication, and artifact.
+Define automatic tool-scoped sessions, explicit multi-call sessions, project
+base, LayerStack, sandbox, private delta, changeset, publication, and artifact.
 
-### 11. What Ephemeral Sandbox Is—and Is Not
+### 11. What Ephemeral Sandbox Is
 
-Separate workspace isolation for cooperating agents from hardened hostile-
-tenant security.
+Present Ephemeral Sandbox as one agent workspace runtime connecting shared
+LayerStack history, private sessions, attributable execution, conflict-aware
+publication, provenance, and observability.
 
 ## Part II — Reading the System
 

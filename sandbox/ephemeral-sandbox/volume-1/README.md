@@ -31,7 +31,8 @@ checkpointing, and browser isolation are future design topics.
 
 ## Status
 
-Part 0 manuscript complete; later parts remain in editorial planning.
+Part 0 and Part I manuscripts are complete. Part I currently uses figure
+placeholders; later parts remain in editorial planning.
 
 ## Contents
 
@@ -41,6 +42,7 @@ Part 0 manuscript complete; later parts remain in editorial planning.
 - [Part 0 manuscript](chapters/PART-0.md)
 - [Part 0 manuscript — 简体中文版](chapters/PART-0.zh-CN.md)
 - [Part 0 editorial blueprint](chapters/PART-0-WRITING-TEMPLATE.md)
+- [Part I manuscript](chapters/PART-I.md)
 - [Part I editorial blueprint](chapters/PART-I-WRITING-TEMPLATE.md)
 - [Part 0 visual assets](assets/README.md)
 - [Appendices](appendices/README.md)

@@ -10,11 +10,11 @@ The four chapters form one argument:
 ```text
 one agent changes its environment
         ->
-many agents interfere with one another
+many agents interfere or lose verifiable context
         ->
 safe cooperation needs an explicit workspace contract
         ->
-Ephemeral Sandbox implements that contract within a defined trust boundary
+Ephemeral Sandbox assembles that contract into one workspace runtime
 ```
 
 Part I is successful when readers can describe the problem and the required
@@ -71,22 +71,19 @@ observe -> name -> compare -> model -> qualify the claim
 These are learning moves, not mandatory heading names. The chapters below use
 different sections because they answer different kinds of questions.
 
-## Part I Opening Spread
+## Part I Opening
 
-Before Chapter 8, use a two-page visual opening titled **One Task, Three Agents,
-One Machine**.
+Open with one short question: what happens when an agent stops producing text
+and starts operating a computer? Reveal the four state surfaces—files,
+processes, network, and resources—without adding a separate opening diagram.
 
-Page one shows the apparently simple request: three agents work on three issues
-in one repository. Page two reveals everything they actually share: files,
-processes, ports, CPU, memory, disk, caches, credentials, and publication state.
-
-Include one plain-language promise:
+Include one plain-language promise in the early prose:
 
 > A sandbox is a set of boundaries around what a program can see, change, use,
 > and publish. Different sandboxes draw different boundaries.
 
-This spread gives beginners a working definition without pretending that all
-sandbox products provide the same guarantees.
+This gives beginners a working definition without pretending that all sandbox
+products provide the same guarantees.
 
 ## The Running Scenario
 
@@ -102,9 +99,9 @@ Increase the pressure one chapter at a time:
 | Chapter | Scenario state | Question created for the next chapter |
 | --- | --- | --- |
 | 8 | One agent edits files, starts processes, opens ports, and consumes resources. | What changes when several agents do this at once? |
-| 9 | Three agents share a checkout and interfere through files, processes, ports, and test state. | What must a workspace promise to prevent ambiguity? |
+| 9 | Shared agents interfere directly; isolated A2A agents lose verifiable intermediate context and integrate late. | What must a workspace promise to prevent ambiguity? |
 | 10 | The workflow gains an immutable base, private sessions, deltas, changesets, and publication. | Which of these promises does Ephemeral Sandbox v1 actually enforce? |
-| 11 | The v1 boundary is evaluated against cooperative and hostile workloads. | How does the implementation realize the supported contract? |
+| 11 | The contract becomes one Ephemeral Sandbox product model. | How does a request travel through the implementation? |
 
 Do not reset the story at the start of every chapter. Each opening should begin
 from the consequence left by the previous chapter.
@@ -119,8 +116,8 @@ from the consequence left by the previous chapter.
 behind modified files, a package cache, a server process, a bound port, and a
 large test log.
 
-**Core definition:** A coding agent is a decision loop whose actions are
-real operating-system operations. Its effects outlive individual model turns.
+**Core definition:** A coding agent uses a runtime whose tool calls become real
+operating-system operations. Their effects can outlive individual model turns.
 
 **Progression:**
 
@@ -145,12 +142,10 @@ chat response -> tool call -> process -> side effect -> persistent runtime state
 7. **What We Can Now Ask of a Runtime** — derive initial requirements and lead
    into concurrency.
 
-**Figures to produce:**
+**Figure to produce:**
 
-- **Figure 8.1 — From Prompt to Side Effects:** prompt -> model decision -> tool
-  call -> process tree -> four environmental surfaces.
-- **Figure 8.2 — Before and After the Agent Run:** a side-by-side machine state
-  snapshot showing changed files, one child process, one port, and resource use.
+- **Figure 8.1 — One Tool Call Creates Machine State:** agent -> tool -> files,
+  processes, network, and resources.
 
 **Tables to produce:**
 
@@ -170,76 +165,58 @@ observable side effect, including those a normal shell transcript misses.
 **Exit question:** If one agent has this many effects, what happens when three
 agents share the same environment?
 
-### Chapter 9: Why Parallel Coding Agents Collide
+### Chapter 9: Why Coding Agents Hit a Concurrency Ceiling
 
-**Reader question:** Why are branches or prompts alone insufficient isolation?
+**Reader question:** Why can adding more coding agents reduce the probability
+that the project finishes correctly?
 
-**Opening incident:** Continue the running scenario. Show a timeline in which
-the agents individually make reasonable decisions but collectively produce an
-unreliable result.
+**Opening incident:** Continue the running scenario. Show three agents making
+reasonable decisions in one shared checkout while files, tests, a server, and a
+port change underneath one another.
 
-**Core definition:** A collision is unplanned coupling through mutable state or
-scarce runtime resources.
+**Core definition:** The concurrency ceiling is the point at which additional
+agents create more interference, coordination, integration, and diagnosis work
+than useful progress.
 
-**Progression:** Organize collisions by shared surface rather than by anecdote:
+**Two failure modes:**
 
-| Surface | Example | Visible symptom | Hidden ambiguity |
-| --- | --- | --- | --- |
-| Filesystem | Agent A changes a lockfile while Agent B tests. | Flaky or stale test result. | Which dependency graph did the test validate? |
-| Process | One agent kills or replaces another agent's process. | Interrupted command. | Who owns cleanup and retry? |
-| Network | Two dev servers request the same port. | Bind failure or wrong service. | Which session does the endpoint represent? |
-| Resource | Concurrent builds exhaust memory or disk. | Timeout or OOM. | Which workload exceeded its budget? |
-| Publication | Two plausible edits target the same source. | Merge conflict or silent overwrite. | Which result should become shared history? |
-
-**Core figure:** A time-ordered collision trace, not a generic architecture
-diagram.
+| Layout | Immediate benefit | Characteristic failure |
+| --- | --- | --- |
+| Shared mutable workspace | Every agent sees current state | Direct interference across files and runtime resources |
+| Isolated workspaces with A2A messages | Agents cannot overwrite one another while working | Partial observability, unverifiable claims, and late integration |
 
 **Sections:**
 
-1. **One Agent Works; Three Agents Interfere** — continue the exact state left
-   by Chapter 8.
-2. **A Collision Timeline** — show individually valid actions whose ordering
-   creates an invalid result.
-3. **Five Places Agents Collide** — files, processes, network, resources, and
-   publication.
-4. **Why Git Branches Solve Only Part of the Problem** — explain source history
-   versus live runtime state without assuming Git internals.
-5. **The Isolation Ladder** — shared checkout, worktree, copied directory,
-   container, VM or microVM, and agent workspace session.
-6. **What Correct Parallel Work Requires** — derive privacy, attribution,
-   reproducibility, and explicit publication.
-7. **Incident Analysis: One Collision from Start to Finish** — show the initial
-   state, event ordering, symptom, hidden ambiguity, and required boundary.
+1. **Two Ways Parallel Agents Go Wrong** — introduce both failure modes before
+   recommending a workspace design.
+2. **Shared Workspace: Every Action Is Somebody Else's Input** — follow the
+   three-agent collision timeline.
+3. **Isolated A2A Teams and CooperBench** — explain how isolation defers the
+   collision, using CooperBench as evidence without treating A2A as useless.
+4. **From Clean Merges to Runtime Requirements** — separate textual merging
+   from system correctness, then derive the four workspace requirements.
 
-**Figures to produce:**
+**Figure to produce:**
 
-- **Figure 9.1 — Three-Agent Collision Timeline:** swimlanes for Agents A, B, and
-  C plus shared filesystem, process, and port state.
-- **Figure 9.2 — Source Isolation Is Not Runtime Isolation:** two overlapping
-  maps showing what a Git worktree separates and what remains shared.
-- **Figure 9.3 — The Isolation Ladder:** increasingly strong boundaries, with
-  cost and trust assumptions visibly increasing rather than a simplistic
-  "better" arrow.
+- **Figure 9.1 — Two Routes to the Concurrency Ceiling:** shared workspace to
+  interference on the left; isolated A2A workspaces to late integration on the
+  right. Both meet at the same ceiling.
 
 **Tables to produce:**
 
-- **Table 9.1 — Collision Taxonomy:** surface, trigger, visible symptom, hidden
-  ambiguity, and required boundary.
-- **Table 9.2 — Workspace Options:** shared checkout, worktree, copy, container,
-  microVM, and agent workspace compared by filesystem, process, network,
-  resource, publication, startup, and storage behavior.
+- **CooperBench Observations and Infrastructure Lessons.**
+- **Workspace Options:** branch, worktree, directory copy, container, and
+  private workspace session.
 
-**Comparison:** Evaluate a shared checkout, Git branches/worktrees, copied
-directories, containers, and private workspace sessions. Separate source
-versioning from runtime isolation.
-
-**Worked incident:** Explain one deterministic two-session collision and point
-out the missing boundary and ownership record.
+**Evidence rule:** State that the main CooperBench setup uses separate
+Docker-based environments and delayed patch integration. Qualify its 46-task
+team-scaling experiment as small. Do not claim the paper proves that A2A never
+works or that shared mutable state is the cure.
 
 **Exit question:** What exact objects and invariants would make the result
 unambiguous?
 
-### Chapter 10: The Workspace Contract
+### Chapter 10: The Workspace Contract: One Tool Call, One Session
 
 **Reader question:** What must an agent-facing workspace promise?
 
@@ -248,156 +225,95 @@ in the failed three-agent run. The ambiguous nouns reveal the missing contract.
 
 **Core definition:** A workspace contract specifies the starting state, private
 mutable state, execution boundary, capture result, and publication transition
-for one agent session.
+for one attributable session. The short form is one tool call, one session;
+multi-step work may explicitly join several calls to one longer session.
 
-**Concept ladder:** Introduce one object only when the running scenario needs
-it:
+**Running trace:** Introduce the five central objects through one concrete
+history:
 
 ```text
-project base
-  -> LayerStack
-  -> sandbox
-  -> workspace session
-  -> private delta
-  -> changeset
-  -> publication
-  -> artifact
+Agent C -> request Q91 -> session S17 -> base R42
+        -> test process + port 3000 -> changeset C8
+        -> publication rejected against R43
 ```
 
-For every object, use the same five-field definition card:
-
-| Field | Prompt |
-| --- | --- |
-| Meaning | What is it in one sentence? |
-| Identity | How is one instance distinguished from another? |
-| Owner | Which component or actor controls its lifecycle? |
-| Mutability | Can it change, and at what transition? |
-| Failure rule | What must happen if creation, capture, or publication fails? |
+Use the trace to define base, workspace session, private delta, changeset, and
+publication. Introduce LayerStack, sandbox, and artifacts afterward as supporting
+objects rather than equal entries in a glossary.
 
 **Core figure:** State transitions from immutable base to private work to
 accepted shared history.
 
 **Sections:**
 
-1. **Turn the Failure Story into Requirements** — convert each Chapter 9
-   collision into a promise the runtime must make.
-2. **Before Work: Shared Truth** — explain project base, LayerStack, and sandbox
-   in plain language.
-3. **During Work: A Private Session** — explain workspace session and private
-   delta.
-4. **After Work: Capture Is Not Publication** — explain changeset,
-   publication, and artifact.
-5. **The Workspace Lifecycle** — create, execute, inspect, capture, publish or
-   reject, and destroy.
-6. **Six Invariants That Make Results Reviewable** — make the contract precise
-   without implementation detail.
-7. **Failure Is a State Transition** — show conflict, rejection, timeout, and
-   cleanup as expected paths.
-8. **A Complete Workspace Journey** — annotate one session from base selection
-   through private work, capture, publication or rejection, and teardown.
+1. **Follow One Workspace from Base to Publication** — state current v1 behavior
+   first, then use Q91/S17/R42/C8 to define the contract.
+2. **Automatic and Explicit Sessions** — contrast one-command finalization with
+   a session carried across edits, commands, inspection, and retry.
+3. **Private Delta, Changeset, and Publication** — separate mutable work,
+   capture, and all-or-reject publication.
+4. **Ownership Should Follow the Session** — connect files, lines, processes,
+   ports, resources, evidence, and publication to one identity; compare Git
+   blame with LayerStack file blame.
+5. **Three Questions for a Workspace Runtime** — close with base identity,
+   private-versus-candidate state, and complete attributable publication.
 
 **Figures to produce:**
 
-- **Figure 10.1 — Shared History, Private Work:** a stable base feeding three
-  private sessions, each with its own delta.
-- **Figure 10.2 — Workspace Lifecycle State Machine:** create -> running ->
-  captured -> published/rejected -> destroyed, including failure paths.
-- **Figure 10.3 — Ownership Map:** user or orchestrator, workspace runtime,
-  session, and shared history, each connected to the state it owns.
+- **Figure 10.1 — Shared Base, Private Sessions, Publication Gate:** a stable
+  base feeding three sessions whose candidate changes converge on one gate.
+- **Figure 10.2 — One Command, One Automatic Session:** command call, create,
+  execute, publish or reject, destroy, with durable evidence retained.
 
 **Tables to produce:**
 
-- **Table 10.1 — Contract Object Dictionary:** plain-English analogy, precise
-  meaning, identity, owner, mutability, and one non-example for all eight terms.
-- **Table 10.2 — Contract Invariants:** invariant, why it matters, how a reader
-  would notice a violation, and expected response.
-- **Table 10.3 — Lifecycle Operations:** operation, precondition, state change,
-  success result, and failure result.
+- **v1 Operation Behavior:** command and file operations with and without a
+  workspace session ID.
+- **Git Blame vs File Blame:** owner identity, history model, runtime context,
+  squash behavior, and connection to execution evidence.
 
-**Invariants:** State these before implementation details. At minimum:
-
-- a session begins from an explicit base;
-- uncommitted state is private to its session;
-- execution has an attributable owner;
-- capture does not silently publish;
-- publication is explicit and all-or-reject;
-- artifacts are outputs, not implicit shared workspace state.
+**Accuracy rule:** Automatic tool-scoped sessions are implemented for command
+execution without a `workspace_session_id`. Explicit sessions support multi-call
+work. Direct file edits without a session currently publish operation-owned
+layers, so universal one-tool-call, one-session semantics must be labeled
+**Proposed** rather than described as v1 behavior.
 
 **Worked trace:** Label every object, owner, transition, and invalid state in a
 short multi-agent history.
 
-**Exit question:** Which parts of this contract are delivered by the current
-repository, and which require a stronger sandbox boundary?
+**Exit question:** How does Ephemeral Sandbox assemble these objects into one
+agent-facing workspace runtime?
 
-### Chapter 11: What Ephemeral Sandbox Is—and Is Not
+### Chapter 11: What Ephemeral Sandbox Is
 
-**Reader question:** What security and reliability claims can v1 honestly make?
+**Reader question:** How does Ephemeral Sandbox combine the workspace-contract
+objects into one agent-facing runtime?
 
-**Opening incident:** Run the same contract through two threat models: trusted
-cooperating coding agents and mutually hostile tenants.
+**Opening:** Restate the needs established by Chapters 8–10, then give the
+one-sentence product definition immediately.
 
-**Core definition:** Ephemeral Sandbox v1 is an agent workspace and
-coordination runtime. It should not be described as a hardened hostile-tenant
-security boundary.
-
-**Classification dimensions:**
-
-| Dimension | Question |
-| --- | --- |
-| Workspace isolation | Can sessions see one another's private file changes? |
-| Process isolation | How are commands attributed, controlled, and cleaned up? |
-| Network isolation | Which network state is shared or session-specific? |
-| Resource isolation | Which limits and accounting mechanisms are available? |
-| Publication safety | How are conflicts detected and rejected? |
-| Tenant security | Is the boundary designed for actively malicious workloads? |
-
-**Evidence table:** Every important claim receives one status label:
-
-- **Implemented** — verified in repository code, tests, or documented runtime.
-- **Experimental** — present but incomplete, unstable, or narrowly scoped.
-- **Compared** — behavior belonging to another system.
-- **Proposed** — future design, not v1 behavior.
-
-**Core figure:** Two nested boundaries: the v1 workspace contract inside a
-larger hostile-tenant runtime boundary that remains out of scope.
+**Core definition:** Ephemeral Sandbox is an agent workspace runtime that gives
+concurrent coding tasks private execution state over shared project history,
+then turns completed work into reviewable, conflict-aware publication.
 
 **Sections:**
 
-1. **Why "Sandbox" Is an Overloaded Word** — revisit the Part 0 zoo using the
-   boundary vocabulary readers now understand.
-2. **Two Different Threat Models** — cooperating agents that may make mistakes
-   versus workloads that actively try to escape or attack.
-3. **The v1 Promise** — list the workspace, execution, publication, provenance,
-   and observability behavior supported by evidence.
-4. **The v1 Non-Promise** — explain hostile tenancy, credential brokering,
-   fleet scheduling, durable checkpoints, and browser state in approachable
-   language.
-5. **How to Read an Infrastructure Claim** — teach readers to ask for boundary,
-   threat model, lifecycle, evidence, and failure behavior.
-6. **Where v1 Fits** — supported deployments, conditional deployments, and
-   unsuitable deployments.
-7. **Deployment Scenarios** — explain where v1 fits, where additional controls
-   are required, and where a different runtime boundary is necessary.
+1. **Ephemeral Sandbox in One View** — connect LayerStack, private sessions,
+   publication, and evidence in one product diagram.
+2. **Three Agent-Facing Surfaces** — introduce management, runtime, and
+   observability before the Part II request-path tour.
+3. **From the Product Model to the System** — hand the reader directly to the
+   request path.
 
-**Figures to produce:**
+**Figure to produce:**
 
-- **Figure 11.1 — Nested Runtime Boundaries:** workspace isolation inside the
-  larger security and fleet controls required for hostile tenants.
-- **Figure 11.2 — Deployment Decision Tree:** trusted collaborators or hostile
-  code, local or remote execution, credential exposure, and required boundary.
+- **Figure 11.1 — Ephemeral Sandbox in One View:** an agent or orchestrator
+  enters one runtime containing Shared LayerStack, Private Workspace Sessions,
+  Publish Gate, and Observability.
 
-**Tables to produce:**
+**Table to produce:**
 
-- **Table 11.1 — v1 Claim Matrix:** capability, current status, evidence, trust
-  assumption, and important limitation.
-- **Table 11.2 — Mistake Model vs Threat Model:** accidental conflict, runaway
-  process, malicious filesystem access, credential theft, and kernel escape.
-- **Table 11.3 — Deployment Fit:** local cooperative team, CI worker, internal
-  shared service, public arbitrary-code service, and multi-tenant cloud.
-
-**Scenario analysis:** Classify representative deployments as supported,
-conditionally supported, or out of scope, with the relevant contract or
-missing control stated explicitly.
+- **Agent-Facing Surfaces:** management, runtime, and observability.
 
 **Exit transition:** Now that the supported contract is clear, Part II can
 trace how a request travels through the system that implements it.
@@ -407,7 +323,7 @@ trace how a request travels through the system that implements it.
 The exact section plans above take priority. Use this small shell to preserve a
 consistent reader experience, not to force every chapter into identical
 headings. A concept chapter, failure-analysis chapter, contract chapter, and
-scope chapter should not feel mechanically interchangeable.
+product-model chapter should not feel mechanically interchangeable.
 
 ```markdown
 # Chapter N: Title
@@ -499,9 +415,9 @@ then attach service names to that mental model.
 
 ## Editorial Constraints for Part I
 
-- Target 3,000-5,000 words per chapter; prefer a shorter chapter with one clear
-  model over an exhaustive survey.
-- Use the same names for the eight workspace-contract objects everywhere.
+- Target 450-1,600 words per chapter and 4,100-4,600 words for the complete
+  part; prefer a shorter chapter with one clear model over an exhaustive survey.
+- Use the same names for the workspace-contract objects everywhere.
 - Introduce no internal crate or service unless the reader needs it to explain
   an externally visible behavior. The full implementation tour belongs in
   Part II.
@@ -510,8 +426,8 @@ then attach service names to that mental model.
   categories rather than define them.
 - Treat rejection, cleanup, timeout, and conflict as normal runtime paths, not
   footnotes.
-- Do not use "sandbox" alone when the intended boundary is filesystem,
-  process, network, resource, workspace, or hostile-tenant isolation.
+- Use the precise terms filesystem, process, network, resource, workspace, and
+  publication when one of those specific concepts is intended.
 - When commands or traces appear, annotate their meaning and resulting state;
   do not turn them into step-by-step reader assignments.
 
@@ -523,7 +439,6 @@ then attach service names to that mental model.
 - [ ] Every workspace-contract object has identity, ownership, mutability, and
       failure semantics.
 - [ ] v1 claims are grounded in the current repository evidence baseline.
-- [ ] Cooperative-agent isolation is not presented as hostile-tenant security.
 - [ ] Chapter 11 creates a clean handoff to the request-path material in Part II.
 - [ ] The manuscript contains no exercises, labs, quizzes, or reader homework.
 
@@ -531,3 +446,11 @@ then attach service names to that mental model.
 
 - Datawhale, *Hello Agents*, Chapter 1, "Introduction to Agents":
   <https://github.com/datawhalechina/hello-agents/blob/main/docs/chapter1/Chapter1-Introduction-to-Agents.md>
+
+## Supporting Reference for Chapter 9
+
+- Agent Infra Foundation, "The Concurrency Ceiling of Coding Agents":
+  <https://agent-infra-foundation.org/blog/2026/07/the-concurrency-ceiling-of-coding-agents/>
+
+Use this article as evidence for the practical concurrency limit. Do not copy
+its structure or turn Chapter 9 into a summary of the article.
