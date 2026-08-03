@@ -3,16 +3,31 @@
 Books about the infrastructure that gives AI agents a place to work, a boundary
 around their actions, and a reliable way to preserve and publish results.
 
-Start with the [book index](index.md).
+## Explore the Collection
 
-## Current collection
+### Sandbox
 
-- [`sandbox/`](sandbox/): books about agent execution environments.
-- [`sandbox/ephemeral-sandbox/`](sandbox/ephemeral-sandbox/): the Ephemeral
-  Sandbox book series.
-- [`sandbox/ephemeral-sandbox/volume-1/`](sandbox/ephemeral-sandbox/volume-1/):
-  *The Agent Workspace — Building Parallel Agent Workspaces*.
+Agent execution environments, private workspaces, isolation, state, resource
+control, recovery, and publication.
 
-The books distinguish implemented systems, experimental ideas, and future
-design proposals. Volume 1 is grounded in the current Ephemeral Sandbox
-repository and its LayerStack-backed workspace runtime.
+#### Ephemeral Sandbox
+
+A book series about workspace runtimes for parallel coding agents.
+
+##### Volume I — The Agent Workspace
+
+*Building Parallel Agent Workspaces with Ephemeral Sandbox*
+
+- **Part 0 — Overview of Agent Sandboxes in Practice** — [English](sandbox/ephemeral-sandbox/volume-1/chapters/PART-0.md) · [简体中文](sandbox/ephemeral-sandbox/volume-1/chapters/PART-0.zh-CN.md)
+- **Part I — The Concurrency Ceiling of Parallel Coding Agents** — [English](sandbox/ephemeral-sandbox/volume-1/chapters/PART-I.md) · [简体中文](sandbox/ephemeral-sandbox/volume-1/chapters/PART-I.zh-CN.md)
+- **Part II — Reading the System** — Planned
+- **Part III — Shared History and Private Workspaces** — Planned
+- **Part IV — From Runtime State to Published Work** — Planned
+- **Part V — Seeing and Operating the Runtime** — Planned
+- **Part VI — The Boundary of Version 1** — Planned
+
+[Explore Volume I →](sandbox/ephemeral-sandbox/volume-1/README.md)
+
+The books distinguish implemented systems, experimental ideas, comparisons,
+and future design proposals. More agent-infrastructure categories and series
+will be added as the collection grows.

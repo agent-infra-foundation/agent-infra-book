@@ -13,22 +13,5 @@ publication.
 - [Volume overview](sandbox/ephemeral-sandbox/volume-1/README.md)
 - [Part 0 manuscript — Overview of Agent Sandboxes in Practice](sandbox/ephemeral-sandbox/volume-1/chapters/PART-0.md)
 - [Part 0 manuscript — 智能体沙箱实践概览（简体中文）](sandbox/ephemeral-sandbox/volume-1/chapters/PART-0.zh-CN.md)
-- [Product requirements](sandbox/ephemeral-sandbox/volume-1/PRD.md)
-- [Detailed volume outline](sandbox/ephemeral-sandbox/volume-1/outline.md)
-
-## Editorial Blueprints
-
-- [Part 0 editorial blueprint](sandbox/ephemeral-sandbox/volume-1/chapters/PART-0-WRITING-TEMPLATE.md)
-- [Part I editorial blueprint](sandbox/ephemeral-sandbox/volume-1/chapters/PART-I-WRITING-TEMPLATE.md)
-- [Chapter workspace](sandbox/ephemeral-sandbox/volume-1/chapters/README.md)
-- [Appendices workspace](sandbox/ephemeral-sandbox/volume-1/appendices/README.md)
-
-## Visual Assets
-
-- [Part 0 figure inventory](sandbox/ephemeral-sandbox/volume-1/assets/README.md)
-- [Part 0 figure contact sheet](sandbox/ephemeral-sandbox/volume-1/assets/part-0-figure-contact-sheet.png)
-
-## Collection Navigation
-
-- [Sandbox books](sandbox/README.md)
-- [Ephemeral Sandbox series](sandbox/ephemeral-sandbox/README.md)
+- [Part I manuscript — The Concurrency Ceiling of Parallel Coding Agents](sandbox/ephemeral-sandbox/volume-1/chapters/PART-I.md)
+- [Part I manuscript — 并行编码智能体的并发上限（简体中文）](sandbox/ephemeral-sandbox/volume-1/chapters/PART-I.zh-CN.md)
