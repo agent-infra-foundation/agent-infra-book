@@ -51,7 +51,12 @@ Explain how values, artifacts, patches, branches, and changesets return from a
 sandbox. Place Ephemeral Sandbox in the landscape as the Volume I case study
 for private parallel workspaces and explicit publication.
 
-## Part I — The Problem
+## Part I — The Concurrency Ceiling of Parallel Coding Agents
+
+Explain why native OS and filesystem primitives can run many processes but do
+not encode agent tasks, stable project bases, private changesets, resource
+ownership, or publication decisions. Human developers traditionally provide
+that coordination; parallel agents expose its scaling limit.
 
 ### 8. Agents Are Processes with Side Effects
 
@@ -62,14 +67,18 @@ Why agents need filesystem, process, network, and resource boundaries.
 Compare two failure modes: direct interference when agents share one mutable
 workspace, and partial observability with late integration when isolated agents
 coordinate only through A2A messages. Use CooperBench as evidence for the
-second mode, then derive the workspace-runtime requirements.
+second mode, then name four explicit challenges: private execution and
+publication, file and line auditability, resource ownership, and
+lifecycle/recovery.
 
-### 10. The Workspace Contract: One Tool Call, One Session
+### 10. The Workspace Contract: A Workspace Session per Tool Call
 
-Define automatic tool-scoped sessions, explicit multi-call sessions, project
-base, LayerStack, sandbox, private delta, changeset, publication, and artifact.
+Lead with the default invariant: every independent command tool call receives an
+automatic private workspace session, while related calls share an explicit
+multi-call session only by choice. Then define project base, LayerStack,
+sandbox, private delta, changeset, publication, and artifact.
 
-### 11. What Ephemeral Sandbox Is
+### 11. Ephemeral Sandbox: Raise the Concurrency Ceiling for Multi-Agent Programming
 
 Present Ephemeral Sandbox as one agent workspace runtime connecting shared
 LayerStack history, private sessions, attributable execution, conflict-aware

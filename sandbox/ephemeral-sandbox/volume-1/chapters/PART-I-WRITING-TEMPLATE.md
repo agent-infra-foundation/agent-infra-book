@@ -1,16 +1,19 @@
-# Part I Editorial Blueprint: The Problem
+# Part I Editorial Blueprint: The Concurrency Ceiling of Parallel Coding Agents
 
 ## Purpose of Part I
 
-Part I should give readers a mental model for why agent workspaces exist before
-it explains how Ephemeral Sandbox is built.
+Part I should show why native OS and filesystem primitives become a coordination
+bottleneck for parallel coding agents, then give readers a mental model for why
+agent workspaces exist before explaining how Ephemeral Sandbox is built.
 
 The four chapters form one argument:
 
 ```text
-one agent changes its environment
+native OS and filesystem primitives expose processes, paths, and ports
         ->
-many agents interfere or lose verifiable context
+human developers normally provide task ownership and serialization
+        ->
+parallel agents interfere or lose verifiable context
         ->
 safe cooperation needs an explicit workspace contract
         ->
@@ -193,8 +196,11 @@ than useful progress.
    three-agent collision timeline.
 3. **Isolated A2A Teams and CooperBench** — explain how isolation defers the
    collision, using CooperBench as evidence without treating A2A as useless.
-4. **From Clean Merges to Runtime Requirements** — separate textual merging
-   from system correctness, then derive the four workspace requirements.
+4. **A Clean Merge Can Still Be Broken** — separate textual merging from system
+   correctness.
+5. **Four Challenges of Running Coding Agents in Parallel** — explicitly name
+   private execution and publication, file and line auditability, resource
+   ownership, and lifecycle/recovery before Chapter 10 presents the contract.
 
 **Figure to produce:**
 
@@ -216,7 +222,7 @@ works or that shared mutable state is the cure.
 **Exit question:** What exact objects and invariants would make the result
 unambiguous?
 
-### Chapter 10: The Workspace Contract: One Tool Call, One Session
+### Chapter 10: The Workspace Session Contract:  Workspace Session per Tool Call Execution
 
 **Reader question:** What must an agent-facing workspace promise?
 
@@ -225,8 +231,9 @@ in the failed three-agent run. The ambiguous nouns reveal the missing contract.
 
 **Core definition:** A workspace contract specifies the starting state, private
 mutable state, execution boundary, capture result, and publication transition
-for one attributable session. The short form is one tool call, one session;
-multi-step work may explicitly join several calls to one longer session.
+for one attributable session. State the default invariant prominently: one
+independent command tool call receives one private workspace session. Multi-step
+work may explicitly join several related calls to one longer-lived session.
 
 **Running trace:** Introduce the five central objects through one concrete
 history:
@@ -262,8 +269,9 @@ accepted shared history.
 
 - **Figure 10.1 — Shared Base, Private Sessions, Publication Gate:** a stable
   base feeding three sessions whose candidate changes converge on one gate.
-- **Figure 10.2 — One Command, One Automatic Session:** command call, create,
-  execute, publish or reject, destroy, with durable evidence retained.
+- **Figure 10.2 — One Tool Call, One Workspace Session:** tool call, create
+  workspace session, execute, publish or reject, destroy, with durable evidence
+  retained.
 
 **Tables to produce:**
 
@@ -284,7 +292,7 @@ short multi-agent history.
 **Exit question:** How does Ephemeral Sandbox assemble these objects into one
 agent-facing workspace runtime?
 
-### Chapter 11: What Ephemeral Sandbox Is
+### Chapter 11: Ephemeral Sandbox: Raise the Concurrency Ceiling for Multi-Agent Programming
 
 **Reader question:** How does Ephemeral Sandbox combine the workspace-contract
 objects into one agent-facing runtime?
@@ -295,6 +303,9 @@ one-sentence product definition immediately.
 **Core definition:** Ephemeral Sandbox is an agent workspace runtime that gives
 concurrent coding tasks private execution state over shared project history,
 then turns completed work into reviewable, conflict-aware publication.
+Emphasize that the default concurrency primitive is a private workspace session
+per independent command tool call; explicit sessions deliberately group related
+calls.
 
 **Sections:**
 
@@ -415,7 +426,7 @@ then attach service names to that mental model.
 
 ## Editorial Constraints for Part I
 
-- Target 450-1,600 words per chapter and 4,100-4,600 words for the complete
+- Target 450-1,750 words per chapter and 4,500-5,100 words for the complete
   part; prefer a shorter chapter with one clear model over an exhaustive survey.
 - Use the same names for the workspace-contract objects everywhere.
 - Introduce no internal crate or service unless the reader needs it to explain
@@ -441,6 +452,8 @@ then attach service names to that mental model.
 - [ ] v1 claims are grounded in the current repository evidence baseline.
 - [ ] Chapter 11 creates a clean handoff to the request-path material in Part II.
 - [ ] The manuscript contains no exercises, labs, quizzes, or reader homework.
+- [ ] The manuscript ends with references for research claims, product behavior,
+      official tool semantics, and the implementation evidence baseline.
 
 ## Reference Used for the Teaching Pattern
 
