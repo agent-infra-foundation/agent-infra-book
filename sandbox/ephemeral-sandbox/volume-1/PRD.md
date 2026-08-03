@@ -195,14 +195,18 @@ exercise, or setup tutorial.
 Explain why an agent needs filesystem, process, network, and resource
 boundaries.
 
-### 9. Why Parallel Coding Agents Collide
+### 9. Why Coding Agents Hit a Concurrency Ceiling
 
-Cover shared checkouts, dependency changes, port conflicts, stale tests, and
-ambiguous ownership.
+Explain the two common failure modes of parallel coding: direct interference
+inside one shared mutable workspace, and partial observability plus late
+integration across isolated workspaces coordinated through A2A messages. Use
+CooperBench as evidence for the second mode without claiming that messaging is
+useless or that a shared mutable checkout is the remedy.
 
-### 10. The Workspace Contract
+### 10. The Workspace Contract: One Tool Call, One Session
 
-Define:
+Define the automatic tool-scoped workspace session, the longer-lived explicit
+session, and the following contract objects:
 
 - project base;
 - LayerStack;
@@ -213,10 +217,12 @@ Define:
 - publication;
 - artifact.
 
-### 11. What Ephemeral Sandbox Is—and Is Not
+### 11. What Ephemeral Sandbox Is
 
-Clarify that v1 provides workspace isolation for cooperating agents, not
-hardened hostile-tenant isolation.
+Assemble the Part I concepts into one positive product definition: shared
+LayerStack history, private workspace sessions, automatic and explicit
+lifecycles, attributable execution, conflict-aware publication, provenance,
+and observability.
 
 ## Part II — Reading the System
 

@@ -15,6 +15,10 @@ Use [PART-I-WRITING-TEMPLATE.md](PART-I-WRITING-TEMPLATE.md) for the Part I
 narrative beginning at Chapter 8, chapter map, reusable manuscript shell, and
 author review checklist.
 
+Use [PART-I.md](PART-I.md) as the reader-facing manuscript for Chapters 8–11.
+Its five figure blocks are intentional placeholders until the simplified Part I
+visuals are produced.
+
 Recommended chapter template:
 
 1. Opening incident or agent task.
