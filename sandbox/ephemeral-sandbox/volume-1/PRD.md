@@ -188,7 +188,13 @@ Part 0 must remain informative rather than promotional. It should contain
 strong diagrams and comparison tables, no product ranking, installation guide,
 exercise, or setup tutorial.
 
-## Part I — The Problem
+## Part I — The Concurrency Ceiling of Parallel Coding Agents
+
+Show how native operating-system and filesystem abstractions expose processes,
+paths, users, ports, and resource counters while leaving human developers to
+supply task ownership, serialization, and publication decisions. Explain why
+that implicit coordination becomes a bottleneck when many coding agents run in
+parallel.
 
 ### 8. Agents Are Processes with Side Effects
 
@@ -201,12 +207,16 @@ Explain the two common failure modes of parallel coding: direct interference
 inside one shared mutable workspace, and partial observability plus late
 integration across isolated workspaces coordinated through A2A messages. Use
 CooperBench as evidence for the second mode without claiming that messaging is
-useless or that a shared mutable checkout is the remedy.
+useless or that a shared mutable checkout is the remedy. End with four explicit
+challenges: private execution and publication, file and line auditability,
+resource ownership, and lifecycle/recovery.
 
-### 10. The Workspace Contract: One Tool Call, One Session
+### 10. The Workspace Contract: A Workspace Session per Tool Call
 
-Define the automatic tool-scoped workspace session, the longer-lived explicit
-session, and the following contract objects:
+Make the default invariant prominent: every independent command tool call
+receives an automatic private workspace session. Related calls share state only
+when the caller deliberately joins them to a longer-lived explicit session.
+Then define the following contract objects:
 
 - project base;
 - LayerStack;
@@ -217,12 +227,12 @@ session, and the following contract objects:
 - publication;
 - artifact.
 
-### 11. What Ephemeral Sandbox Is
+### 11. Ephemeral Sandbox: Raise the Concurrency Ceiling for Multi-Agent Programming
 
-Assemble the Part I concepts into one positive product definition: shared
-LayerStack history, private workspace sessions, automatic and explicit
-lifecycles, attributable execution, conflict-aware publication, provenance,
-and observability.
+Assemble the Part I concepts into one positive product definition centered on a
+workspace session per independent command tool call: shared LayerStack history,
+private workspace sessions, automatic and explicit lifecycles, attributable
+execution, conflict-aware publication, provenance, and observability.
 
 ## Part II — Reading the System
 

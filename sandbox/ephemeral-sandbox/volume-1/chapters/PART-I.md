@@ -1,19 +1,25 @@
-# Part I — The Problem
+# Part I — The Concurrency Ceiling of Parallel Coding Agents
 
-*Why coding agents need a workspace contract before they need more concurrency*
+*How native operating-system and filesystem abstractions limit safe multi-agent coding*
 
 Part 0 toured the sandbox landscape. Part I asks what happens when an agent stops producing text and starts operating a computer.
 
 An agent can edit files, install packages, launch processes, bind ports, and consume resources. Fifty agents can do all of those things at once. Who then explains which task changed line 418, consumed 6 GB of memory, or took port 3000?
+
+For human development, the missing coordinator is usually the developer. A person remembers which checkout is active, waits for an install to finish, chooses another port, notices an old server, decides which files belong in a commit, and resolves conflicts before sharing the result. Much of this coordination lives in habit rather than in the operating system.
+
+Parallel agents remove that implicit serialization. The kernel can schedule their processes and the filesystem can store their bytes, but neither represents an agent task, its stable project base, its private changeset, or its publication decision. At high concurrency, that semantic gap becomes the bottleneck.
 
 “Check the terminal history and hope” is not an infrastructure strategy.
 
 This part develops one argument:
 
 ```text
-tool calls create machine state
+native OS and filesystem primitives expose processes, paths, and ports
         ↓
-concurrent agents interfere or lose visibility
+human developers normally supply task ownership and serialization
+        ↓
+parallel agents interfere or lose verifiable state
         ↓
 each unit of work needs an attributable workspace session
         ↓
@@ -52,13 +58,9 @@ agent decision → tool call → process tree → machine state
 
 Some state is obvious, such as an edited source file. Some is easy to miss: a daemon, compiler cache, temporary socket, downloaded dependency, or occupied port.
 
-> **Figure 8.1 placeholder — One tool call creates machine state**
->
-> Planned asset: `../assets/diagrams/part-1/08-01-tool-call-side-effects.svg`
->
-> Draw **Agent → Tool**, then four outputs: **Files**, **Processes**, **Network**, and **Resources**.
->
-> *Caption: A tool call returns a result and may leave machine state behind.*
+![An agent invokes a tool that affects files, processes, network state, and resources.](../assets/diagrams/part-1/08-01-tool-call-side-effects.png)
+
+*Figure 8.1 — A tool call returns a result and may leave machine state behind.*
 
 | State | Examples | Why another agent cares |
 | --- | --- | --- |
@@ -75,9 +77,11 @@ This is why tool output and machine outcome must be separated. The output is wha
 
 > *⚙️ **Side-effect rule:** An agent action is complete when the runtime can account for the machine state it created—not merely when the text response ends.*
 
-### The operating system lacks the agent story
+### Native OS and filesystem primitives lack the agent story
 
 Operating systems know process IDs, sockets, memory pages, open files, and CPU time. Filesystems know paths, permissions, owners, and modification times.
+
+Those are machine-level identities. Agent orchestration needs task-level identities: which project base a task sees, which files and processes belong together, which evidence validates the result, and whether the result is still private. The kernel may comfortably run thousands of processes while the workspace model fails to explain what any of them mean.
 
 They do not naturally know:
 
@@ -130,6 +134,16 @@ It is not. Coding tasks discover overlap while they work. Several may update the
 
 The **concurrency ceiling** is the point where additional agents create more interference, coordination, integration, and diagnosis work than useful progress.
 
+### The human was the hidden concurrency control
+
+A single developer performs many small acts of serialization without naming them. They avoid editing a file during a dependency rewrite, stop one server before starting another, inspect a diff before committing, and remember which test result belongs to which code state.
+
+Native filesystems present mutable paths. Operating systems present processes, users, ports, and resource counters. These primitives are powerful, but they do not encode “Agent C is testing revision R42 in private while Agent A prepares a different candidate.” When hundreds of agents act independently, the human conventions that made one shared machine understandable stop scaling.
+
+A filesystem is like warehouse shelving: a path tells you where an object sits, not which work order owns it. One worker can remember that context. A hundred concurrent workers need the context recorded by the system.
+
+The ceiling therefore is not the number of processes the kernel can launch. It is the number of concurrent coding tasks the runtime can keep isolated, attributable, reviewable, and safe to integrate.
+
 ### Two ways parallel agents go wrong
 
 The two common layouts fail differently.
@@ -150,13 +164,9 @@ In isolated workspaces, agents stop overwriting one another. Each agent also los
 
 One layout shares too much mutable state. The other shares too little verifiable state.
 
-> **Figure 9.1 placeholder — Two routes to the concurrency ceiling**
->
-> Planned asset: `../assets/diagrams/part-1/09-01-two-concurrency-failures.svg`
->
-> Left: agents entering **Shared Workspace → Interference**. Right: agents in **Private Workspaces → Late Integration**. Both end at **Concurrency Ceiling**.
->
-> *Caption: Isolation removes direct collisions but still requires verifiable coordination and integration.*
+![Agents in one shared workspace encounter interference, while agents in separate private workspaces encounter late integration; both paths reach a concurrency ceiling.](../assets/diagrams/part-1/09-01-two-concurrency-failures.png)
+
+*Figure 9.1 — Isolation removes direct collisions but still requires verifiable coordination and integration.*
 
 A workspace runtime can instead give each agent a private writable session over the same recorded project history, followed by controlled publication. Agents share the codebase without sharing half-written files.
 
@@ -203,7 +213,7 @@ The conclusion is narrow: A2A messaging can coordinate intent, but it cannot be 
 
 > *🚧 **Coordination rule:** Give agents private workspaces and a system-level way to inspect, attribute, and integrate their work.*
 
-### From clean merges to runtime requirements
+### A clean merge can still be broken
 
 Two edits may touch different lines and merge cleanly while breaking the system. One agent can rename a configuration key while another adds a consumer of the old name. One can upgrade a library while another writes against its old API.
 
@@ -222,12 +232,14 @@ Branches record source history. Worktrees separate working files. Copies duplica
 
 Git is excellent at comparing text. It is not a runtime coordinator.
 
-The failures collapse into four requirements:
+### Four challenges of running coding agents in parallel
 
-1. **Private execution and controlled publication.** An agent works against a stable base in a private writable view. Its result reaches shared history through a separate publication step.
-2. **File and line-level auditability.** Reviewers can connect changed paths and published lines to the session or operation that introduced them.
-3. **Resource ownership and observability.** Processes, ports, CPU, memory, disk, and I/O belong to an attributable unit of work.
-4. **Lifecycle, validation, and recovery.** The runtime records when work begins, captures evidence, reports publication or rejection, and cleans up or preserves state for repair.
+The gap between native machine primitives and agent work appears as four challenges:
+
+1. **Private execution and controlled publication.** A shared writable tree exposes changes immediately, while a native filesystem has no task-level base-and-publish contract. Agent work needs a stable base, private mutation, and a separate transition into shared history.
+2. **File and line-level auditability.** Paths, users, and timestamps do not identify the agent task that introduced a published line. Reviewers need session and operation provenance.
+3. **Resource ownership and observability.** PIDs, ports, CPU, memory, disk, and I/O must be grouped by agent work rather than inspected as unrelated machine objects.
+4. **Lifecycle, validation, and recovery.** Process exit is narrower than task completion. The runtime must capture evidence, report publication or rejection, and clean up or preserve the session for repair.
 
 Resource ownership deserves the same precision as file ownership. Operators should be able to ask which session owns a server, which task is consuming memory, whether two agents requested the same port, and how much disk a private delta occupies. Those facts help diagnose failures, enforce budgets, and decide which workload to stop without guessing from process names.
 
@@ -241,7 +253,7 @@ Files, processes, resources, changesets, and publication all need an owner. “T
 
 ---
 
-## Chapter 10 — The Workspace Contract: One Tool Call, One Session
+## Chapter 10 — The Workspace Contract: A Workspace Session per Tool Call
 
 After the failed test run, the orchestrator asks:
 
@@ -251,11 +263,23 @@ Git can list modified files. The process table can list workers. The network sta
 
 The missing object is a **workspace session**: a bounded, attributable period of work over a recorded project state.
 
-For command execution, v1 uses a practical default: when the caller supplies no session ID, the runtime creates a private session, runs the command, captures its result, attempts publication, and tears the session down. Multi-step tasks keep an explicit session across calls.
+The workspace session adds the agent-level identity absent from native process and filesystem abstractions. It groups a project base, private files, command processes, network context, resources, changeset, and publication outcome under one lifecycle.
+
+The default boundary is deliberately small:
+
+```text
+one independent tool call
+    → one private workspace session
+    → one attributable execution result
+    → publish or reject
+    → cleanup
+```
+
+For command execution, v1 applies this workspace-per-tool-call rule automatically. When the caller supplies no session ID, the runtime creates a private session, runs the command, captures its result, attempts publication, and tears the session down. Related calls share state only when the caller deliberately places them in a longer-lived explicit session.
 
 Sessionless file writes currently follow a different path, so “one tool call, one session” is the design rule rather than a universal v1 implementation fact.
 
-> *⏳ **Session rule:** A command call creates an attributable workspace session or explicitly joins an existing one.*
+> *⏳ **Workspace-per-tool-call rule:** Every independent command tool call receives a workspace session by default. Related calls may explicitly join the same longer-lived session.*
 
 | Operation | v1 behavior |
 | --- | --- |
@@ -284,27 +308,19 @@ This trace introduces the five objects that carry the contract:
 
 **LayerStack** is the immutable shared history that records those bases and accepted results. The **sandbox** is the execution environment hosting S17. Artifacts such as logs or build outputs can be retained as evidence without silently becoming project history.
 
-> **Figure 10.1 placeholder — Shared base, private sessions, publication gate**
->
-> Planned asset: `../assets/diagrams/part-1/10-01-workspace-contract.svg`
->
-> Draw **Shared Project History** feeding three **Workspace Sessions**. Their candidate changes converge on **Publish Gate → New Revision or Reject**.
->
-> *Caption: Agents share recorded history, not one mutable working directory.*
+![Shared project history feeds three private workspace sessions whose deltas pass through a publication gate to either a new revision or rejection.](../assets/diagrams/part-1/10-01-workspace-contract.png)
+
+*Figure 10.1 — Agents share recorded history, not one mutable working directory.*
 
 ### Automatic and explicit sessions
 
-When `exec_command` arrives without a `workspace_session_id`, Ephemeral Sandbox creates an automatic workspace session with a publish-then-destroy finalization policy. The caller receives a safe default without manually managing every short-lived workspace.
+The normal case is a workspace session per tool call. When `exec_command` arrives without a `workspace_session_id`, Ephemeral Sandbox creates an automatic workspace session with a publish-then-destroy finalization policy. The caller receives a private execution boundary without manually managing every short-lived workspace.
 
 The automatic session carries its LayerStack base, private writable view, execution identity, network profile, and finalization policy.
 
-> **Figure 10.2 placeholder — One command, one automatic session**
->
-> Planned asset: `../assets/diagrams/part-1/10-02-automatic-session-lifecycle.svg`
->
-> Draw **Command → Create Session → Execute → Publish or Reject → Destroy**, with **Changeset + Evidence** retained below publication.
->
-> *Caption: The workspace is temporary; accepted work and retained evidence are durable.*
+![A command creates a workspace session, executes inside it, publishes or rejects the result, retains the changeset and evidence, and destroys the temporary workspace.](../assets/diagrams/part-1/10-02-automatic-session-lifecycle.png)
+
+*Figure 10.2 — Each independent tool call gets a temporary workspace; accepted work and retained evidence are durable.*
 
 For a multi-step task, the orchestrator creates an **explicit session** and passes its ID across edits, commands, inspection, and retries. Successful publication closes the session. Destruction discards unpublished state. A rejected pre-commit publication can leave the workspace available for diagnosis or repair.
 
@@ -312,7 +328,7 @@ That retained state is useful. An agent can inspect the conflict, re-read the ac
 
 There is also a narrower command-execution session—the PTY, streams, timeout, and process group for one command. Closing it does not imply that the longer workspace is ready to publish.
 
-#### Why the tool call is a useful default boundary
+#### Why each tool call gets a workspace
 
 A tool call already has a request identity, inputs, a start time, a terminal result, and a caller waiting for an answer. Giving it a workspace session turns those familiar fields into a bounded state transition.
 
@@ -394,31 +410,31 @@ A reader can test the contract with three questions:
 
 Failures should preserve those answers. A timeout must not erase ownership. A holder exit must not make cleanup appear successful. A stale base must not produce a partial publication. The runtime may retry internally, but its final state should remain inspectable to the orchestrator.
 
-Chapter 11 assembles that contract into the Ephemeral Sandbox product model.
+Chapter 11 shows how Ephemeral Sandbox uses that contract to raise the concurrency ceiling.
 
 ---
 
-## Chapter 11 — What Ephemeral Sandbox Is
+## Chapter 11 — Ephemeral Sandbox: Raise the Concurrency Ceiling for Multi-Agent Programming
 
 Agents need private execution over shared project history. Their work needs an identity, a reviewable changeset, a publication result, and durable evidence.
 
 > **Ephemeral Sandbox is an agent workspace runtime that gives concurrent coding tasks private execution state over shared project history, then turns completed work into reviewable, conflict-aware publication.**
 
+Its default concurrency primitive is a workspace session per independent command tool call. The runtime does not merely launch another process inside a shared checkout: it gives the call a stable project base, private writable state, attributable execution, and an explicit publish-or-reject ending. Related tool calls share a workspace only when the caller deliberately joins them to an explicit session.
+
 Think of it as a versioned workshop. Each agent receives a private workbench built from a cataloged project state. It may edit, build, test, and make a mess there. When ready, it submits a parts list and inspection record to the publication counter. Accepted design history survives after the workbench is cleared.
 
 The workbench is an execution environment; the catalog and counter are a state system. Ephemeral Sandbox connects them through the workspace session.
+
+Linux processes, namespaces, mounts, and filesystems remain the execution mechanisms. LayerStack, workspace sessions, changesets, and publication add the agent-facing semantics needed to use those mechanisms at higher coding concurrency.
 
 ### Ephemeral Sandbox in one view
 
 LayerStack records shared project history. Private workspace sessions combine a copy-on-write project view with command execution and a selected network profile. Capture turns private work into a changeset; the publication gate accepts the complete candidate or rejects it. Events, traces, snapshots, resource data, diagnostics, and file provenance preserve the evidence.
 
-> **Figure 11.1 placeholder — Ephemeral Sandbox in one view**
->
-> Planned asset: `../assets/diagrams/part-1/11-01-ephemeral-sandbox-overview.svg`
->
-> Draw **Agent or Orchestrator** entering one box containing **Shared LayerStack**, **Private Workspace Sessions**, **Publish Gate**, and **Observability**.
->
-> *Caption: Ephemeral Sandbox connects shared history, private execution, publication, and evidence.*
+![An agent or orchestrator enters Ephemeral Sandbox, where shared LayerStack history feeds private workspace sessions, a publication gate controls shared updates, and observability records runtime evidence.](../assets/diagrams/part-1/11-01-ephemeral-sandbox-overview.png)
+
+*Figure 11.1 — Ephemeral Sandbox connects shared history, private execution, publication, and evidence.*
 
 ### Three agent-facing surfaces
 
@@ -443,3 +459,14 @@ CLI / MCP → catalog → client → protocol → gateway → manager → daemon
 ```
 
 That path must preserve the base, session identity, publication decision, and evidence established in Part I.
+
+---
+
+## References
+
+1. Arpandeep Khatua et al., [“CooperBench: Why Coding Agents Cannot Be Your Teammates Yet”](https://arxiv.org/abs/2601.13295), arXiv:2601.13295, 2026.
+2. Agent Infra Foundation, [“The Concurrency Ceiling of Coding Agents”](https://agent-infra-foundation.org/blog/2026/07/the-concurrency-ceiling-of-coding-agents/), 2026.
+3. The Git Project, [`git-blame` documentation](https://git-scm.com/docs/git-blame).
+4. Ephemeral Sandbox, [“Architecture”](https://ephemeral-sandbox.com/architecture).
+5. Ephemeral Sandbox, [“Multi-Agent Coding Workspaces”](https://ephemeral-sandbox.com/multi-agent-coding-workspaces).
+6. Ephemeral AI Lab, [`ephemeral-sandbox` source repository](https://github.com/Ephemeral-AI-Lab/ephemeral-sandbox).
