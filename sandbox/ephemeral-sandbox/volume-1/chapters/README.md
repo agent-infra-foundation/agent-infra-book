@@ -2,7 +2,10 @@
 
 Part 0 is available as the complete [Overview of Agent Sandboxes in Practice
 manuscript](PART-0.md) and as a [Simplified Chinese edition](PART-0.zh-CN.md).
-Later chapters will become Markdown manuscript files as they are drafted.
+Part I is also available as the complete [Concurrency Ceiling of Parallel Coding
+Agents manuscript](PART-I.md) and as a [Simplified Chinese
+edition](PART-I.zh-CN.md). Later chapters will become Markdown manuscript files
+as they are drafted.
 
 Use [PART-0-WRITING-TEMPLATE.md](PART-0-WRITING-TEMPLATE.md) for the Part 0
 eight-chapter sandbox-landscape survey, workshop analogy, product profile
@@ -16,8 +19,8 @@ narrative beginning at Chapter 8, chapter map, reusable manuscript shell, and
 author review checklist.
 
 Use [PART-I.md](PART-I.md) as the reader-facing manuscript for Chapters 8–11.
-Its five figure blocks are intentional placeholders until the simplified Part I
-visuals are produced.
+Its five finished figures are shared by the English and Simplified Chinese
+editions.
 
 Recommended chapter template:
 
