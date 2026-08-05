@@ -31,8 +31,9 @@ checkpointing, and browser isolation are future design topics.
 
 ## Status
 
-Part 0 and Part I manuscripts are complete in English and Simplified Chinese.
-Their visual assets are included; later parts remain in editorial planning.
+Part 0, Part I, and Part II manuscripts are complete in English and Simplified
+Chinese. Part III is being drafted; its first chapter and visual asset are
+available now. Later parts remain in editorial planning.
 
 ## Contents
 
@@ -45,5 +46,8 @@ Their visual assets are included; later parts remain in editorial planning.
 - [Part I manuscript](chapters/PART-I.md)
 - [Part I manuscript — 简体中文版](chapters/PART-I.zh-CN.md)
 - [Part I editorial blueprint](chapters/PART-I-WRITING-TEMPLATE.md)
+- [Part II manuscript](chapters/PART-II.md)
+- [Part II manuscript — 简体中文版](chapters/PART-II.zh-CN.md)
+- [Part III draft](chapters/PART-III.md)
 - [Part 0 visual assets](assets/README.md)
 - [Appendices](appendices/README.md)
