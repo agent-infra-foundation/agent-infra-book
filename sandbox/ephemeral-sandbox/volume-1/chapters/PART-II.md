@@ -3,14 +3,96 @@
 *How every unit of agent work receives a private workspace over stable,
 reusable project history.*
 
-An agent asks to run one command:
+Part I showed why native process and filesystem primitives become ambiguous
+when many coding agents share one codebase. Part II begins at the missing
+boundary: the workspace session that owns one unit of work.
+
+This part follows the model from the outside in:
+
+1. what happens to an agent tool call;
+2. how many sessions share stable project history; and
+3. how LayerStack represents that history with layers, manifests, and leases.
+
+Part III will take the resulting lease and construct the private copy-on-write
+filesystem in which commands actually run.
+
+---
+
+## Chapter 12 — Workspace Session Per Tool Call
+
+Two agents are working on the same codebase at published revision R42.
+
+- Agent A must upgrade the authentication dependency and run its tests.
+- Agent B must regenerate the API client and run the integration suite.
+
+The orchestrator issues two independent command tool calls:
 
 ```text
-exec_command("cargo test")
+Agent A / request Q91
+  exec_command("cargo update -p auth-sdk && cargo test auth")
+
+Agent B / request Q92
+  exec_command("./scripts/regenerate-client && cargo test api")
 ```
 
-A conventional shell needs a directory and a process. An agent workspace
-runtime needs a more complete answer:
+A conventional shell needs a directory and a process. It can start both
+commands in `/repo` and return two process IDs:
+
+```text
+Agent A / command C31 ─┐
+                       ├── /repo   one mutable checkout
+Agent B / command C32 ─┘
+```
+
+That is enough to execute the commands. It is not enough to explain their
+results.
+
+Agent A may rewrite `Cargo.lock` while Agent B is resolving dependencies. Agent
+B may replace generated client files while Agent A's test workers are still
+loading modules. Both commands may write to the same build directory, and both
+integration suites may expect port 3000. A command can exit successfully after
+observing a mixture of states that never existed as one recorded revision.
+
+The shell still has a working directory, two process trees, and two exit codes.
+What it lacks is the agent-work context that Part I identified:
+
+| Question | Conventional shell answer | Agent workspace answer |
+| --- | --- | --- |
+| Which project state did this command test? | “Whatever `/repo` contained while it ran” | Recorded base R42 |
+| Which filesystem changes belong to it? | One combined working-tree diff | A private delta owned by S17 or S18 |
+| Which processes, ports, and resources belong to it? | Separate PIDs and machine counters | One session-scoped runtime identity |
+| Can its files become shared state? | They are already visible in `/repo` | Capture, then publish or reject |
+| What does completion mean? | The parent process exited | Command settled, publication resolved, cleanup recorded |
+
+For multi-agent coding, a command must therefore be more than a process started
+in a directory. It must be a bounded state transition with a stable beginning,
+a private middle, an attributable result, and an explicit ending.
+
+An independent tool call is a useful default boundary because the orchestrator
+can already name it: it has a request ID, inputs, a start, and one terminal
+response. An agent identity is too broad—one agent may perform many unrelated
+tasks. A PID is too narrow—one command may create a process tree, files, ports,
+and background workers. The workspace session wraps the complete machine event
+that one independent call caused. Related calls share state only by explicitly
+joining a longer-lived session.
+
+Ephemeral Sandbox gives the two calls separate workspace sessions over the same
+recorded project history:
+
+```text
+shared LayerStack revision R42
+    ├── request Q91 → workspace S17 → command C31 → private delta A
+    └── request Q92 → workspace S18 → command C32 → private delta B
+```
+
+Now Agent A cannot rewrite the files Agent B is currently reading. Each
+command's process tree, transcript, and filesystem delta have one owner; port
+and resource observations can be correlated with the same session identity.
+Each test result names the base and private state it actually exercised. When a
+call ends, its candidate changes cross a publication boundary instead of
+leaking into the other call halfway through.
+
+That gives an agent workspace runtime a more complete answer:
 
 ```text
 tool call
@@ -25,7 +107,7 @@ destroy the temporary workspace
 ```
 
 That temporary workspace is the central idea of this part. Ephemeral Sandbox
-creates an automatic workspace session for an independent command tool call.
+creates an automatic workspace session for each independent command tool call.
 When several operations intentionally belong to one task, they can target the
 same explicit session instead.
 
@@ -33,22 +115,9 @@ Both forms begin from shared **LayerStack** history. They share accepted project
 state, not unfinished writes. A lease keeps each session's starting revision
 stable even if another session publishes while it is running.
 
-Part II follows this model from the outside in:
-
-1. what happens to an agent tool call;
-2. how many sessions share stable project history; and
-3. how LayerStack represents that history with layers, manifests, and leases.
-
-Part III will take the resulting lease and construct the private copy-on-write
-filesystem in which commands actually run.
-
----
-
-## Chapter 12 — Workspace Session Per Tool Call
-
-Agent A needs one command to regenerate parser tables. Agent B needs a sequence:
-edit `src/server.rs`, run a test, inspect the failure, revise the file, and run
-the test again.
+Agent A's dependency update from the opening fits one independent command. Agent
+B's work may grow into a sequence: regenerate the client, inspect a failed API
+test, edit `src/server.rs`, and run the test again.
 
 Those tasks need different lifecycles. Agent A's command can receive a temporary
 workspace that finalizes automatically. Agent B's related operations need one

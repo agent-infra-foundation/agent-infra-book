@@ -4,13 +4,72 @@
 
 *每个智能体工作单元如何在稳定、可复用的项目历史之上获得私有工作空间。*
 
-一个智能体请求运行一条命令：
+第 I 部分说明了当许多编码智能体共享一份代码库时，原生进程与文件系统原语为什么会产生歧义。第 II 部分从缺失的边界开始：由 workspace session 拥有一个工作单元。
+
+本部分按照从外到内的顺序解释这套模型：
+
+1. 一次智能体工具调用会发生什么；
+2. 大量 session 如何共享稳定的项目历史；
+3. LayerStack 如何用 layer（“层”）、manifest（“清单”）与 lease 表示这份历史。
+
+第 III 部分会使用最终得到的 lease，构建真正执行命令的 private COW（copy-on-write，“写时复制”）文件系统。
+
+---
+
+## 第 12 章 — 每次工具调用一个 Workspace Session
+
+两个智能体正在同一份代码库上工作，当前 published revision（“已发布修订”）是 R42。
+
+- 智能体 A 需要升级身份验证依赖并运行相关测试。
+- 智能体 B 需要重新生成 API client 并运行 integration suite（“集成测试套件”）。
+
+orchestrator（“编排器”）发出两次彼此独立的命令工具调用：
 
 ```text
-exec_command("cargo test")
+智能体 A / 请求 Q91
+  exec_command("cargo update -p auth-sdk && cargo test auth")
+
+智能体 B / 请求 Q92
+  exec_command("./scripts/regenerate-client && cargo test api")
 ```
 
-传统 shell 只需要一个目录和一个进程。agent workspace runtime（“智能体工作空间运行时”）需要给出更完整的答案：
+传统 shell 只需要一个目录和一个进程。它可以在 `/repo` 中启动两条命令，再返回两个 PID：
+
+```text
+智能体 A / 命令 C31 ─┐
+                      ├── /repo   一份 mutable checkout（“可变检出”）
+智能体 B / 命令 C32 ─┘
+```
+
+这足以执行命令，却不足以解释命令的结果。
+
+智能体 A 可能在智能体 B 解析依赖时重写 `Cargo.lock`。智能体 B 可能在智能体 A 的测试 worker 仍在加载 module 时替换生成的 client 文件。两条命令可能写入同一个 build directory，也可能都希望使用 3000 端口。一条命令即使成功退出，也可能观察到一组从未作为某个已记录 revision 存在过的混合状态。
+
+shell 仍然拥有一个 working directory、两棵 process tree 与两个 exit code。它缺少的是第 I 部分指出的 agent-work context（“智能体工作上下文”）：
+
+| 问题 | 传统 Shell 的答案 | Agent Workspace 的答案 |
+| --- | --- | --- |
+| 这条命令测试了哪份项目状态？ | “运行期间 `/repo` 碰巧包含的内容” | 已记录 base R42 |
+| 哪些文件系统变更属于它？ | 一份混合在一起的 working-tree diff | 由 S17 或 S18 拥有的 private delta |
+| 哪些进程、端口与资源属于它？ | 彼此分离的 PID 与机器计数器 | 一份 session-scoped runtime identity（“会话级运行时身份”） |
+| 它的文件能否成为共享状态？ | 它们已经在 `/repo` 中可见 | 先 capture，再 publish 或 reject |
+| “完成”表示什么？ | parent process（“父进程”）已经退出 | 命令结束、publication 已解析、cleanup 已记录 |
+
+因此，在 multi-agent coding（“多智能体编码”）中，一条命令不能只是从某个目录启动的进程。它必须是一项有边界的状态转换：拥有稳定的开始、私有的中间过程、可归属的结果，以及明确的结束。
+
+independent tool call（“独立工具调用”）适合作为默认边界，因为 orchestrator 已经能够准确标识它：它拥有 request ID、输入、开始时间与一个终态响应。agent identity（“智能体身份”）太宽——一个智能体可能处理许多无关任务；PID 又太窄——一条命令可能创建整棵 process tree、文件、端口与后台 worker。workspace session 包住的是一次独立调用所产生的完整 machine event（“机器事件”）。只有主动加入一个生命周期更长的 session，相关调用才会共享状态。
+
+Ephemeral Sandbox 会让两次调用在同一份已记录项目历史之上获得彼此独立的 workspace session：
+
+```text
+共享 LayerStack 修订 R42
+    ├── 请求 Q91 → workspace S17 → 命令 C31 → private delta A
+    └── 请求 Q92 → workspace S18 → 命令 C32 → private delta B
+```
+
+现在，智能体 A 无法重写智能体 B 正在读取的文件。每条命令的 process tree、transcript 与 filesystem delta 都有同一个 owner；端口和资源观测也可以关联到同一份 session identity。每份测试结果都能指出自己真正执行过的 base 与 private state。调用结束时，它的 candidate change（“候选变更”）必须跨过 publication boundary，而不会在执行到一半时泄漏给另一次调用。
+
+这才是 agent workspace runtime 需要提供的完整答案：
 
 ```text
 工具调用
@@ -24,23 +83,11 @@ exec_command("cargo test")
 销毁临时工作空间
 ```
 
-这份临时工作空间是本部分的核心。Ephemeral Sandbox 会为一条独立命令工具调用创建 automatic workspace session（“自动工作空间会话”）。当多项操作主动属于同一任务时，它们可以改为指向同一个 explicit session（“显式会话”）。
+这份临时工作空间是本部分的核心。Ephemeral Sandbox 会为每一条独立命令工具调用创建 automatic workspace session（“自动工作空间会话”）。当多项操作主动属于同一任务时，它们可以改为指向同一个 explicit session（“显式会话”）。
 
 两种 session 都从共享 **LayerStack** 历史开始。它们共享已经接受的项目状态，而不是尚未完成的写入。即使其他 session 在执行期间完成发布，lease（“租约”）也会保持每个 session 的起始修订稳定。
 
-第 II 部分按照从外到内的顺序解释这套模型：
-
-1. 一次智能体工具调用会发生什么；
-2. 大量 session 如何共享稳定的项目历史；
-3. LayerStack 如何用 layer（“层”）、manifest（“清单”）与 lease 表示这份历史。
-
-第 III 部分会使用最终得到的 lease，构建真正执行命令的 private COW（copy-on-write，“写时复制”）文件系统。
-
----
-
-## 第 12 章 — 每次工具调用一个 Workspace Session
-
-智能体 A 只需要一条命令重新生成 parser table。智能体 B 则需要一组连续操作：编辑 `src/server.rs`、运行测试、检查失败、继续修改文件，然后再次运行测试。
+开场中的智能体 A 可以用一条独立命令完成依赖升级。智能体 B 的工作则可能扩展成一组连续操作：重新生成 client、检查失败的 API 测试、编辑 `src/server.rs`，然后再次运行测试。
 
 两项任务需要不同的生命周期。智能体 A 的命令可以获得一份自动收尾的临时工作空间；智能体 B 的相关操作则需要在多次调用之间持续保持私有的同一工作空间。
 
