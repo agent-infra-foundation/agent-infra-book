@@ -512,24 +512,38 @@ workspace runtime built over it.
 
 A base layer such as `B000001-base` contains the starting project. Accepted
 publication creates an `L*` layer and prepends it to the active manifest.
-Squashing may later replace eligible older layers with an equivalent `S*`
-layer. Squashing changes physical layout, not the visible project.
+Squashing may later replace each eligible contiguous block with an equivalent
+`S*` layer. One squash can produce several `S*` layers, while lease-boundary
+layers and runs too short to squash remain as ordinary `L*` entries. Later
+publications prepend new `L*` layers. Squashing changes physical layout, not the
+visible project.
 
 Once a layer appears in a manifest, it is history—not a shared scratchpad.
 
 ### Newest first, first visible path wins
 
-Suppose revision R42 contains:
+An active manifest is not restricted to one published layer, one squashed
+layer, and one base. It may interleave several `L*` and `S*` entries:
 
 ```text
-L000042       newest published delta
-S000041       compacted earlier history
-B000001-base  original project payload
+manifest.layers                         newest first
+
+L-head          recent published delta
+L-recent        another unsquashed published delta
+S-block-A       flattened replacement for one older layer run
+L-boundary      unsquashed layer retained at a lease boundary
+S-block-B       flattened replacement for another older layer run
+B-base          original project payload
 ```
 
-A read of `src/server.rs` searches in that order. If L42 contains the file, its
-version wins. Otherwise the read falls through to S41 and then B1. A deletion
-marker in a newer layer can hide a path that still exists below it.
+The names are shortened for the example. Real `L*` and `S*` IDs include an
+allocation version and unique suffix. Their numeric-looking components do not
+define lookup priority; the manifest array does.
+
+A read of `src/server.rs` searches every entry in that order. The first visible
+version wins, whether it comes from an unsquashed `L*` layer or a squashed `S*`
+layer. A deletion marker in any higher-priority layer can hide a path that still
+exists below it.
 
 The [LayerStack architecture](https://ephemeral-sandbox.com/architecture/layerstack)
 preserves this ordering through OverlayFS: publication prepends the newest
@@ -551,7 +565,7 @@ by a workspace:
 workspace session: S18
 manifest version: 42
 root hash: H42
-lower-layer count: 3
+lower-layer count: 6
 ```
 
 The version is convenient for logs. The root hash protects the stronger fact:
@@ -567,8 +581,9 @@ serves two purposes:
 2. storage maintenance knows which layers are still in use.
 
 This is why squashing and garbage collection must respect active leases. A
-maintenance pass may compact unleased older history, but it cannot remove the
-floor beneath S18 merely because R43 is now active.
+maintenance pass may replace eligible blocks only while preserving every
+leased logical view. It cannot remove the floor beneath S18 merely because R43
+is now active.
 
 Long layer chains also have a cost. Creating a workspace must construct the
 ordered lower-path list, and a read may traverse layers before finding a visible

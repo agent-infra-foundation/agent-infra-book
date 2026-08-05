@@ -368,21 +368,28 @@ LayerStack 拥有文件系统历史、revision identity（“修订身份”）�
 | Published，`L*` | 已接受的文件系统 delta | 否 |
 | Squashed，`S*` | 旧历史的等价紧凑形式 | 否 |
 
-例如 `B000001-base` 这样的 base layer 包含初始项目。publication 接受结果后，会创建一个 `L*` layer，并把它放到 active manifest 最前面。之后，squash（“压缩”）可以把符合条件的旧 layer 替换成等价的 `S*` layer。squash 改变物理布局，不改变可见项目。
+例如 `B000001-base` 这样的 base layer 包含初始项目。publication 接受结果后，会创建一个 `L*` layer，并把它放到 active manifest 最前面。之后，squash（“压缩”）可以把每一段符合条件的连续 layer block 替换成等价的 `S*` layer。一次 squash 可以产生多个 `S*` layer；lease boundary（“租约边界”）与长度不足以 squash 的 layer run 则继续保留为普通 `L*` 条目。之后的 publication 还会继续在最前面加入新的 `L*` layer。squash 改变物理布局，不改变可见项目。
 
 一个 layer 一旦出现在 manifest 中，就是历史，不再是共享草稿区。
 
 ### 最新优先，第一个可见路径获胜
 
-假设修订 R42 包含：
+active manifest 并不限定只能包含一个 published layer、一个 squashed layer 与一个 base。它可以交错包含多项 `L*` 与 `S*`：
 
 ```text
-L000042       最新发布的 delta
-S000041       已压缩的早期历史
-B000001-base  原始项目内容
+manifest.layers                         最新优先
+
+L-head          近期发布的 delta
+L-recent        另一个尚未压缩的 published delta
+S-block-A       一段旧 layer run 的扁平化替代层
+L-boundary      在 lease boundary 保留的未压缩 layer
+S-block-B       另一段旧 layer run 的扁平化替代层
+B-base          原始项目内容
 ```
 
-读取 `src/server.rs` 时，系统会按照这个顺序搜索。如果 L42 包含该文件，它的版本获胜；否则读取继续落到 S41，再落到 B1。新 layer 中的删除标记，也可以隐藏物理上仍然存在于下层的路径。
+示例缩短了 layer 名称。真实 `L*` 与 `S*` ID 包含 allocation version 与 unique suffix。ID 中看似数字的部分并不决定查找优先级；manifest array 才决定。
+
+读取 `src/server.rs` 时，系统会按照这个顺序检查每一项。第一个可见版本获胜，无论它来自尚未压缩的 `L*` layer，还是已经压缩的 `S*` layer。任何高优先级 layer 中的删除标记，都可以隐藏物理上仍然存在于下层的路径。
 
 [LayerStack Architecture](https://ephemeral-sandbox.com/architecture/layerstack) 会一直把这份顺序保留到 OverlayFS：publication 把最新 layer 放到最前面；lease 复制这些有序路径；第一个 lower path（“下层路径”）获得最高查找优先级。
 
@@ -398,7 +405,7 @@ manifest version、root hash 与 layer count 共同描述工作空间持有的 b
 工作空间会话：S18
 manifest version：42
 root hash：H42
-lower-layer count：3
+lower-layer count：6
 ```
 
 version 便于日志记录；root hash 保护更强的事实：究竟是哪一份有序历史生成了当前视图。包含相同 layer、但顺序不同的两份 manifest，并不表示同一个文件系统。
@@ -410,7 +417,7 @@ lease 会保存 manifest snapshot 及其解析后的 lower-layer path。它有�
 1. 运行中的 workspace 保留开始时那份确切历史；
 2. 存储维护知道哪些 layer 仍然正在使用。
 
-因此，squash 与 garbage collection（“垃圾回收”）必须尊重 active lease。维护流程可以压缩没有被租用的旧历史，却不能仅仅因为 R43 已经成为 active revision，就移除 S18 脚下的地板。
+因此，squash 与 garbage collection（“垃圾回收”）必须尊重 active lease。维护流程只有在保留每一份 leased logical view（“已租用逻辑视图”）的前提下，才能替换符合条件的 layer block；它不能仅仅因为 R43 已经成为 active revision，就移除 S18 脚下的地板。
 
 过长的 layer chain 也有成本。创建 workspace 时，系统必须构造有序 lower-path list；读取路径时，也可能要穿过多层才能找到可见版本。squash 可以缩短符合条件的旧 chain，但它是一项维护操作，不是每条命令结束后都会发生的魔法压缩。
 
