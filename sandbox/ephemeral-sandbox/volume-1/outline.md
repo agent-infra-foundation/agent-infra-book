@@ -91,7 +91,10 @@ publication, provenance, and observability.
 
 Begin with the user-visible lifecycle: automatic workspaces for independent
 commands, explicit workspaces for related operations, session-ID behavior,
-command sessions, and the task-scoped ownership rule.
+command sessions, and the task-scoped ownership rule. Close the chapter by
+mapping the session design directly to Part I's four challenges. Organize the
+opening as problem → workspace-per-tool-call response, and explain why the
+private boundary must be automatic rather than an optional caller convention.
 
 ### 13. One LayerStack, Many Stable Bases
 

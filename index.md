@@ -16,7 +16,7 @@ publication.
 - [Part I manuscript — The Concurrency Ceiling of Parallel Coding Agents](sandbox/ephemeral-sandbox/volume-1/chapters/PART-I.md)
 - [Part I manuscript — 并行编码智能体的并发上限（简体中文）](sandbox/ephemeral-sandbox/volume-1/chapters/PART-I.zh-CN.md)
 - [Part II manuscript — Shared History and Workspace Sessions](sandbox/ephemeral-sandbox/volume-1/chapters/PART-II.md)
-- [Part II manuscript — 共享历史与 Workspace Session（简体中文）](sandbox/ephemeral-sandbox/volume-1/chapters/PART-II.zh-CN.md)
+- [Part II manuscript — 共享历史与工作空间会话（简体中文）](sandbox/ephemeral-sandbox/volume-1/chapters/PART-II.zh-CN.md)
 - [Part III draft — Private Workspaces and Published History](sandbox/ephemeral-sandbox/volume-1/chapters/PART-III.md)
 - **Part IV — Running and Operating the Workspace Runtime** — Planned
 - **Part V — The Boundary of Version 1** — Planned

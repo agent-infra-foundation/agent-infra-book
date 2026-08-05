@@ -252,7 +252,13 @@ Start with the user-visible tool-call boundary. An independent `exec_command`
 uses an automatic `publish_then_destroy` workspace; a related sequence targets
 one explicit workspace. Explain how `workspace_session_id` changes file and
 command behavior, distinguish workspace and command lifetimes, and make the
-task-scoped ownership rule precise.
+task-scoped ownership rule precise. Explicitly map the design back to Part I's
+four challenges: private execution and publication, auditability, resource
+ownership, and lifecycle/recovery. Use a problem → design response structure:
+restate why independent calls interfere in one mutable checkout, then show why
+making the private session automatic is the essential default. Clarify that the
+boundary prevents runtime interleaving but leaves semantic incompatibility to
+publication and conflict handling.
 
 ### 13. One LayerStack, Many Stable Bases
 

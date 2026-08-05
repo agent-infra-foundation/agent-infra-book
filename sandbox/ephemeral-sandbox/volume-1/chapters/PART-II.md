@@ -20,7 +20,15 @@ filesystem in which commands actually run.
 
 ## Chapter 12 — Workspace Session Per Tool Call
 
-Two agents are working on the same codebase at published revision R42.
+> **The question is not only where a command runs. It is which machine state
+> that tool call is allowed to see, create, publish, and leave behind.**
+
+### The problem: independent tool calls share machine state
+
+Two agents are working on the same codebase in `/repo`. When they begin, both
+intend to use the same starting content. The native filesystem exposes paths,
+bytes, and timestamps; it does not freeze or name that content as a project
+revision.
 
 - Agent A must upgrade the authentication dependency and run its tests.
 - Agent B must regenerate the API client and run the integration suite.
@@ -39,9 +47,24 @@ A conventional shell needs a directory and a process. It can start both
 commands in `/repo` and return two process IDs:
 
 ```text
-Agent A / command C31 ─┐
-                       ├── /repo   one mutable checkout
-Agent B / command C32 ─┘
+SHARED MUTABLE MACHINE VIEW
+
+Q91 / Agent A                              Q92 / Agent B
+cargo update                               regenerate client
+      │                                           │
+      │ rewrites Cargo.lock                       │ rewrites generated/*
+      └────────────────────┐   ┌──────────────────┘
+                           ▼   ▼
+                ┌──────────────────────────┐
+                │ /repo                    │
+                │ one mutable checkout     │
+                ├──────────────────────────┤
+                │ source + generated files │
+                │ target/ build output     │
+                │ port 3000 + processes    │
+                └─────────────┬────────────┘
+                              ▼
+                mixed diff · ambiguous tests
 ```
 
 That is enough to execute the commands. It is not enough to explain their
@@ -58,11 +81,18 @@ What it lacks is the agent-work context that Part I identified:
 
 | Question | Conventional shell answer | Agent workspace answer |
 | --- | --- | --- |
-| Which project state did this command test? | “Whatever `/repo` contained while it ran” | Recorded base R42 |
+| Which project state did this command test? | “Whatever `/repo` contained while it ran” | A recorded LayerStack base |
 | Which filesystem changes belong to it? | One combined working-tree diff | A private delta owned by S17 or S18 |
 | Which processes, ports, and resources belong to it? | Separate PIDs and machine counters | One session-scoped runtime identity |
 | Can its files become shared state? | They are already visible in `/repo` | Capture, then publish or reject |
 | What does completion mean? | The parent process exited | Command settled, publication resolved, cleanup recorded |
+
+The filesystem path `/repo` is doing too many jobs. It is the project base,
+Agent A's scratch space, Agent B's scratch space, the test input, and the place
+from which results will eventually be committed. Because those roles are not
+separated, every write immediately changes another tool call's world.
+
+### The design response: make the tool call a workspace boundary
 
 For multi-agent coding, a command must therefore be more than a process started
 in a directory. It must be a bounded state transition with a stable beginning,
@@ -76,13 +106,36 @@ and background workers. The workspace session wraps the complete machine event
 that one independent call caused. Related calls share state only by explicitly
 joining a longer-lived session.
 
-Ephemeral Sandbox gives the two calls separate workspace sessions over the same
-recorded project history:
+Ephemeral Sandbox first records the shared project state as LayerStack revision
+R42, then gives the two calls separate workspace sessions over that history:
 
 ```text
-shared LayerStack revision R42
-    ├── request Q91 → workspace S17 → command C31 → private delta A
-    └── request Q92 → workspace S18 → command C32 → private delta B
+WORKSPACE SESSION PER INDEPENDENT COMMAND
+
+                         ┌───────────────────────┐
+                         │ LayerStack R42        │
+                         │ immutable shared base │
+                         └───────┬───────┬───────┘
+                         lease R42       lease R42
+                               │         │
+          Q91                  ▼         ▼                  Q92
+           │           ┌────────────┐ ┌────────────┐         │
+           └──────────►│ S17        │ │ S18        │◄────────┘
+                       │ private ΔA │ │ private ΔB │
+                       │ command C31│ │ command C32│
+                       │ evidence A │ │ evidence B │
+                       └─────┬──────┘ └──────┬─────┘
+                         candidate A      candidate B
+                               └─────┐ ┌─────┘
+                                     ▼
+                              ┌───────────────┐
+                              │ publication   │
+                              │ accept/reject │
+                              │ then cleanup  │
+                              └───────┬───────┘
+                                      ▼
+                              shared head advances
+                              only through accepted work
 ```
 
 Now Agent A cannot rewrite the files Agent B is currently reading. Each
@@ -92,19 +145,21 @@ Each test result names the base and private state it actually exercised. When a
 call ends, its candidate changes cross a publication boundary instead of
 leaking into the other call halfway through.
 
-That gives an agent workspace runtime a more complete answer:
+The mapping is deliberate:
 
-```text
-tool call
-    ↓
-private workspace session over a stable project revision
-    ↓
-command execution and private filesystem changes
-    ↓
-publish or reject
-    ↓
-destroy the temporary workspace
-```
+> **One independent command call → one recorded base → one private delta → one
+> runtime owner → one publication outcome → one cleanup scope.**
+
+This boundary prevents direct filesystem interleaving and preserves meaningful
+execution evidence. It does not guarantee that Agent A's dependency upgrade is
+semantically compatible with Agent B's generated client. Instead, it turns two
+uncontrolled mutations into two attributable candidates with known bases. The
+publication path can then merge, reject, or request repair without first
+reconstructing what happened in a shared directory.
+
+That is the more complete answer. The runtime does not merely return command
+output; it returns a scoped lifecycle whose accepted result may advance shared
+history.
 
 That temporary workspace is the central idea of this part. Ephemeral Sandbox
 creates an automatic workspace session for each independent command tool call.
@@ -156,6 +211,12 @@ history.
 This is the precise meaning of **workspace session per tool call** in v1: it is
 the default boundary for an independent `exec_command`, not a claim that every
 kind of runtime operation creates a workspace.
+
+The default is the important part. If isolation depends on an agent remembering
+to create a directory or an orchestrator wrapping every command correctly, the
+old concurrency ceiling returns as soon as one caller forgets. Creating the
+session before the command starts makes the attributable private path the normal
+execution path, including for callers with no custom workspace-management logic.
 
 ### Explicit workspace: one related sequence
 
@@ -284,12 +345,39 @@ An automatic command can succeed while capture fails or publication rejects.
 An explicit command can fail while its workspace remains available for
 inspection and another attempt. These endings must remain separate and visible.
 
+### How the design answers Part I's four challenges
+
+Part I ended with four problems created by parallel agents on native machine
+primitives. The workspace-session design gives all four problems the same owner:
+
+| Part I challenge | Part II design response | Result in the opening scenario |
+| --- | --- | --- |
+| Private execution and controlled publication | A session leases a stable base, owns a private delta, and crosses an explicit publication boundary | S17 and S18 cannot expose half-written files to each other; each candidate is accepted or rejected separately |
+| File and line-level auditability | Request, session, base, command, and changeset identities remain connected | A published line can retain whether it came from Q91/S17 or Q92/S18 instead of one combined `/repo` diff |
+| Resource ownership and observability | Command sessions sit inside a workspace session, giving processes, transcripts, ports, and resource observations one task key | An operator can relate port 3000 or a process tree to S17 or S18 instead of guessing from a PID |
+| Lifecycle, validation, and recovery | Command, workspace, and publication states have separate endings; automatic and explicit sessions use deliberate finalization policies | Exit code 0 cannot silently stand in for publication, and cleanup or retry targets the correct private state |
+
+LayerStack alone does not implement every answer in this table. Part II
+establishes the common identity and stable-history contract. Part III constructs
+the private filesystem, capture, publication, and provenance path. Part IV
+applies the same ownership model to processes, ports, resources, diagnostics,
+and recovery.
+
+That separation is important. The design does not create four unrelated logs
+for files, processes, resources, and publication. It gives them one join key:
+the workspace session. The session is what turns machine facts into one
+inspectable unit of agent work.
+
 Now the unit of work is clear. The next question is what all of those temporary
 sessions start from.
 
 ---
 
 ## Chapter 13 — One LayerStack, Many Stable Bases
+
+Chapter 12 gave each unit of work an owner. Part I's first challenge still asks
+what that owner actually sees: a stable project state, or another agent's
+moving target.
 
 Two coding tasks enter the same sandbox. Both need the repository, toolchain,
 and accepted project state. They do not need the same writable checkout.
@@ -396,6 +484,10 @@ represented.
 ---
 
 ## Chapter 14 — Inside LayerStack: Layers, Manifests, and Leases
+
+A lease promises that a workspace keeps a stable base. Auditability requires a
+stronger answer: the runtime must identify exactly which ordered filesystem
+history that base represents.
 
 Agent A and Agent B both open `src/server.rs` at R42. Each reads the same
 published file until its private workspace changes that path. This behavior
