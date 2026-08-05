@@ -253,7 +253,7 @@ Files, processes, resources, changesets, and publication all need an owner. “T
 
 ---
 
-## Chapter 10 — The Workspace Contract: A Workspace Session per Tool Call
+## Chapter 10 — Workspace Sessions at the Tool-Call Boundary
 
 After the failed test run, the orchestrator asks:
 
@@ -448,17 +448,18 @@ CLI and MCP expose these groups to humans and agents. The separation lets an ins
 
 For an external orchestrator, these surfaces make the sandbox a service: the agent remains outside and calls runtime operations through RPC or MCP. An embedded agent can run inside the environment while its controller still uses the same management and observability boundaries. In both modes, the workspace session remains the unit of private work.
 
-### From the product model to the system
+### From the product model to the workspace
 
 Part I began with tool-call side effects, found the multi-agent concurrency ceiling, and introduced the session and publication boundary that make work attributable.
 
-Ephemeral Sandbox is the runtime built around that model. Part II follows one request through its implementation:
+Ephemeral Sandbox is the runtime built around that model. Part II opens the workspace itself:
 
 ```text
-CLI / MCP → catalog → client → protocol → gateway → manager → daemon → runtime
+shared LayerStack → leased workspace session → private COW delta
 ```
 
-That path must preserve the base, session identity, publication decision, and evidence established in Part I.
+It explains how many temporary private workspaces can begin from one durable
+history before Part III follows their return through capture and publication.
 
 ---
 

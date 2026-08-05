@@ -71,12 +71,13 @@ second mode, then name four explicit challenges: private execution and
 publication, file and line auditability, resource ownership, and
 lifecycle/recovery.
 
-### 10. The Workspace Contract: A Workspace Session per Tool Call
+### 10. Workspace Sessions at the Tool-Call Boundary
 
-Lead with the default invariant: every independent command tool call receives an
-automatic private workspace session, while related calls share an explicit
-multi-call session only by choice. Then define project base, LayerStack,
-sandbox, private delta, changeset, publication, and artifact.
+Explain automatic `publish_then_destroy` sessions for independent commands,
+explicit sessions for related command and file operations, and the sessionless
+file-operation exception. Then define project base, LayerStack, sandbox,
+workspace session, command session, private delta, changeset, publication, and
+artifact.
 
 ### 11. Ephemeral Sandbox: Raise the Concurrency Ceiling for Multi-Agent Programming
 
@@ -84,126 +85,134 @@ Present Ephemeral Sandbox as one agent workspace runtime connecting shared
 LayerStack history, private sessions, attributable execution, conflict-aware
 publication, provenance, and observability.
 
-## Part II — Reading the System
+## Part II — LayerStack and Shared Project History
 
-### 12. From Agent Request to Runtime
+### 12. One LayerStack, Many Workspace Sessions
 
-Follow CLI/MCP → catalog → client → protocol → gateway → manager → daemon →
-runtime.
+Introduce the sandbox, durable LayerStack, leased workspace session, nested
+command session, private mutation, and atomic publication mental model.
 
-### 13. Contracts Before Transports
+### 13. LayerStack: Immutable Shared History
 
-Operation contracts, catalogs, routes, request envelopes, response envelopes,
-and compatibility.
+Content-addressed base, published, and squashed layers; newest-first manifests;
+root hashes; leases; active heads; and storage ownership.
 
-### 14. Gateway, Manager, and Daemon
+### 14. Automatic and Explicit Workspace Sessions
 
-Separate composition, lifecycle management, sandbox execution, and runtime
-behavior.
+Automatic sessions for independent commands, explicit sessions for related
+operations, and sessionless snapshot/file-operation behavior.
 
-### 15. CLI, MCP, and the Agent-Facing Interface
+## Part III — Private Workspaces and Published History
 
-Why management, runtime, and observability are separate surfaces.
+### 15. Copy-on-Write Workspace Projection
 
-## Part III — Shared History, Private Workspaces
+Open Part III by turning the Part II LayerStack lease into a writable kernel
+view: leased shared lower layers, private upper and work directories, read
+fall-through, and private deltas without full project copies.
 
-### 16. LayerStack: Immutable Shared History
+### 16. Namespace Holders and Command Sessions
 
-Content-addressed layers, manifests, root hashes, leases, active heads, and
-storage ownership.
+Open Part III by keeping the Part II COW workspace alive across operations.
+Cover holder-owned mount and process namespaces, namespace file descriptors,
+one-shot runners, and the distinction between process completion and workspace
+finalization. End with a settled private delta ready for capture.
 
-### 17. Copy-on-Write Workspace Sessions
-
-Private writable views over a shared base without repeatedly cloning the
-project.
-
-### 18. Overlay Mounts and Namespace Holders
-
-Mount lifecycle, holder processes, namespace file descriptors, and remount
-behavior.
-
-### 19. Shared and Isolated Network Profiles
-
-Shared networking, isolated networking, veth pairs, bridge allocation, and
-per-session port behavior.
-
-### 20. Commands, PTYs, and Process Lifecycle
-
-Shell execution, stdin, output streaming, transcript windows, process groups,
-timeouts, and cleanup.
-
-## Part IV — From Runtime State to Published Work
-
-### 21. Capturing a Workspace
+### 17. Capturing a Workspace
 
 How filesystem mutations become a changeset.
 
-### 22. Publish-Time Resolution
+### 18. Publish-Time Resolution
 
 Base revision, active revision, command changes, protected paths, and route
 preparation.
 
-### 23. Three-Way Merge and Conflict Semantics
+### 19. Three-Way Merge and Conflict Semantics
 
 Line-level merging, binary and oversized-file limitations, source conflicts,
 and rejection reasons.
 
-### 24. Provenance and File Blame
+### 20. Provenance and File Blame
 
 Structural line origins, ownership attribution, file history, and reviewability.
 
-### 25. Publish, Reject, Rebase, or Destroy
+### 21. Publish, Reject, Rebase, or Destroy
 
 Why rejection is normal control flow and why publication must be all-or-reject.
 
-### 26. Squashing, Leases, and Layer Garbage Collection
+### 22. Squashing, Leases, and Layer Garbage Collection
 
 Autosquash, active sessions, storage cleanup, remount sweeps, and lease safety.
 
-## Part V — Seeing and Operating the Runtime
+## Part IV — Running and Operating the Workspace Runtime
 
-### 27. Observability as a First-Class Runtime Surface
+### 23. Commands, PTYs, and Process Lifecycle
+
+Shell execution, stdin, output streaming, transcript windows, process groups,
+timeouts, and cleanup.
+
+### 24. Network Profiles and Port Ownership
+
+Shared and isolated networking, veth pairs, bridge allocation, port behavior,
+and attribution.
+
+### 25. Observability as a First-Class Runtime Surface
 
 Events, traces, snapshots, diagnostics, and query boundaries.
 
-### 28. Resource Isolation
+### 26. Resource Ownership and Isolation
 
-cgroups, CPU and memory accounting, disk usage, process topology, and workload
-reserves.
+cgroups, CPU, memory, workspace disk use, changeset size, process topology,
+occupied ports, workload reserves, and ownership attribution.
 
-### 29. Teardown, Failure, and Recovery
+### 27. Teardown, Failure, and Recovery
 
 Holder exits, retryable cleanup, stale generations, failed remounts, and
 shutdown transactions.
 
-### 30. Configuration and Platform Boundaries
+### 28. Configuration and Platform Boundaries
 
 Linux, macOS, Windows, Docker, Multipass, YAML configuration, and provider
 behavior.
 
-### 31. Testing the Agent Workspace
+### 29. Testing and Benchmarking Parallel Workspaces
 
-Unit tests, contract tests, integration tests, live CLI/MCP tests, and external
-benchmark repositories.
+Unit, contract, integration, and live CLI/MCP tests, followed by comparisons of
+worktrees, copied sandboxes, and LayerStack-backed sessions.
 
-### 32. Benchmarking Parallel Agents
+## Part V — The Boundary of Version 1
 
-Compare worktrees, copied sandboxes, and LayerStack-backed sessions across
-concurrency, latency, conflict rate, storage, and human-review effort.
-
-## Part VI — The Boundary of Version 1
-
-### 33. What Version 1 Solves
+### 30. What Version 1 Solves
 
 Reliable parallel workspace isolation, execution boundaries, publication,
 provenance, and observability.
 
-### 34. What Version 1 Deliberately Does Not Solve
+### 31. What Version 1 Deliberately Does Not Solve
 
 MicroVM tenancy, credential brokering, unrestricted hostile workloads,
 durable process checkpoints, fleet scheduling, and browser-state isolation.
 
-### 35. The Next Runtime Boundary
+### 32. The Next Runtime Boundary
 
 Introduce the design questions that will become Volume II without solving them
 inside Volume I.
+
+## Part VI — Reading the Implementation: From Tool Call to Workspace Runtime
+
+### 33. Following One Tool Call Through the Runtime
+
+Follow CLI/MCP → catalog → client → protocol → gateway → manager → daemon →
+runtime.
+
+### 34. Contracts Before Transports
+
+Operation contracts, catalogs, routes, request envelopes, response envelopes,
+and compatibility.
+
+### 35. Gateway, Manager, and Daemon
+
+Separate composition, lifecycle management, sandbox execution, and runtime
+behavior.
+
+### 36. CLI, MCP, and the Agent-Facing Interface
+
+Why management, runtime, and observability are separate surfaces.

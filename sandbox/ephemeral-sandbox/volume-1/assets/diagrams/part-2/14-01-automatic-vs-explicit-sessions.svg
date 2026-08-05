@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="760" viewBox="0 0 1200 760" role="img" aria-labelledby="title desc">
+  <title id="title">Automatic and explicit workspace-session lifecycles</title>
+  <desc id="desc">An automatic session belongs to one independent command and publishes or rejects before destruction. An explicit session keeps one private workspace across an edit and two commands until deliberate finalization.</desc>
+  <metadata>Derived from the workspace-session, lease, and publication language of https://ephemeral-sandbox.com/architecture/layerstack and the website’s light-theme HTML components.</metadata>
+  <defs>
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0 0 10 5 0 10Z" fill="#16749b"/>
+    </marker>
+    <marker id="arrow-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0 0 10 5 0 10Z" fill="#2fa87a"/>
+    </marker>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="6" stdDeviation="8" flood-color="#2a201b" flood-opacity="0.07"/>
+    </filter>
+    <style>
+      .sans { font-family: Inter, Arial, sans-serif; }
+      .mono { font-family: "JetBrains Mono", Consolas, monospace; }
+      .title { font-size: 30px; font-weight: 750; fill: #2a201b; }
+      .column-title { font-size: 24px; font-weight: 750; }
+      .step { font-size: 18px; font-weight: 680; fill: #2a201b; }
+      .kicker { font-size: 13px; font-weight: 700; letter-spacing: 1.8px; }
+      .small { font-size: 15px; }
+      .tiny { font-size: 13px; }
+      .muted { fill: #7a695e; }
+    </style>
+  </defs>
+
+  <rect width="1200" height="760" rx="28" fill="#fbf5ec"/>
+  <rect x="18" y="18" width="1164" height="724" rx="24" fill="none" stroke="#e5d5bf" stroke-width="2"/>
+  <text x="54" y="61" class="mono kicker" fill="#16749b">WORKSPACE SESSION PER TOOL-CALL BOUNDARY</text>
+  <text x="54" y="102" class="sans title">Automatic for independent work; explicit for related operations</text>
+
+  <!-- Column backgrounds -->
+  <rect x="52" y="142" width="525" height="550" rx="24" fill="#f5fafc" stroke="#a9cfdf" stroke-width="2"/>
+  <rect x="623" y="142" width="525" height="550" rx="24" fill="#f3faf7" stroke="#9ecfbd" stroke-width="2"/>
+  <line x1="600" y1="160" x2="600" y2="683" stroke="#e5d5bf" stroke-width="2" stroke-dasharray="6 8"/>
+
+  <!-- Headers -->
+  <rect x="77" y="166" width="475" height="70" rx="18" fill="#e8f3f7" stroke="#16749b"/>
+  <text x="103" y="195" class="mono kicker" fill="#16749b">AUTOMATIC</text>
+  <text x="103" y="222" class="sans small muted">no workspace_session_id</text>
+  <rect x="648" y="166" width="475" height="70" rx="18" fill="#e9f7f1" stroke="#2fa87a"/>
+  <text x="674" y="195" class="mono kicker" fill="#2fa87a">EXPLICIT</text>
+  <text x="674" y="222" class="sans small muted">reuse one workspace_session_id</text>
+
+  <!-- Automatic steps -->
+  <g filter="url(#shadow)">
+    <rect x="113" y="267" width="403" height="58" rx="16" fill="#fff" stroke="#16749b"/>
+    <rect x="113" y="345" width="403" height="58" rx="16" fill="#fff" stroke="#16749b"/>
+    <rect x="113" y="423" width="403" height="58" rx="16" fill="#fff" stroke="#16749b"/>
+    <rect x="113" y="501" width="403" height="58" rx="16" fill="#fff" stroke="#cf8a2c"/>
+    <rect x="113" y="579" width="403" height="58" rx="16" fill="#fff" stroke="#cf6a5c"/>
+  </g>
+  <text x="145" y="303" class="sans step">1 · Tool call</text>
+  <text x="145" y="381" class="sans step">2 · Temporary workspace session</text>
+  <text x="145" y="459" class="sans step">3 · Execute command</text>
+  <text x="145" y="537" class="sans step">4 · Publish or reject</text>
+  <text x="145" y="615" class="sans step">5 · Destroy session</text>
+  <path d="M314 325 V342 M314 403 V420 M314 481 V498 M314 559 V576" stroke="#16749b" stroke-width="3" marker-end="url(#arrow-blue)"/>
+
+  <!-- Explicit steps -->
+  <g filter="url(#shadow)">
+    <rect x="684" y="267" width="403" height="58" rx="16" fill="#fff" stroke="#2fa87a"/>
+    <rect x="684" y="345" width="403" height="58" rx="16" fill="#fff" stroke="#2fa87a"/>
+    <rect x="684" y="423" width="403" height="58" rx="16" fill="#fff" stroke="#2fa87a"/>
+    <rect x="684" y="501" width="403" height="58" rx="16" fill="#fff" stroke="#2fa87a"/>
+    <rect x="684" y="579" width="403" height="58" rx="16" fill="#fff" stroke="#8e5ca6"/>
+  </g>
+  <text x="716" y="303" class="sans step">1 · Open or reuse workspace</text>
+  <text x="716" y="381" class="sans step">2 · Edit files</text>
+  <text x="716" y="459" class="sans step">3 · Command 1</text>
+  <text x="716" y="537" class="sans step">4 · Command 2</text>
+  <text x="716" y="615" class="sans step">5 · Deliberate finalization</text>
+  <path d="M885 325 V342 M885 403 V420 M885 481 V498 M885 559 V576" stroke="#2fa87a" stroke-width="3" marker-end="url(#arrow-green)"/>
+
+  <!-- Takeaways -->
+  <rect x="133" y="654" width="363" height="30" rx="15" fill="#e8f3f7"/>
+  <text x="314" y="674" text-anchor="middle" class="mono tiny" fill="#16749b">one independent command → one workspace</text>
+  <rect x="704" y="654" width="363" height="30" rx="15" fill="#e9f7f1"/>
+  <text x="885" y="674" text-anchor="middle" class="mono tiny" fill="#2fa87a">related operations → one workspace</text>
+</svg>

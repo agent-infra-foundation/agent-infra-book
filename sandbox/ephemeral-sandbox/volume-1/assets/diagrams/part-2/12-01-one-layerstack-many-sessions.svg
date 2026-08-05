@@ -1,0 +1,86 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680" role="img" aria-labelledby="title desc">
+  <title id="title">One LayerStack, many private workspace sessions</title>
+  <desc id="desc">One shared immutable LayerStack supplies the same leased history to three private workspace sessions. Each session owns a small private delta. Accepted publication returns one new layer to shared history.</desc>
+  <metadata>Derived from the HTML composition and light-theme palette of https://ephemeral-sandbox.com/architecture/layerstack.</metadata>
+  <defs>
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0 0 10 5 0 10Z" fill="#16749b"/>
+    </marker>
+    <marker id="arrow-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0 0 10 5 0 10Z" fill="#8e5ca6"/>
+    </marker>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="7" stdDeviation="9" flood-color="#2a201b" flood-opacity="0.08"/>
+    </filter>
+    <style>
+      .sans { font-family: Inter, Arial, sans-serif; }
+      .mono { font-family: "JetBrains Mono", Consolas, monospace; }
+      .title { font-size: 30px; font-weight: 750; fill: #2a201b; }
+      .kicker { font-size: 13px; font-weight: 700; letter-spacing: 1.8px; fill: #16749b; }
+      .muted { fill: #7a695e; }
+      .card-title { font-size: 22px; font-weight: 720; fill: #2a201b; }
+      .small { font-size: 15px; }
+      .tiny { font-size: 13px; }
+    </style>
+  </defs>
+
+  <rect width="1200" height="680" rx="28" fill="#fbf5ec"/>
+  <rect x="18" y="18" width="1164" height="644" rx="24" fill="none" stroke="#e5d5bf" stroke-width="2"/>
+
+  <text x="54" y="61" class="mono kicker">SHARED HISTORY · PRIVATE FUTURES</text>
+  <text x="54" y="102" class="sans title">One LayerStack, many workspace sessions</text>
+  <text x="54" y="132" class="sans small muted">Agents share published truth—not unfinished filesystem mutations.</text>
+
+  <!-- Shared LayerStack -->
+  <g filter="url(#shadow)">
+    <rect x="62" y="194" width="338" height="310" rx="22" fill="#fff" stroke="#16749b" stroke-width="2.5"/>
+  </g>
+  <text x="91" y="230" class="mono kicker">SHARED HISTORY</text>
+  <text x="91" y="270" class="sans card-title">LayerStack</text>
+  <text x="91" y="296" class="sans tiny muted">newest published layer wins</text>
+
+  <rect x="96" y="326" width="270" height="52" rx="12" fill="#e8f3f7" stroke="#16749b" stroke-width="1.5"/>
+  <text x="116" y="349" class="mono tiny" fill="#16749b">R42</text>
+  <text x="116" y="369" class="sans tiny muted">latest published history</text>
+  <rect x="108" y="386" width="246" height="45" rx="11" fill="#eef5f3" stroke="#9ecfbd"/>
+  <text x="128" y="414" class="sans tiny" fill="#2a201b">earlier published layers</text>
+  <rect x="120" y="439" width="222" height="43" rx="11" fill="#f3e6d0" stroke="#b97445"/>
+  <text x="140" y="466" class="sans tiny" fill="#2a201b">B1 · shared base</text>
+
+  <!-- Shared leased view -->
+  <path d="M400 349 H468" fill="none" stroke="#16749b" stroke-width="4"/>
+  <path d="M468 349 V232 H530" fill="none" stroke="#16749b" stroke-width="3" marker-end="url(#arrow-blue)"/>
+  <path d="M468 349 H530" fill="none" stroke="#16749b" stroke-width="3" marker-end="url(#arrow-blue)"/>
+  <path d="M468 349 V466 H530" fill="none" stroke="#16749b" stroke-width="3" marker-end="url(#arrow-blue)"/>
+  <rect x="422" y="314" width="140" height="30" rx="15" fill="#fbf5ec" stroke="#e5d5bf"/>
+  <text x="492" y="334" text-anchor="middle" class="mono tiny" fill="#16749b">leased history</text>
+
+  <!-- Private workspace sessions -->
+  <g filter="url(#shadow)">
+    <rect x="548" y="178" width="480" height="108" rx="20" fill="#fff" stroke="#2fa87a" stroke-width="2"/>
+    <rect x="548" y="295" width="480" height="108" rx="20" fill="#fff" stroke="#2fa87a" stroke-width="2"/>
+    <rect x="548" y="412" width="480" height="108" rx="20" fill="#fff" stroke="#2fa87a" stroke-width="2"/>
+  </g>
+
+  <g class="sans">
+    <text x="579" y="215" class="card-title">Workspace session A</text>
+    <text x="579" y="247" class="small muted">stable view of R42</text>
+    <rect x="878" y="205" width="116" height="42" rx="21" fill="#e9f7f1" stroke="#2fa87a"/>
+    <text x="936" y="231" text-anchor="middle" class="mono tiny" fill="#2fa87a">private ΔA</text>
+
+    <text x="579" y="332" class="card-title">Workspace session B</text>
+    <text x="579" y="364" class="small muted">stable view of R42</text>
+    <rect x="878" y="322" width="116" height="42" rx="21" fill="#e9f7f1" stroke="#2fa87a"/>
+    <text x="936" y="348" text-anchor="middle" class="mono tiny" fill="#2fa87a">private ΔB</text>
+
+    <text x="579" y="449" class="card-title">Workspace session C</text>
+    <text x="579" y="481" class="small muted">stable view of R42</text>
+    <rect x="878" y="439" width="116" height="42" rx="21" fill="#e9f7f1" stroke="#2fa87a"/>
+    <text x="936" y="465" text-anchor="middle" class="mono tiny" fill="#2fa87a">private ΔC</text>
+  </g>
+
+  <!-- Publication return -->
+  <path d="M1028 479 C1094 479 1094 588 1014 588 H242 C178 588 178 535 214 505" fill="none" stroke="#8e5ca6" stroke-width="4" stroke-linecap="round" marker-end="url(#arrow-purple)"/>
+  <rect x="419" y="565" width="374" height="43" rx="21" fill="#fff8ff" stroke="#c9a9d8"/>
+  <text x="606" y="592" text-anchor="middle" class="sans small" fill="#704281">accepted publication returns one new layer</text>
+</svg>

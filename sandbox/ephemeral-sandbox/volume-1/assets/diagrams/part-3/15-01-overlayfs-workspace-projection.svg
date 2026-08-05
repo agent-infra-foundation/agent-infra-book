@@ -1,0 +1,108 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700" role="img" aria-labelledby="title desc">
+  <title id="title">OverlayFS turns a LayerStack lease into a writable workspace</title>
+  <desc id="desc">A read-only lowerdir chain from leased LayerStack history, a private writable upperdir, and a private workdir feed an OverlayFS mount. The agent uses the merged workspace. Reads fall through to lowerdir, while writes and captured changes remain in upperdir.</desc>
+  <metadata>Derived from the private mutation and session overlay HTML elements at https://ephemeral-sandbox.com/architecture/layerstack.</metadata>
+  <defs>
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0 0 10 5 0 10Z" fill="#16749b"/>
+    </marker>
+    <marker id="arrow-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0 0 10 5 0 10Z" fill="#2fa87a"/>
+    </marker>
+    <marker id="arrow-cedar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto">
+      <path d="M0 0 10 5 0 10Z" fill="#b97445"/>
+    </marker>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="7" stdDeviation="9" flood-color="#2a201b" flood-opacity="0.08"/>
+    </filter>
+    <style>
+      .sans { font-family: Inter, Arial, sans-serif; }
+      .mono { font-family: "JetBrains Mono", Consolas, monospace; }
+      .title { font-size: 30px; font-weight: 750; fill: #2a201b; }
+      .kicker { font-size: 13px; font-weight: 700; letter-spacing: 1.8px; fill: #16749b; }
+      .kicker-green { font-size: 13px; font-weight: 700; letter-spacing: 1.8px; fill: #2fa87a; }
+      .kicker-cedar { font-size: 13px; font-weight: 700; letter-spacing: 1.8px; fill: #b97445; }
+      .card-title { font-size: 22px; font-weight: 720; fill: #2a201b; }
+      .small { font-size: 15px; }
+      .tiny { font-size: 13px; }
+      .muted { fill: #7a695e; }
+    </style>
+  </defs>
+
+  <rect width="1200" height="700" rx="28" fill="#fbf5ec"/>
+  <rect x="18" y="18" width="1164" height="664" rx="24" fill="none" stroke="#e5d5bf" stroke-width="2"/>
+  <text x="54" y="61" class="mono kicker">LEASED HISTORY → WRITABLE WORKSPACE</text>
+  <text x="54" y="102" class="sans title">OverlayFS projects shared layers beneath private session state</text>
+  <text x="54" y="132" class="sans small muted">The agent uses the merged mount; the three backing directories have different jobs.</text>
+
+  <!-- upperdir -->
+  <g filter="url(#shadow)">
+    <rect x="62" y="188" width="360" height="116" rx="20" fill="#fff" stroke="#2fa87a" stroke-width="2"/>
+  </g>
+  <text x="91" y="225" class="mono kicker-green">UPPERDIR · RW</text>
+  <text x="91" y="257" class="sans card-title">private session delta</text>
+  <text x="91" y="283" class="sans tiny muted">writes · copy-ups · whiteouts</text>
+  <rect x="302" y="209" width="91" height="29" rx="14" fill="#e9f7f1"/>
+  <text x="347" y="229" text-anchor="middle" class="mono tiny" fill="#2fa87a">captured</text>
+
+  <!-- lowerdir -->
+  <g filter="url(#shadow)">
+    <rect x="62" y="332" width="360" height="128" rx="20" fill="#fff" stroke="#16749b" stroke-width="2"/>
+  </g>
+  <text x="91" y="369" class="mono kicker">LOWERDIR · RO</text>
+  <text x="91" y="401" class="sans card-title">leased LayerStack</text>
+  <rect x="91" y="417" width="301" height="28" rx="14" fill="#e8f3f7"/>
+  <text x="241" y="436" text-anchor="middle" class="mono tiny" fill="#16749b">L43:L42:S40:B1 · newest first</text>
+
+  <!-- workdir -->
+  <g filter="url(#shadow)">
+    <rect x="62" y="488" width="360" height="112" rx="20" fill="#fff" stroke="#b97445" stroke-width="2"/>
+  </g>
+  <text x="91" y="525" class="mono kicker-cedar">WORKDIR · PRIVATE</text>
+  <text x="91" y="557" class="sans card-title">OverlayFS bookkeeping</text>
+  <text x="91" y="583" class="sans tiny muted">internal; not agent workspace content</text>
+
+  <!-- Inputs to mount -->
+  <path d="M422 246 H486 V323" fill="none" stroke="#2fa87a" stroke-width="3.5" marker-end="url(#arrow-green)"/>
+  <path d="M422 396 H486" fill="none" stroke="#16749b" stroke-width="3.5" marker-end="url(#arrow-blue)"/>
+  <path d="M422 544 H486 V467" fill="none" stroke="#b97445" stroke-width="3.5" marker-end="url(#arrow-cedar)"/>
+
+  <!-- OverlayFS -->
+  <g filter="url(#shadow)">
+    <rect x="504" y="300" width="225" height="190" rx="24" fill="#fff" stroke="#e5d5bf" stroke-width="2"/>
+  </g>
+  <circle cx="616" cy="350" r="31" fill="#e8f3f7" stroke="#16749b"/>
+  <text x="616" y="360" text-anchor="middle" class="sans" font-size="32" fill="#16749b">+</text>
+  <text x="616" y="409" text-anchor="middle" class="sans card-title">OverlayFS</text>
+  <text x="616" y="437" text-anchor="middle" class="sans tiny muted">one merged projection</text>
+  <rect x="543" y="452" width="146" height="25" rx="12" fill="#f3e6d0"/>
+  <text x="616" y="469" text-anchor="middle" class="mono tiny" fill="#2a201b">session S18</text>
+
+  <path d="M729 395 H784" fill="none" stroke="#16749b" stroke-width="4" marker-end="url(#arrow-blue)"/>
+
+  <!-- Merged workspace -->
+  <g filter="url(#shadow)">
+    <rect x="802" y="190" width="334" height="410" rx="24" fill="#fff" stroke="#2fa87a" stroke-width="2.5"/>
+  </g>
+  <text x="832" y="228" class="mono kicker-green">MERGED MOUNT</text>
+  <text x="832" y="268" class="sans card-title">/workspace</text>
+  <text x="832" y="296" class="sans small muted">the project view used by the agent</text>
+
+  <rect x="832" y="326" width="274" height="62" rx="14" fill="#f7f4ef" stroke="#e5d5bf"/>
+  <text x="855" y="352" class="mono tiny" fill="#2a201b">src/server.rs</text>
+  <text x="855" y="374" class="sans tiny muted">upperdir version, otherwise lowerdir</text>
+  <rect x="832" y="400" width="274" height="62" rx="14" fill="#f7f4ef" stroke="#e5d5bf"/>
+  <text x="855" y="426" class="mono tiny" fill="#2a201b">tests/server_test.rs</text>
+  <text x="855" y="448" class="sans tiny muted">new writes land in upperdir</text>
+
+  <rect x="832" y="492" width="126" height="38" rx="19" fill="#e8f3f7"/>
+  <text x="895" y="516" text-anchor="middle" class="mono tiny" fill="#16749b">read union</text>
+  <rect x="974" y="492" width="132" height="38" rx="19" fill="#e9f7f1"/>
+  <text x="1040" y="516" text-anchor="middle" class="mono tiny" fill="#2fa87a">write private</text>
+
+  <!-- Rules -->
+  <rect x="502" y="562" width="228" height="39" rx="19" fill="#e8f3f7" stroke="#a9cfdf"/>
+  <text x="616" y="587" text-anchor="middle" class="sans tiny" fill="#16749b">reads: upperdir → lowerdir</text>
+  <rect x="502" y="612" width="228" height="39" rx="19" fill="#e9f7f1" stroke="#9ecfbd"/>
+  <text x="616" y="637" text-anchor="middle" class="sans tiny" fill="#2fa87a">writes + capture: upperdir</text>
+</svg>

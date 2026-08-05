@@ -222,7 +222,7 @@ works or that shared mutable state is the cure.
 **Exit question:** What exact objects and invariants would make the result
 unambiguous?
 
-### Chapter 10: The Workspace Session Contract:  Workspace Session per Tool Call Execution
+### Chapter 10: Workspace Sessions at the Tool-Call Boundary
 
 **Reader question:** What must an agent-facing workspace promise?
 
@@ -312,9 +312,9 @@ calls.
 1. **Ephemeral Sandbox in One View** — connect LayerStack, private sessions,
    publication, and evidence in one product diagram.
 2. **Three Agent-Facing Surfaces** — introduce management, runtime, and
-   observability before the Part II request-path tour.
-3. **From the Product Model to the System** — hand the reader directly to the
-   request path.
+   observability without expanding the internal service graph.
+3. **From the Product Model to the Workspace** — hand the reader to shared
+   LayerStack history and private workspace sessions in Part II.
 
 **Figure to produce:**
 
@@ -327,7 +327,9 @@ calls.
 - **Agent-Facing Surfaces:** management, runtime, and observability.
 
 **Exit transition:** Now that the supported contract is clear, Part II can
-trace how a request travels through the system that implements it.
+explain LayerStack history, leases, and the session lifecycles that consume
+them. Part III begins with COW workspace projection, then namespace execution,
+capture, and publication.
 
 ## Common Reader Rhythm, Not a Fixed Formula
 
@@ -421,8 +423,8 @@ shared" over "Git worktree architecture." Include a legend on the first figure
 of each chapter and never encode meaning by color alone.
 
 Avoid showing the full Ephemeral Sandbox component architecture in Part I.
-Readers should first understand state, ownership, and boundaries. Part II can
-then attach service names to that mental model.
+Readers should first understand state, ownership, and boundaries. Part II
+deepens the workspace model; Part VI attaches service and crate names to it.
 
 ## Editorial Constraints for Part I
 
@@ -431,7 +433,7 @@ then attach service names to that mental model.
 - Use the same names for the workspace-contract objects everywhere.
 - Introduce no internal crate or service unless the reader needs it to explain
   an externally visible behavior. The full implementation tour belongs in
-  Part II.
+  Part VI.
 - Use one primary diagram and at most two supporting diagrams per chapter.
 - Place product comparisons after the conceptual model, so products illustrate
   categories rather than define them.
@@ -450,7 +452,8 @@ then attach service names to that mental model.
 - [ ] Every workspace-contract object has identity, ownership, mutability, and
       failure semantics.
 - [ ] v1 claims are grounded in the current repository evidence baseline.
-- [ ] Chapter 11 creates a clean handoff to the request-path material in Part II.
+- [ ] Chapter 11 creates a clean handoff to shared history and private
+      workspaces in Part II.
 - [ ] The manuscript contains no exercises, labs, quizzes, or reader homework.
 - [ ] The manuscript ends with references for research claims, product behavior,
       official tool semantics, and the implementation evidence baseline.

@@ -20,11 +20,11 @@ A book series about workspace runtimes for parallel coding agents.
 
 - **Part 0 — Overview of Agent Sandboxes in Practice** — [English](sandbox/ephemeral-sandbox/volume-1/chapters/PART-0.md) · [简体中文](sandbox/ephemeral-sandbox/volume-1/chapters/PART-0.zh-CN.md)
 - **Part I — The Concurrency Ceiling of Parallel Coding Agents** — [English](sandbox/ephemeral-sandbox/volume-1/chapters/PART-I.md) · [简体中文](sandbox/ephemeral-sandbox/volume-1/chapters/PART-I.zh-CN.md)
-- **Part II — Reading the System** — Planned
-- **Part III — Shared History and Private Workspaces** — Planned
-- **Part IV — From Runtime State to Published Work** — Planned
-- **Part V — Seeing and Operating the Runtime** — Planned
-- **Part VI — The Boundary of Version 1** — Planned
+- **Part II — LayerStack and Shared Project History** — Planned
+- **Part III — Private Workspaces and Published History** — Planned
+- **Part IV — Running and Operating the Workspace Runtime** — Planned
+- **Part V — The Boundary of Version 1** — Planned
+- **Part VI — Reading the Implementation: From Tool Call to Workspace Runtime** — Planned
 
 [Explore Volume I →](sandbox/ephemeral-sandbox/volume-1/README.md)
 

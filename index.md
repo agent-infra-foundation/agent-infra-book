@@ -15,3 +15,8 @@ publication.
 - [Part 0 manuscript — 智能体沙箱实践概览（简体中文）](sandbox/ephemeral-sandbox/volume-1/chapters/PART-0.zh-CN.md)
 - [Part I manuscript — The Concurrency Ceiling of Parallel Coding Agents](sandbox/ephemeral-sandbox/volume-1/chapters/PART-I.md)
 - [Part I manuscript — 并行编码智能体的并发上限（简体中文）](sandbox/ephemeral-sandbox/volume-1/chapters/PART-I.zh-CN.md)
+- **Part II — LayerStack and Shared Project History** — Planned
+- **Part III — Private Workspaces and Published History** — Planned
+- **Part IV — Running and Operating the Workspace Runtime** — Planned
+- **Part V — The Boundary of Version 1** — Planned
+- **Part VI — Reading the Implementation: From Tool Call to Workspace Runtime** — Planned
