@@ -85,22 +85,24 @@ Present Ephemeral Sandbox as one agent workspace runtime connecting shared
 LayerStack history, private sessions, attributable execution, conflict-aware
 publication, provenance, and observability.
 
-## Part II — LayerStack and Shared Project History
+## Part II — Shared History and Workspace Sessions
 
-### 12. One LayerStack, Many Workspace Sessions
+### 12. Workspace Session Per Tool Call
 
-Introduce the sandbox, durable LayerStack, leased workspace session, nested
-command session, private mutation, and atomic publication mental model.
+Begin with the user-visible lifecycle: automatic workspaces for independent
+commands, explicit workspaces for related operations, session-ID behavior,
+command sessions, and the task-scoped ownership rule.
 
-### 13. LayerStack: Immutable Shared History
+### 13. One LayerStack, Many Stable Bases
 
-Content-addressed base, published, and squashed layers; newest-first manifests;
-root hashes; leases; active heads; and storage ownership.
+Explain how sessions share published history without sharing unfinished writes,
+how leases keep starting revisions stable, and how concurrent sessions may use
+different LayerStack revisions.
 
-### 14. Automatic and Explicit Workspace Sessions
+### 14. Inside LayerStack: Layers, Manifests, and Leases
 
-Automatic sessions for independent commands, explicit sessions for related
-operations, and sessionless snapshot/file-operation behavior.
+Cover base, published, and squashed layers; newest-first path resolution;
+manifest identity and root hashes; lease-aware squashing and storage ownership.
 
 ## Part III — Private Workspaces and Published History
 

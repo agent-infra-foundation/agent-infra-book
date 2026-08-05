@@ -4,8 +4,8 @@ Part 0 is available as the complete [Overview of Agent Sandboxes in Practice
 manuscript](PART-0.md) and as a [Simplified Chinese edition](PART-0.zh-CN.md).
 Part I is also available as the complete [Concurrency Ceiling of Parallel Coding
 Agents manuscript](PART-I.md) and as a [Simplified Chinese
-edition](PART-I.zh-CN.md). Part II is available as the complete [LayerStack and
-Shared Project History manuscript](PART-II.md) and as a [Simplified Chinese
+edition](PART-I.zh-CN.md). Part II is available as the complete [Shared History
+and Workspace Sessions manuscript](PART-II.md) and as a [Simplified Chinese
 edition](PART-II.zh-CN.md). [Part III](PART-III.md) is currently a draft. Later
 chapters will become Markdown manuscript files as they are drafted.
 

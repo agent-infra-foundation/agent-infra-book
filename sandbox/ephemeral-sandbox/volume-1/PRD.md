@@ -237,37 +237,36 @@ workspace session per independent command tool call: shared LayerStack history,
 private workspace sessions, automatic and explicit lifecycles, attributable
 execution, conflict-aware publication, provenance, and observability.
 
-## Part II — LayerStack and Shared Project History
+## Part II — Shared History and Workspace Sessions
 
-Move from the Part I product definition into the filesystem state model that
+Move from the Part I product definition into the workspace-session lifecycle a
+tool call experiences, then descend into the shared filesystem state model that
 makes private parallel work possible. The organizing idea is one sandbox, one
-shared LayerStack, and many leased workspace sessions. End after defining the
-automatic and explicit session lifecycles that consume LayerStack history. Part
-III begins by constructing the private writable projection, then follows its
-execution, capture, and publication.
+shared LayerStack, and many task-scoped workspace sessions. Part III begins by
+constructing the private writable projection, then follows its execution,
+capture, and publication.
 
-### 12. One LayerStack, Many Workspace Sessions
+### 12. Workspace Session Per Tool Call
 
-Introduce the complete mental model: the sandbox is the managed runtime
-boundary; LayerStack is durable published history; a workspace session is a
-temporary writable projection of one leased history; and a command session is
-one process and transcript inside that workspace. Establish four invariants:
-history is shared, the execution view is leased, mutation is private, and
-publication is atomic.
+Start with the user-visible tool-call boundary. An independent `exec_command`
+uses an automatic `publish_then_destroy` workspace; a related sequence targets
+one explicit workspace. Explain how `workspace_session_id` changes file and
+command behavior, distinguish workspace and command lifetimes, and make the
+task-scoped ownership rule precise.
 
-### 13. LayerStack: Immutable Shared History
+### 13. One LayerStack, Many Stable Bases
 
-Cover content-addressed base, published, and squashed layers; newest-first
-manifests; root hashes; active heads; leases; and storage ownership. Explain why
-a live workspace pins the exact lower-layer chain from which it began.
+Explain how many sessions reuse published LayerStack history without sharing a
+writable checkout. Show how a lease preserves one session's starting revision
+while the active head advances, how sessions can lease different revisions,
+and what storage costs remain in their private deltas.
 
-### 14. Automatic and Explicit Workspace Sessions
+### 14. Inside LayerStack: Layers, Manifests, and Leases
 
-Explain the two workspace lifecycles. An independent command may use an
-automatic `publish_then_destroy` session. A multi-operation task may target an
-explicit session so commands and file operations share one stable private view.
-Contrast both with sessionless snapshot reads and operation-attributed file
-writes. This chapter is where the book makes the tool-call boundary precise.
+Cover content-addressed base, published, and squashed layers; newest-first path
+resolution; manifest versions and root hashes; active leases; and storage
+ownership. End with the four guarantees—shared history, leased execution base,
+private mutation, and atomic publication—and hand the lease to Part III.
 
 ## Part III — Private Workspaces and Published History
 

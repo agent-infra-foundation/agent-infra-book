@@ -452,14 +452,16 @@ For an external orchestrator, these surfaces make the sandbox a service: the age
 
 Part I began with tool-call side effects, found the multi-agent concurrency ceiling, and introduced the session and publication boundary that make work attributable.
 
-Ephemeral Sandbox is the runtime built around that model. Part II opens the workspace itself:
+Ephemeral Sandbox is the runtime built around that model. Part II follows the
+next tool call into its workspace-session boundary and shared history:
 
 ```text
-shared LayerStack → leased workspace session → private COW delta
+tool call → workspace session → LayerStack lease
 ```
 
-It explains how many temporary private workspaces can begin from one durable
-history before Part III follows their return through capture and publication.
+It explains automatic and explicit session lifecycles, then shows how many
+temporary workspaces can share stable LayerStack history. Part III constructs
+their private COW views and follows them through capture and publication.
 
 ---
 

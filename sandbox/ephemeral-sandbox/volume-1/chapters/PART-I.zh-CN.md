@@ -456,14 +456,13 @@ CLI 和 MCP 向人类与智能体暴露这三组能力。这种分离可以让�
 
 第 I 部分从工具调用产生的副作用出发，找到了多智能体并发上限，并引入让工作可归因的会话与发布边界。
 
-Ephemeral Sandbox 就是围绕这套模型构建的运行时。第 II 部分将打开工作空间本身：
+Ephemeral Sandbox 就是围绕这套模型构建的运行时。第 II 部分会跟随下一次工具调用，进入它的 workspace-session boundary（“工作空间会话边界”）与共享历史：
 
 ```text
-共享 LayerStack → 租用的 workspace session → 私有 COW delta（“写时复制增量”）
+工具调用 → workspace session → LayerStack lease
 ```
 
-它会解释许多短生命周期的私有工作空间如何从同一份持久历史开始；
-第 III 部分再沿着 capture（“捕获”）与 publication（“发布”）说明它们如何返回共享历史。
+它会解释 automatic 与 explicit session lifecycle，并说明许多临时工作空间如何共享稳定的 LayerStack 历史。第 III 部分再构建它们的 private COW view，并沿着 capture（“捕获”）与 publication（“发布”）说明它们如何返回共享历史。
 
 ---
 
