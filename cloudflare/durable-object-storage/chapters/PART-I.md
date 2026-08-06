@@ -7,7 +7,9 @@ workspace should not.
 > **Stable identity does not mean a permanent process.** A Durable Object owns
 > the durable state; execution can be reconstructed around it.
 
-![A chibi developer's dissolving computer remains connected to a stable archive of files and identity.](../assets/part-i/state-survives-machine.png)
+<p align="center">
+  <img src="../assets/part-i/state-survives-machine.png" alt="A chibi developer's dissolving computer remains connected to a stable archive of files and identity." width="50%" />
+</p>
 
 *Figure 1: Execution can disappear while identity and committed state survive.
 The illustration is conceptual; Durable Object memory and storage boundaries
@@ -231,7 +233,9 @@ and [legacy KV storage API](https://developers.cloudflare.com/durable-objects/ap
 > <u>**Critical boundary:**</u>
 > **FUSE mounts computerd's disposable VFS, not Durable Object SQLite.**
 
-![A durable file archive synchronizes with a disposable computer workshop containing a mounted folder and terminal.](../assets/part-i/sqlite-fuse-workspace.png)
+<p align="center">
+  <img src="../assets/part-i/sqlite-fuse-workspace.png" alt="A durable file archive synchronizes with a disposable computer workshop containing a mounted folder and terminal." width="50%" />
+</p>
 
 *Figure 2: Computer synchronizes the authoritative Workspace VFS with a
 disposable execution-side VFS. FUSE exposes the latter to native commands; it
@@ -559,7 +563,9 @@ and [computerd FUSE implementation](https://github.com/cloudflare/computer/tree/
 > A **10-byte overwrite** inside a full chunk created **512 KiB** of new unique
 > payload. A **10-byte prepend** to 32 MiB created about **32 MiB**.
 
-![A small overwrite replaces one file chunk, while a front insertion shifts many chunks and leaves old chunks waiting for reclamation.](../assets/part-i/tiny-edit-cost.png)
+<p align="center">
+  <img src="../assets/part-i/tiny-edit-cost.png" alt="A small overwrite replaces one file chunk, while a front insertion shifts many chunks and leaves old chunks waiting for reclamation." width="50%" />
+</p>
 
 *Figure 3: Edit shape determines storage amplification. The illustration is
 conceptual; the exact retained benchmark measurements appear below.*
