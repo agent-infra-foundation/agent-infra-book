@@ -2,7 +2,7 @@
 
 Audit date: 2026-08-07
 
-Manuscript: [`PART-I.md`](./PART-I.md)
+Manuscripts: [English (`PART-I.md`)](./PART-I.md) · [简体中文 (`PART-I.zh-CN.md`)](./PART-I.zh-CN.md)
 
 Computer implementation pin:
 [`76d9e75c5688713b656bce85540d9e0071cece8b`](https://github.com/cloudflare/computer/tree/76d9e75c5688713b656bce85540d9e0071cece8b)

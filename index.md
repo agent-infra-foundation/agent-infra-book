@@ -28,7 +28,7 @@ publication.
 
 *Building Durable Systems and Agent Workspaces with Cloudflare Durable Objects*
 
-- **Read:** [Part I — Introducing Cloudflare Durable Objects (English)](cloudflare/durable-object-storage/chapters/PART-I.md)
+- **Read:** [Part I — Introducing Cloudflare Durable Objects](cloudflare/durable-object-storage/chapters/PART-I.md) · [第一部分：Cloudflare Durable Objects 入门（简体中文）](cloudflare/durable-object-storage/chapters/PART-I.zh-CN.md)
 - **Measure:** [Native filesystem vs Computer benchmark](cloudflare/durable-object-storage/benchmarks/storage/BENCHMARK.md) · [Latest end-to-end result](cloudflare/durable-object-storage/benchmarks/storage/results/medium-summary.md)
 - **Verify:** [Part I evidence audit](cloudflare/durable-object-storage/chapters/PART-I-EVIDENCE-AUDIT.md)
 - **Explore:** [Book overview](cloudflare/durable-object-storage/README.md) · [Detailed outline](cloudflare/durable-object-storage/outline.md)

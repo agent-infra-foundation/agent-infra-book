@@ -42,7 +42,7 @@ attaching disposable execution environments to that durable state.
 
 *Building Durable Systems and Agent Workspaces with Cloudflare Durable Objects*
 
-- **Part I — Introducing Cloudflare Durable Objects** — [English](cloudflare/durable-object-storage/chapters/PART-I.md)
+- **Part I — Introducing Cloudflare Durable Objects** — [English](cloudflare/durable-object-storage/chapters/PART-I.md) · [简体中文](cloudflare/durable-object-storage/chapters/PART-I.zh-CN.md)
 - **Part II — Engineering the Durable Computer** — Planned
 - **Part III — Giving State Hands** — Planned
 - **Companion storage benchmark** — [Method and findings](cloudflare/durable-object-storage/benchmarks/storage/BENCHMARK.md) · [Latest result](cloudflare/durable-object-storage/benchmarks/storage/results/medium-summary.md)
