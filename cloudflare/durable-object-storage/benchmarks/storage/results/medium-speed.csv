@@ -1,0 +1,12 @@
+operation,nativeCommandMs,computerFuseCommandMs,computerDurableExecMs,verificationMs,fuseVsNative,durableVsNative
+"Create 6,385 files / 274.8 MiB",633.176,21049.831,62217,9,33.245,98.262
+Recursive ls -lR,921.322,14360.184,14491,4,15.586,15.728
+Read all file content,197.986,7041.529,7069,4,35.566,35.705
+Duplicate tree,517.886,34092.175,53322,13,65.829,102.961
+Overwrite 10 bytes once,8.511,14.702,167,7,1.727,19.622
+Overwrite 10 bytes five times / five execution brackets,38.619,73.157,473,38,1.894,12.248
+Overwrite 10 bytes five times / one execution bracket,23.39,53.617,126,7,2.292,5.387
+Append 10 bytes,3.618,8.014,56,7,2.215,15.478
+Prepend 10 bytes to 32 MiB,51.126,204.673,1596,48,4.003,31.217
+Delete duplicate tree,96.909,3416.71,5862,4,35.257,60.49
+Delete remaining tree,94.903,3455.391,7503,3,36.41,79.06

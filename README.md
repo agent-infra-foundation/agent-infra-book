@@ -28,6 +28,26 @@ A book series about workspace runtimes for parallel coding agents.
 
 [Explore Volume I →](sandbox/ephemeral-sandbox/volume-1/README.md)
 
+### Cloudflare
+
+Stateful compute, durable storage, virtual filesystems, isolate execution, and
+agent computers built on Cloudflare's developer platform.
+
+#### Durable Objects
+
+A book about giving application state a globally addressable owner and
+attaching disposable execution environments to that durable state.
+
+##### From Stateful Compute to Agent Computers
+
+*Building Durable Systems and Agent Workspaces with Cloudflare Durable Objects*
+
+- **Part I — Introducing Cloudflare Durable Objects** — Draft
+- **Part II — Engineering the Durable Computer** — Planned
+- **Part III — Giving State Hands** — Planned
+
+[Explore the book →](cloudflare/durable-object-storage/README.md)
+
 The books distinguish implemented systems, experimental ideas, comparisons,
 and future design proposals. More agent-infrastructure categories and series
 will be added as the collection grows.

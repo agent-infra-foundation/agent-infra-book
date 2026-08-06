@@ -1,0 +1,16 @@
+node_modules/
+.wrangler/
+vendor/*.tgz
+results/raw/*.json
+results/raw/*.log
+results/raw/*.out
+results/raw/*.err
+results/raw/local-smoke-*.json
+results/raw/local-smoke-*.out
+results/raw/local-smoke-*.err
+results/raw/bootstrap-*.out
+results/raw/bootstrap-*.err
+!vendor/README.md
+!vendor/PROVENANCE.json
+!results/raw/.gitkeep
+!results/raw/local-medium-d64d142688d0.json

@@ -1,0 +1,30 @@
+{
+  "name": "@agent-infra-book/durable-object-storage-benchmark",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "bootstrap": "powershell -ExecutionPolicy Bypass -File ./scripts/prepare-computer.ps1",
+    "typecheck": "tsc --noEmit",
+    "run:local-smoke": "powershell -ExecutionPolicy Bypass -File ./scripts/run-local-smoke.ps1",
+    "run:local-medium": "powershell -ExecutionPolicy Bypass -File ./scripts/run-local-medium.ps1",
+    "bench:smoke": "vitest run --config vitest.config.ts src/bench/storage-smoke.bench.ts",
+    "bench:full": "vitest run --config vitest.config.ts src/bench/storage-full.bench.ts",
+    "run:smoke": "powershell -ExecutionPolicy Bypass -File ./scripts/run.ps1 -Profile smoke",
+    "run:full": "powershell -ExecutionPolicy Bypass -File ./scripts/run.ps1 -Profile full"
+  },
+  "dependencies": {
+    "@cloudflare/computer": "file:vendor/cloudflare-computer-0.1.0-alpha.1.tgz",
+    "@cloudflare/computer-rpc": "file:vendor/cloudflare-computer-rpc-0.0.0-full.tgz",
+    "@cloudflare/computerd": "file:vendor/cloudflare-computerd-0.1.0-alpha.1.tgz",
+    "@cloudflare/dofs": "file:vendor/cloudflare-dofs-0.0.0-full.tgz"
+  },
+  "devDependencies": {
+    "@cloudflare/vitest-pool-workers": "0.16.10",
+    "@cloudflare/workers-types": "4.20260702.1",
+    "@types/node": "25.9.1",
+    "typescript": "6.0.3",
+    "vitest": "4.1.7",
+    "wrangler": "4.107.1"
+  }
+}

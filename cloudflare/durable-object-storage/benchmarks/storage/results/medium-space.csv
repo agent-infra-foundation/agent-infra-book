@@ -1,0 +1,10 @@
+state,phase,files,logicalMiB,nativeAllocatedMiB,computerDatabaseMiB,computerUniqueBlobMiB,reachableBlobMiB,orphanBlobMiB,workerdPersistMiB,databaseAmplification,payloadDedupRatio,chunkReferences,uniqueBlobs
+Initial unique tree,initialize,6385,274.781,274.781,282.023,274.781,274.781,0,285.53,1.026,1,6576,6576
+Exact duplicate tree,duplicate,12770,549.563,549.563,283.75,274.781,274.781,0,288.206,0.516,2,13152,6576
+One 10-byte overwrite,edit-one,12770,549.563,549.563,284.25,275.281,275.281,0,288.206,0.517,1.996,13152,6577
+After five edits in separate execution brackets,edit-separate-5,12770,549.563,549.563,286.758,277.781,275.781,2,289.268,0.522,1.978,13152,6582
+After five edits in one execution bracket,edit-five-bracket,12770,549.563,549.563,287.258,278.281,276.281,2,289.268,0.523,1.975,13152,6583
+After 10-byte append,append,12770,549.563,549.566,287.262,278.281,276.281,2,289.268,0.523,1.975,13153,6584
+After 10-byte prepend,prepend,12770,549.563,549.57,319.309,310.281,308.281,2,320.815,0.581,1.771,13154,6649
+After deleting duplicate,delete-copy,6385,274.781,274.789,319.582,310.281,274.781,35.5,324.972,1.163,0.886,6578,6649
+After deleting all files,delete-all,0,0,0,318.785,310.281,0,310.281,325.015,,,0,6649
