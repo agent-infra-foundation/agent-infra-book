@@ -1,0 +1,27 @@
+{
+    "upstream":  "https://github.com/cloudflare/computer",
+    "sourceCommit":  "76d9e75c5688713b656bce85540d9e0071cece8b",
+    "sourceCommitDate":  "2026-08-05T16:40:04+01:00",
+    "packageName":  "@cloudflare/computer",
+    "packageVersion":  "0.1.0-alpha.1",
+    "packageFile":  "cloudflare-computer-0.1.0-alpha.1.tgz",
+    "packageSha256":  "f2d1c56b7e685be887be3e63a9869948bbd5c7380ccdbb6e79e5801080fde0d2",
+    "workspacePackages":  {
+                              "@cloudflare/dofs":  {
+                                                       "file":  "cloudflare-dofs-0.0.0-full.tgz",
+                                                       "sha256":  "b9ca8b9c14439882b72724f3ee30efcab20f5f6dba02f8c91019b1231be64b81"
+                                                   },
+                              "@cloudflare/computer-rpc":  {
+                                                               "file":  "cloudflare-computer-rpc-0.0.0-full.tgz",
+                                                               "sha256":  "95dd7e9089a92a29b7d430147faf7720324df568b98de2c857c89364e84e7b88"
+                                                           },
+                              "@cloudflare/computerd":  {
+                                                            "file":  "cloudflare-computerd-0.1.0-alpha.1.tgz",
+                                                            "sha256":  "1d8e20bf8f1cf0db819fef168e665df07999e5c6e794434472b0fd0ba7476737"
+                                                        }
+                          },
+    "sourceMode":  "git-archive",
+    "workspacePackaging":  "built-dist-allowlist-for-private-packages",
+    "dirtyWorkingTreeIncluded":  false,
+    "generatedAt":  "2026-08-06T12:59:38.7183446+00:00"
+}

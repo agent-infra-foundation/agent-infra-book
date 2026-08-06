@@ -1,0 +1,310 @@
+{
+  "generatedAt": "2026-08-06T18:10:04.1472009+00:00",
+  "sourceResult": "raw/local-medium-d64d142688d0.json",
+  "sourceResultSha256": "6ca9f3546bffeb7bf166eb4831ebf1db42079901547b549dff78b79fc8ed52f2",
+  "computerCommit": "76d9e75c5688713b656bce85540d9e0071cece8b",
+  "packageSha256": "f2d1c56b7e685be887be3e63a9869948bbd5c7380ccdbb6e79e5801080fde0d2",
+  "wranglerRuntimeSource": "sibling-cloudflare-computer-node_modules",
+  "runtimeVersions": null,
+  "environment": {
+    "platform": "WSL2",
+    "command": "identical Bash workload",
+    "nativePath": "native WSL filesystem",
+    "computerPath": "Workspace.runtime.exec -> Bash -> FUSE -> computerd VFS -> pull -> Durable Object SQLite",
+    "cachePolicy": "warm local caches; no page-cache eviction",
+    "executionPolicy": "one deterministic run per scenario",
+    "syncBatchPolicy": "ordinary create/duplicate classes use at most 40 hashes per bracket; the single 32 MiB boundary-file bracket references 64",
+    "observedUnbatchedFailure": "too many SQL variables at offset 417: SQLITE_ERROR"
+  },
+  "corpus": {
+    "profile": "medium-v1",
+    "fileCount": 6385,
+    "logicalBytes": 288129024,
+    "description": "5000x4KiB + 1000x32KiB + 256x256KiB + 128x1MiB + 1x32MiB",
+    "content": "deterministic AES-256-CTR pseudorandom bytes; deliberate duplication only in duplicate phase"
+  },
+  "speed": [
+    {
+      "operation": "Create 6,385 files / 274.8 MiB",
+      "nativeCommandMs": 633.176,
+      "computerFuseCommandMs": 21049.831,
+      "computerDurableExecMs": 62217,
+      "verificationMs": 9,
+      "fuseVsNative": 33.245,
+      "durableVsNative": 98.262
+    },
+    {
+      "operation": "Recursive ls -lR",
+      "nativeCommandMs": 921.322,
+      "computerFuseCommandMs": 14360.184,
+      "computerDurableExecMs": 14491,
+      "verificationMs": 4,
+      "fuseVsNative": 15.586,
+      "durableVsNative": 15.728
+    },
+    {
+      "operation": "Read all file content",
+      "nativeCommandMs": 197.986,
+      "computerFuseCommandMs": 7041.529,
+      "computerDurableExecMs": 7069,
+      "verificationMs": 4,
+      "fuseVsNative": 35.566,
+      "durableVsNative": 35.705
+    },
+    {
+      "operation": "Duplicate tree",
+      "nativeCommandMs": 517.886,
+      "computerFuseCommandMs": 34092.175,
+      "computerDurableExecMs": 53322,
+      "verificationMs": 13,
+      "fuseVsNative": 65.829,
+      "durableVsNative": 102.961
+    },
+    {
+      "operation": "Overwrite 10 bytes once",
+      "nativeCommandMs": 8.511,
+      "computerFuseCommandMs": 14.702,
+      "computerDurableExecMs": 167,
+      "verificationMs": 7,
+      "fuseVsNative": 1.727,
+      "durableVsNative": 19.622
+    },
+    {
+      "operation": "Overwrite 10 bytes five times / five execution brackets",
+      "nativeCommandMs": 38.619,
+      "computerFuseCommandMs": 73.157,
+      "computerDurableExecMs": 473,
+      "verificationMs": 38,
+      "fuseVsNative": 1.894,
+      "durableVsNative": 12.248
+    },
+    {
+      "operation": "Overwrite 10 bytes five times / one execution bracket",
+      "nativeCommandMs": 23.39,
+      "computerFuseCommandMs": 53.617,
+      "computerDurableExecMs": 126,
+      "verificationMs": 7,
+      "fuseVsNative": 2.292,
+      "durableVsNative": 5.387
+    },
+    {
+      "operation": "Append 10 bytes",
+      "nativeCommandMs": 3.618,
+      "computerFuseCommandMs": 8.014,
+      "computerDurableExecMs": 56,
+      "verificationMs": 7,
+      "fuseVsNative": 2.215,
+      "durableVsNative": 15.478
+    },
+    {
+      "operation": "Prepend 10 bytes to 32 MiB",
+      "nativeCommandMs": 51.126,
+      "computerFuseCommandMs": 204.673,
+      "computerDurableExecMs": 1596,
+      "verificationMs": 48,
+      "fuseVsNative": 4.003,
+      "durableVsNative": 31.217
+    },
+    {
+      "operation": "Delete duplicate tree",
+      "nativeCommandMs": 96.909,
+      "computerFuseCommandMs": 3416.71,
+      "computerDurableExecMs": 5862,
+      "verificationMs": 4,
+      "fuseVsNative": 35.257,
+      "durableVsNative": 60.49
+    },
+    {
+      "operation": "Delete remaining tree",
+      "nativeCommandMs": 94.903,
+      "computerFuseCommandMs": 3455.391,
+      "computerDurableExecMs": 7503,
+      "verificationMs": 3,
+      "fuseVsNative": 36.41,
+      "durableVsNative": 79.06
+    }
+  ],
+  "space": [
+    {
+      "state": "Initial unique tree",
+      "phase": "initialize",
+      "files": 6385,
+      "logicalMiB": 274.781,
+      "nativeAllocatedMiB": 274.781,
+      "computerDatabaseMiB": 282.023,
+      "computerUniqueBlobMiB": 274.781,
+      "reachableBlobMiB": 274.781,
+      "orphanBlobMiB": 0,
+      "workerdPersistMiB": 285.53,
+      "databaseAmplification": 1.026,
+      "payloadDedupRatio": 1,
+      "chunkReferences": 6576,
+      "uniqueBlobs": 6576
+    },
+    {
+      "state": "Exact duplicate tree",
+      "phase": "duplicate",
+      "files": 12770,
+      "logicalMiB": 549.563,
+      "nativeAllocatedMiB": 549.563,
+      "computerDatabaseMiB": 283.75,
+      "computerUniqueBlobMiB": 274.781,
+      "reachableBlobMiB": 274.781,
+      "orphanBlobMiB": 0,
+      "workerdPersistMiB": 288.206,
+      "databaseAmplification": 0.516,
+      "payloadDedupRatio": 2,
+      "chunkReferences": 13152,
+      "uniqueBlobs": 6576
+    },
+    {
+      "state": "One 10-byte overwrite",
+      "phase": "edit-one",
+      "files": 12770,
+      "logicalMiB": 549.563,
+      "nativeAllocatedMiB": 549.563,
+      "computerDatabaseMiB": 284.25,
+      "computerUniqueBlobMiB": 275.281,
+      "reachableBlobMiB": 275.281,
+      "orphanBlobMiB": 0,
+      "workerdPersistMiB": 288.206,
+      "databaseAmplification": 0.517,
+      "payloadDedupRatio": 1.996,
+      "chunkReferences": 13152,
+      "uniqueBlobs": 6577
+    },
+    {
+      "state": "After five edits in separate execution brackets",
+      "phase": "edit-separate-5",
+      "files": 12770,
+      "logicalMiB": 549.563,
+      "nativeAllocatedMiB": 549.563,
+      "computerDatabaseMiB": 286.758,
+      "computerUniqueBlobMiB": 277.781,
+      "reachableBlobMiB": 275.781,
+      "orphanBlobMiB": 2,
+      "workerdPersistMiB": 289.268,
+      "databaseAmplification": 0.522,
+      "payloadDedupRatio": 1.978,
+      "chunkReferences": 13152,
+      "uniqueBlobs": 6582
+    },
+    {
+      "state": "After five edits in one execution bracket",
+      "phase": "edit-five-bracket",
+      "files": 12770,
+      "logicalMiB": 549.563,
+      "nativeAllocatedMiB": 549.563,
+      "computerDatabaseMiB": 287.258,
+      "computerUniqueBlobMiB": 278.281,
+      "reachableBlobMiB": 276.281,
+      "orphanBlobMiB": 2,
+      "workerdPersistMiB": 289.268,
+      "databaseAmplification": 0.523,
+      "payloadDedupRatio": 1.975,
+      "chunkReferences": 13152,
+      "uniqueBlobs": 6583
+    },
+    {
+      "state": "After 10-byte append",
+      "phase": "append",
+      "files": 12770,
+      "logicalMiB": 549.563,
+      "nativeAllocatedMiB": 549.566,
+      "computerDatabaseMiB": 287.262,
+      "computerUniqueBlobMiB": 278.281,
+      "reachableBlobMiB": 276.281,
+      "orphanBlobMiB": 2,
+      "workerdPersistMiB": 289.268,
+      "databaseAmplification": 0.523,
+      "payloadDedupRatio": 1.975,
+      "chunkReferences": 13153,
+      "uniqueBlobs": 6584
+    },
+    {
+      "state": "After 10-byte prepend",
+      "phase": "prepend",
+      "files": 12770,
+      "logicalMiB": 549.563,
+      "nativeAllocatedMiB": 549.57,
+      "computerDatabaseMiB": 319.309,
+      "computerUniqueBlobMiB": 310.281,
+      "reachableBlobMiB": 308.281,
+      "orphanBlobMiB": 2,
+      "workerdPersistMiB": 320.815,
+      "databaseAmplification": 0.581,
+      "payloadDedupRatio": 1.771,
+      "chunkReferences": 13154,
+      "uniqueBlobs": 6649
+    },
+    {
+      "state": "After deleting duplicate",
+      "phase": "delete-copy",
+      "files": 6385,
+      "logicalMiB": 274.781,
+      "nativeAllocatedMiB": 274.789,
+      "computerDatabaseMiB": 319.582,
+      "computerUniqueBlobMiB": 310.281,
+      "reachableBlobMiB": 274.781,
+      "orphanBlobMiB": 35.5,
+      "workerdPersistMiB": 324.972,
+      "databaseAmplification": 1.163,
+      "payloadDedupRatio": 0.886,
+      "chunkReferences": 6578,
+      "uniqueBlobs": 6649
+    },
+    {
+      "state": "After deleting all files",
+      "phase": "delete-all",
+      "files": 0,
+      "logicalMiB": 0,
+      "nativeAllocatedMiB": 0,
+      "computerDatabaseMiB": 318.785,
+      "computerUniqueBlobMiB": 310.281,
+      "reachableBlobMiB": 0,
+      "orphanBlobMiB": 310.281,
+      "workerdPersistMiB": 325.015,
+      "databaseAmplification": null,
+      "payloadDedupRatio": null,
+      "chunkReferences": 0,
+      "uniqueBlobs": 6649
+    }
+  ],
+  "editAmplification": [
+    {
+      "operation": "One 10-byte overwrite",
+      "userBytesWritten": 10,
+      "newUniqueBlobBytes": 524288,
+      "newUniqueBlobMiB": 0.5,
+      "amplification": 52428.8
+    },
+    {
+      "operation": "Five 10-byte overwrites / five execution brackets",
+      "userBytesWritten": 50,
+      "newUniqueBlobBytes": 2621440,
+      "newUniqueBlobMiB": 2.5,
+      "amplification": 52428.8
+    },
+    {
+      "operation": "Five 10-byte overwrites / one execution bracket",
+      "userBytesWritten": 50,
+      "newUniqueBlobBytes": 524288,
+      "newUniqueBlobMiB": 0.5,
+      "amplification": 10485.76
+    },
+    {
+      "operation": "Append 10 bytes to aligned 1 MiB file",
+      "userBytesWritten": 10,
+      "newUniqueBlobBytes": 10,
+      "newUniqueBlobMiB": 0,
+      "amplification": 1
+    },
+    {
+      "operation": "Prepend 10 bytes to 32 MiB file",
+      "userBytesWritten": 10,
+      "newUniqueBlobBytes": 33554442,
+      "newUniqueBlobMiB": 32,
+      "amplification": 3355444.2
+    }
+  ]
+}

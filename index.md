@@ -21,3 +21,19 @@ publication.
 - **Part IV — Running and Operating the Workspace Runtime** — Planned
 - **Part V — The Boundary of Version 1** — Planned
 - **Part VI — Reading the Implementation: From Tool Call to Workspace Runtime** — Planned
+
+## In Editorial Development
+
+### Durable Objects — From Stateful Compute to Agent Computers
+
+*Building Durable Systems and Agent Workspaces with Cloudflare Durable Objects*
+
+- [Book overview](cloudflare/durable-object/README.md)
+- [Product requirements](cloudflare/durable-object/PRD.md)
+- [Detailed outline](cloudflare/durable-object/outline.md)
+- [Book writing template](cloudflare/durable-object/chapters/BOOK-WRITING-TEMPLATE.md)
+- [Part I writing specification](cloudflare/durable-object/chapters/PART-I-WRITING-SPEC.md)
+- [Part I — Introducing Durable Objects](cloudflare/durable-object/chapters/PART-I.md)
+- [Durable Object storage benchmark](cloudflare/durable-object/benchmarks/storage/)
+- **Part II — Engineering the Durable Computer** — Planned
+- **Part III — Giving State Hands** — Planned
