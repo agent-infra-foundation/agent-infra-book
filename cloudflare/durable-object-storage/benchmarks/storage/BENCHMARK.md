@@ -340,7 +340,7 @@ Requirements are WSL2, `/dev/fuse`, `fusermount3`, Node.js 22 or newer in WSL,
 and the local workerd/Wrangler dependencies prepared by the repository.
 
 ```powershell
-cd cloudflare/durable-object/benchmarks/storage
+cd cloudflare/durable-object-storage/benchmarks/storage
 npm.cmd run bootstrap
 npm.cmd run typecheck
 npm.cmd run run:local-smoke

@@ -42,11 +42,11 @@ attaching disposable execution environments to that durable state.
 
 *Building Durable Systems and Agent Workspaces with Cloudflare Durable Objects*
 
-- **Part I — Introducing Durable Objects** — First draft
+- **Part I — Introducing Cloudflare Durable Objects** — Draft
 - **Part II — Engineering the Durable Computer** — Planned
 - **Part III — Giving State Hands** — Planned
 
-[Explore the book →](cloudflare/durable-object/README.md)
+[Explore the book →](cloudflare/durable-object-storage/README.md)
 
 The books distinguish implemented systems, experimental ideas, comparisons,
 and future design proposals. More agent-infrastructure categories and series

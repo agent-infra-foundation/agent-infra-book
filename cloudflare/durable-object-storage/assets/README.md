@@ -1,7 +1,16 @@
 # Visual Assets
 
-No finished figures have been added yet. This inventory defines the first
-production pass and keeps ownership boundaries consistent across the book.
+Part I currently includes three generated conceptual illustrations. Exact
+architecture and benchmark evidence remain in ASCII diagrams, source-linked
+tables, and code.
+
+## Part I Illustrations
+
+| Asset | Role | Message | Evidence status |
+| --- | --- | --- | --- |
+| [State survives the machine](part-i/state-survives-machine.png) | Opening teaser | Execution may disappear while identity and committed state survive. | Illustrative only |
+| [SQLite, synchronization, and FUSE](part-i/sqlite-fuse-workspace.png) | Architecture overview | FUSE exposes the disposable execution-side VFS rather than Durable Object SQLite directly. | Illustrative only; exact boundary is documented in the article |
+| [The cost of a tiny edit](part-i/tiny-edit-cost.png) | Storage mechanism | Edit shape determines how many fixed chunks are replaced. | Illustrative only; exact values come from the retained benchmark |
 
 ## Planned Figure Inventory
 
@@ -35,9 +44,10 @@ Follow the Agent Infra Book visual language:
 | Green | Confirmed durability, recovery, and accepted output |
 | Red | Failure, rejection, overload, and irreversible side effects |
 
-Prefer editable SVG for architecture diagrams. Every figure should include an
-accessible title and description. Captions should state the conclusion rather
-than repeat labels.
+Use generated PNG illustrations only for conceptual explanations. Keep exact
+architecture, algorithms, and benchmark results in ASCII, tables, or code.
+Every figure should include accessible alternative text. Captions should state
+the conclusion rather than repeat labels.
 
 ## Boundary Rule
 

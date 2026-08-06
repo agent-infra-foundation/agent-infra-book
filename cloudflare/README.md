@@ -9,4 +9,4 @@ for agent infrastructure:
 - isolate, shell, and container execution boundaries;
 - recovery, observability, security, and operating trade-offs.
 
-The first series is [`durable-object/`](durable-object/).
+The first series is [`durable-object-storage/`](durable-object-storage/).

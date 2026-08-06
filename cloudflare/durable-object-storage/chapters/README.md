@@ -1,13 +1,13 @@
 # Chapter Workspace
 
-The book is represented by an editorial blueprint, a concise article-style
-candidate for Part I, the original long-form Part I reference, and manuscript
-shells for Parts II and III:
+The book is represented by an editorial blueprint, the canonical Part I
+article, its chapter research sources, and manuscript shells for Parts II and
+III:
 
 - [Book writing template](BOOK-WRITING-TEMPLATE.md)
-- [Part I writing specification](PART-I-WRITING-SPEC.md)
-- [Part I New — From Durable Object to Durable Computer](PART-I-NEW.md) — concise candidate
-- [Part I — Introducing Durable Objects](PART-I.md) — long-form reference
+- [Part I development specification (reference)](PART-I-WRITING-SPEC.md)
+- [Part I — Introducing Cloudflare Durable Objects](PART-I.md)
+  - [Architecture and algorithm evidence audit](PART-I-EVIDENCE-AUDIT.md)
   - [Chapter 1 — The Object That Owns State](part-i/CHAPTER-1.md)
   - [Chapter 2 — Identity Persists; Memory Does Not](part-i/CHAPTER-2.md)
   - [Chapter 3 — Durable Storage: From Legacy KV to SQLite](part-i/CHAPTER-3.md)

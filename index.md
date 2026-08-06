@@ -28,12 +28,12 @@ publication.
 
 *Building Durable Systems and Agent Workspaces with Cloudflare Durable Objects*
 
-- [Book overview](cloudflare/durable-object/README.md)
-- [Product requirements](cloudflare/durable-object/PRD.md)
-- [Detailed outline](cloudflare/durable-object/outline.md)
-- [Book writing template](cloudflare/durable-object/chapters/BOOK-WRITING-TEMPLATE.md)
-- [Part I writing specification](cloudflare/durable-object/chapters/PART-I-WRITING-SPEC.md)
-- [Part I — Introducing Durable Objects](cloudflare/durable-object/chapters/PART-I.md)
-- [Durable Object storage benchmark](cloudflare/durable-object/benchmarks/storage/)
+- [Book overview](cloudflare/durable-object-storage/README.md)
+- [Product requirements](cloudflare/durable-object-storage/PRD.md)
+- [Detailed outline](cloudflare/durable-object-storage/outline.md)
+- [Book writing template](cloudflare/durable-object-storage/chapters/BOOK-WRITING-TEMPLATE.md)
+- [Part I development specification (reference)](cloudflare/durable-object-storage/chapters/PART-I-WRITING-SPEC.md)
+- [Part I — Introducing Cloudflare Durable Objects](cloudflare/durable-object-storage/chapters/PART-I.md)
+- [Durable Object storage benchmark](cloudflare/durable-object-storage/benchmarks/storage/)
 - **Part II — Engineering the Durable Computer** — Planned
 - **Part III — Giving State Hands** — Planned

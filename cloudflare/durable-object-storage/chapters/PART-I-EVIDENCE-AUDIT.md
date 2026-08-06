@@ -1,8 +1,8 @@
-# Part I New — Architecture and Algorithm Evidence Audit
+# Part I — Architecture and Algorithm Evidence Audit
 
 Audit date: 2026-08-07
 
-Manuscript: [`PART-I-NEW.md`](./PART-I-NEW.md)
+Manuscript: [`PART-I.md`](./PART-I.md)
 
 Computer implementation pin:
 [`76d9e75c5688713b656bce85540d9e0071cece8b`](https://github.com/cloudflare/computer/tree/76d9e75c5688713b656bce85540d9e0071cece8b)
@@ -25,15 +25,14 @@ not mutable working-tree lines.
 
 | Material claim | Verdict | Primary evidence |
 | --- | --- | --- |
+| Durable Objects were introduced to add strong state and real-time coordination to otherwise stateless Workers applications. | Historical platform framing | [Introducing Workers Durable Objects](https://blog.cloudflare.com/introducing-workers-durable-objects/) |
+| The “object, unique, durable” decomposition means an application-defined class instance, a globally addressable identity, and persistent private state. | Historical framing, still consistent with current platform concepts | [Introducing Workers Durable Objects](https://blog.cloudflare.com/introducing-workers-durable-objects/), [current concepts](https://developers.cloudflare.com/durable-objects/concepts/what-are-durable-objects/) |
+| Storage and coordination are distinct abilities: an object can coordinate without persisting every event, while attached storage makes accepted state recoverable. | Platform fact | [Introducing Workers Durable Objects](https://blog.cloudflare.com/introducing-workers-durable-objects/) |
 | A Durable Object combines a globally routable identity, one active state owner, and private attached storage. | Platform fact | [Overview](https://developers.cloudflare.com/durable-objects/), [glossary](https://developers.cloudflare.com/durable-objects/reference/glossary/) |
-| `idFromName()` derives a stable ID and `get()` returns a routing stub; neither promises a permanent process. | Platform fact | [Namespace API](https://developers.cloudflare.com/durable-objects/api/namespace/), [lifecycle](https://developers.cloudflare.com/durable-objects/concepts/durable-object-lifecycle/) |
 | In-memory fields can disappear on eviction; persistent storage survives under the storage contract. | Platform fact | [Lifecycle](https://developers.cloudflare.com/durable-objects/concepts/durable-object-lifecycle/) |
 | SQLite-backed storage is private, transactional, and strongly consistent. | Platform fact | [SQLite storage API](https://developers.cloudflare.com/durable-objects/api/sqlite-storage-api/) |
-| A method can return before write confirmation, while the Output Gate delays outgoing messages until pending writes complete. | Platform fact; corrected in manuscript | [Concurrency and Output Gates](https://developers.cloudflare.com/durable-objects/best-practices/rules-of-durable-objects/#understand-how-input-and-output-gates-work) |
-| Single-threaded execution does not make a whole async handler atomic; non-storage waits can permit interleaving. | Platform fact; added caveat | [Rules of Durable Objects](https://developers.cloudflare.com/durable-objects/best-practices/rules-of-durable-objects/) |
-| “Zero latency” means same-thread embedded access without a database network hop, not literally zero query, durability, or request time. | Qualified platform claim | [SQLite in Durable Objects](https://blog.cloudflare.com/sqlite-in-durable-objects/) |
 | The legacy item is the KV-backed storage backend, not asynchronous KV methods themselves. | Platform fact; corrected terminology | [SQLite storage matrix](https://developers.cloudflare.com/durable-objects/api/sqlite-storage-api/) |
-| Partitioning by the “atom of coordination” is the scale-out model; one global hot object is a bottleneck. | Platform guidance plus analysis | [Rules](https://developers.cloudflare.com/durable-objects/best-practices/rules-of-durable-objects/), [limits](https://developers.cloudflare.com/durable-objects/platform/limits/) |
+| Current SQLite-backed storage exposes SQL, synchronous KV, asynchronous KV compatibility, alarms, and PITR, while storage remains private to one object. | Platform fact | [SQLite storage API](https://developers.cloudflare.com/durable-objects/api/sqlite-storage-api/) |
 
 ## Computer VFS and storage algorithm
 
@@ -79,7 +78,7 @@ not mutable working-tree lines.
 
 ## Corrections incorporated
 
-- Corrected Output Gate and asynchronous interleaving semantics.
+- Reframed Chapter 1 around the launch-era state-and-coordination problem while using current SQLite-backed storage semantics.
 - Corrected legacy KV terminology.
 - Made manifests optional and `vfs_chunks` authoritative.
 - Split materialized and streaming write semantics.
@@ -89,4 +88,3 @@ not mutable working-tree lines.
 - Qualified benchmark causality and runtime provenance.
 - Distinguished hypothetical Computer checkpoints from Durable Object SQLite PITR.
 - Made the canonical raw benchmark artifact trackable and hash-addressed.
-

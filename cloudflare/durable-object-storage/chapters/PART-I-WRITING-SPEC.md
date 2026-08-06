@@ -1,6 +1,7 @@
 # Writing Specification: Part I — Introducing Durable Objects
 
-> Status: ready for drafting.
+> Status: historical development reference. The canonical four-chapter
+> manuscript is [`PART-I.md`](PART-I.md).
 >
 > Research baseline: official Cloudflare documentation reviewed on
 > 2026-08-06 and Cloudflare Computer commit

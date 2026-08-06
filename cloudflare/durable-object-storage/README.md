@@ -54,11 +54,11 @@ choices, not Durable Objects storage guarantees.
 
 ## Status
 
-The book is in editorial development. Part I now has a concise article-style
-candidate alongside the complete five-chapter long-form reference. Parts II
-and III remain manuscript shells. The source-pinned storage benchmark and its
-first full result support the benchmark chapter. The publication benchmark
-uses the native WSL
+The book is in editorial development. Part I is the canonical four-chapter
+article. Its source notes and evidence audit remain alongside the manuscript.
+Parts II and III remain manuscript shells. The source-pinned storage benchmark
+and its first full result support the benchmark chapter. The publication
+benchmark uses the native WSL
 filesystem as its baseline and measures the existing Computer pipeline through
 real FUSE, `computerd`, synchronization, and local workerd Durable Object
 SQLite.
@@ -69,10 +69,10 @@ SQLite.
 - [Detailed outline](outline.md)
 - [Chapter workspace](chapters/README.md)
 - [Book writing template](chapters/BOOK-WRITING-TEMPLATE.md)
-- [Part I writing specification](chapters/PART-I-WRITING-SPEC.md)
-- [Part I New — concise article](chapters/PART-I-NEW.md)
-- [Part I — long-form reference manuscript](chapters/PART-I.md)
-- [Part I reference chapter sources](chapters/part-i/)
+- [Part I development specification (reference)](chapters/PART-I-WRITING-SPEC.md)
+- [Part I — Introducing Cloudflare Durable Objects](chapters/PART-I.md)
+- [Part I evidence audit](chapters/PART-I-EVIDENCE-AUDIT.md)
+- [Part I chapter research sources](chapters/part-i/)
 - [Part II manuscript shell](chapters/PART-II.md)
 - [Part III manuscript shell](chapters/PART-III.md)
 - [Durable Object storage benchmarks](benchmarks/storage/)
