@@ -24,16 +24,15 @@ publication.
 
 ## In Editorial Development
 
-### Durable Objects — From Stateful Compute to Agent Computers
+### Cloudflare Durable Object Storage
 
 *Building Durable Systems and Agent Workspaces with Cloudflare Durable Objects*
 
-- [Book overview](cloudflare/durable-object-storage/README.md)
-- [Product requirements](cloudflare/durable-object-storage/PRD.md)
-- [Detailed outline](cloudflare/durable-object-storage/outline.md)
-- [Book writing template](cloudflare/durable-object-storage/chapters/BOOK-WRITING-TEMPLATE.md)
-- [Part I development specification (reference)](cloudflare/durable-object-storage/chapters/PART-I-WRITING-SPEC.md)
-- [Part I — Introducing Cloudflare Durable Objects](cloudflare/durable-object-storage/chapters/PART-I.md)
-- [Durable Object storage benchmark](cloudflare/durable-object-storage/benchmarks/storage/)
+- **Read:** [Part I — Introducing Cloudflare Durable Objects (English)](cloudflare/durable-object-storage/chapters/PART-I.md)
+- **Measure:** [Native filesystem vs Computer benchmark](cloudflare/durable-object-storage/benchmarks/storage/BENCHMARK.md) · [Latest end-to-end result](cloudflare/durable-object-storage/benchmarks/storage/results/medium-summary.md)
+- **Verify:** [Part I evidence audit](cloudflare/durable-object-storage/chapters/PART-I-EVIDENCE-AUDIT.md)
+- **Explore:** [Book overview](cloudflare/durable-object-storage/README.md) · [Detailed outline](cloudflare/durable-object-storage/outline.md)
 - **Part II — Engineering the Durable Computer** — Planned
 - **Part III — Giving State Hands** — Planned
+
+Development references: [product requirements](cloudflare/durable-object-storage/PRD.md), [book writing template](cloudflare/durable-object-storage/chapters/BOOK-WRITING-TEMPLATE.md), and [Part I development specification](cloudflare/durable-object-storage/chapters/PART-I-WRITING-SPEC.md).
