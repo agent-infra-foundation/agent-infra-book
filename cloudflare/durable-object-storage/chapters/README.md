@@ -6,7 +6,7 @@ III:
 
 - [Book writing template](BOOK-WRITING-TEMPLATE.md)
 - [Part I development specification (reference)](PART-I-WRITING-SPEC.md)
-- [Part I — Introducing Cloudflare Durable Objects](PART-I.md)
+- **Part I — Introducing Cloudflare Durable Objects** — [English](PART-I.md) · [简体中文](PART-I.zh-CN.md)
   - [Architecture and algorithm evidence audit](PART-I-EVIDENCE-AUDIT.md)
   - [Chapter 1 — The Object That Owns State](part-i/CHAPTER-1.md)
   - [Chapter 2 — Identity Persists; Memory Does Not](part-i/CHAPTER-2.md)
