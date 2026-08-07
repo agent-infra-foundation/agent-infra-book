@@ -1,8 +1,8 @@
 # Chapter Workspace
 
 The book is represented by an editorial blueprint, the canonical Part I
-article, its chapter research sources, and manuscript shells for Parts II and
-III:
+article, its chapter research sources, a runnable Part II tutorial, and the
+Part III manuscript shell:
 
 - [Book writing template](BOOK-WRITING-TEMPLATE.md)
 - [Part I development specification (reference)](PART-I-WRITING-SPEC.md)
@@ -15,8 +15,12 @@ III:
   - [Chapter 5 — Measuring the Durable Workspace](part-i/CHAPTER-5.md)
   - [Benchmark method and complete interpretation](../benchmarks/storage/BENCHMARK.md)
   - [End-to-end medium result](../benchmarks/storage/results/medium-summary.md)
-- [Part II — Engineering the Durable Computer](PART-II.md)
-  - [Storage-layer component diagnostic](../benchmarks/storage/results/summary.md)
+- **Part II — Cloudflare Computer: How to Cut AI Agent Sandboxing Costs by 80%** — [English](PART-II.md) · [简体中文](PART-II.zh-CN.md)
+  - Chapter 1 — The 10% Container Strategy
+  - Chapter 2 — Build One Website in Two Modes
+  - Chapter 3 — Follow One Command Across the Durability Boundary
+  - Chapter 4 — Calculate the 80% Reduction
+  - [Runnable dual-mode website builder](../examples/dual-mode-website-builder/)
 - [Part III — Giving State Hands](PART-III.md)
 
 The [PRD](../PRD.md) defines audience, scope, evidence rules, and completion

@@ -30,9 +30,10 @@ answers three questions:
   coordination, lifecycle, and storage, then uses Cloudflare Computer's VFS and
   FUSE projection as a concrete bridge from durable state to durable files. It
   closes by measuring the bridge's storage and speed trade-offs.
-- **Part II — Engineering the Durable Computer** follows the implementation in
-  depth: Workspace construction, SQLite VFS operations, atomic writes,
-  synchronization, conflicts, garbage collection, and performance.
+- **Part II — Cloudflare Computer: How to Cut AI Agent Sandboxing Costs by
+  80%** turns the architecture into a runnable dual-mode website tutorial. It
+  keeps ordinary work in isolates, escalates npm and Vite to a container, and
+  derives the cost claim from a transparent monthly model.
 - **Part III — Giving State Hands** compares Code Mode, isolate JavaScript,
   `just-bash`, and containers, ending with an integrated durable coding
   workspace.
@@ -56,9 +57,10 @@ choices, not Durable Objects storage guarantees.
 
 The book is in editorial development. Part I is a canonical four-chapter
 article available in English and Simplified Chinese. Both editions share the
-same source notes, evidence audit, and benchmark. Parts II and III remain
-manuscript shells. The source-pinned storage benchmark and its first full result
-support the benchmark chapter. The publication benchmark uses the native WSL
+same source notes, evidence audit, and benchmark. Part II is a runnable tutorial
+available in English and Simplified Chinese; Part III remains a manuscript shell. The source-pinned storage
+benchmark and its first full result support the benchmark chapter. The
+publication benchmark uses the native WSL
 filesystem as its baseline and measures the existing Computer pipeline through
 real FUSE, `computerd`, synchronization, and local workerd Durable Object
 SQLite.
@@ -73,8 +75,9 @@ SQLite.
 - **Part I — Introducing Cloudflare Durable Objects** — [English](chapters/PART-I.md) · [简体中文](chapters/PART-I.zh-CN.md)
 - [Part I evidence audit](chapters/PART-I-EVIDENCE-AUDIT.md)
 - [Part I chapter research sources](chapters/part-i/)
-- [Part II manuscript shell](chapters/PART-II.md)
+- **Part II — Cloudflare Computer: How to Cut AI Agent Sandboxing Costs by 80%** — [English](chapters/PART-II.md) · [简体中文](chapters/PART-II.zh-CN.md)
 - [Part III manuscript shell](chapters/PART-III.md)
+- [Dual-mode website builder tutorial](examples/dual-mode-website-builder/)
 - [Durable Object storage benchmarks](benchmarks/storage/)
 - [Native filesystem vs Computer benchmark document](benchmarks/storage/BENCHMARK.md)
 - [Latest end-to-end medium result](benchmarks/storage/results/medium-summary.md)
