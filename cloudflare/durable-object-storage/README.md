@@ -76,6 +76,7 @@ SQLite.
 - [Part I evidence audit](chapters/PART-I-EVIDENCE-AUDIT.md)
 - [Part I chapter research sources](chapters/part-i/)
 - **Part II — Cloudflare Computer: How to Cut AI Agent Sandboxing Costs by 80%** — [English](chapters/PART-II.md) · [简体中文](chapters/PART-II.zh-CN.md)
+- [X Article 编辑版（简体中文）— Cloudflare Computer：如何将 AI Agent 沙箱成本降低 80%](articles/X-CLOUDFLARE-COMPUTER-COST.zh-CN.md)
 - [Part III manuscript shell](chapters/PART-III.md)
 - [Dual-mode website builder tutorial](examples/dual-mode-website-builder/)
 - [Durable Object storage benchmarks](benchmarks/storage/)
