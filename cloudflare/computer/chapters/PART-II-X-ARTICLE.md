@@ -155,7 +155,7 @@ The complete registration code includes `Workspace`, `WorkspaceServiceProxy`,
 to read on a phone, the larger implementation lives in an immutable Git
 snapshot:
 
-> [Open the complete Workspace and dual-backend wiring](https://github.com/agent-infra-foundation/agent-infra-book/blob/7f6dec92c07ae1aa55d98f5c1823bc00917b7fdb/cloudflare/durable-object-storage/examples/dual-mode-website-builder/src/index.ts)
+> [Open the complete Workspace and dual-backend wiring](https://github.com/agent-infra-foundation/agent-infra-book/blob/b8be4cc85603ec5ff3389db00315d47aad5bea99/cloudflare/computer/examples/dual-mode-website-builder/src/index.ts)
 
 ---
 
@@ -212,7 +212,7 @@ and **rebuildable cache**.
 
 The complete container configuration is also preserved as a Git snapshot:
 
-> [Open the pinned Dockerfile](https://github.com/agent-infra-foundation/agent-infra-book/blob/7f6dec92c07ae1aa55d98f5c1823bc00917b7fdb/cloudflare/durable-object-storage/examples/dual-mode-website-builder/Dockerfile)
+> [Open the pinned Dockerfile](https://github.com/agent-infra-foundation/agent-infra-book/blob/b8be4cc85603ec5ff3389db00315d47aad5bea99/cloudflare/computer/examples/dual-mode-website-builder/Dockerfile)
 
 ---
 
@@ -254,7 +254,7 @@ It is:
 
 > **“How much of my workflow actually needs Linux?”**
 
-The [complete cost model and calculation](https://github.com/agent-infra-foundation/agent-infra-book/blob/7f6dec92c07ae1aa55d98f5c1823bc00917b7fdb/cloudflare/durable-object-storage/chapters/PART-II.md)
+The [complete cost model and calculation](https://github.com/agent-infra-foundation/agent-infra-book/blob/b8be4cc85603ec5ff3389db00315d47aad5bea99/cloudflare/computer/chapters/PART-II.md)
 are preserved in the full chapter for line-by-line verification.
 
 ---
@@ -309,11 +309,11 @@ The resulting design principle is simple:
 
 ## Code and reproduction
 
-- [Complete runnable project](https://github.com/agent-infra-foundation/agent-infra-book/tree/7f6dec92c07ae1aa55d98f5c1823bc00917b7fdb/cloudflare/durable-object-storage/examples/dual-mode-website-builder)
-- [Complete Worker implementation](https://github.com/agent-infra-foundation/agent-infra-book/blob/7f6dec92c07ae1aa55d98f5c1823bc00917b7fdb/cloudflare/durable-object-storage/examples/dual-mode-website-builder/src/index.ts)
-- [Container Dockerfile](https://github.com/agent-infra-foundation/agent-infra-book/blob/7f6dec92c07ae1aa55d98f5c1823bc00917b7fdb/cloudflare/durable-object-storage/examples/dual-mode-website-builder/Dockerfile)
-- [Local development instructions](https://github.com/agent-infra-foundation/agent-infra-book/blob/7f6dec92c07ae1aa55d98f5c1823bc00917b7fdb/cloudflare/durable-object-storage/examples/dual-mode-website-builder/README.md)
-- [Complete English tutorial and cost calculation](https://github.com/agent-infra-foundation/agent-infra-book/blob/7f6dec92c07ae1aa55d98f5c1823bc00917b7fdb/cloudflare/durable-object-storage/chapters/PART-II.md)
+- [Complete runnable project](https://github.com/agent-infra-foundation/agent-infra-book/tree/b8be4cc85603ec5ff3389db00315d47aad5bea99/cloudflare/computer/examples/dual-mode-website-builder)
+- [Complete Worker implementation](https://github.com/agent-infra-foundation/agent-infra-book/blob/b8be4cc85603ec5ff3389db00315d47aad5bea99/cloudflare/computer/examples/dual-mode-website-builder/src/index.ts)
+- [Container Dockerfile](https://github.com/agent-infra-foundation/agent-infra-book/blob/b8be4cc85603ec5ff3389db00315d47aad5bea99/cloudflare/computer/examples/dual-mode-website-builder/Dockerfile)
+- [Local development instructions](https://github.com/agent-infra-foundation/agent-infra-book/blob/b8be4cc85603ec5ff3389db00315d47aad5bea99/cloudflare/computer/examples/dual-mode-website-builder/README.md)
+- [Complete English tutorial and cost calculation](https://github.com/agent-infra-foundation/agent-infra-book/blob/b8be4cc85603ec5ff3389db00315d47aad5bea99/cloudflare/computer/chapters/PART-II.md)
 
 ---
 
