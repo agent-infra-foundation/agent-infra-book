@@ -16,6 +16,7 @@ Part III manuscript shell:
   - [Benchmark method and complete interpretation](../benchmarks/storage/BENCHMARK.md)
   - [End-to-end medium result](../benchmarks/storage/results/medium-summary.md)
 - **Part II — Cloudflare Computer: How to Cut AI Agent Sandboxing Costs by 80%** — [English](PART-II.md) · [简体中文](PART-II.zh-CN.md)
+  - **X Article editorial edition** — [English](PART-II-X-ARTICLE.md) · [简体中文](PART-II-X-ARTICLE.zh-CN.md)
   - Chapter 1 — The 10% Container Strategy
   - Chapter 2 — Build One Website in Two Modes
   - Chapter 3 — Follow One Command Across the Durability Boundary
