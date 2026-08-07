@@ -3,6 +3,10 @@
 **An agent needs a workspace that persists. It does not need a Linux machine
 that runs continuously.**
 
+This article is part of [Agent Infra Book](https://github.com/agent-infra-foundation/agent-infra-book),
+an open-source systems book about the infrastructure behind coding agents,
+sandboxes, durable workspaces, and agent execution.
+
 AI agents regularly read files, search code, edit configuration, and sometimes
 run commands such as `npm install` or a production build.
 
@@ -300,6 +304,22 @@ The resulting design principle is simple:
 - [Container Dockerfile](https://github.com/agent-infra-foundation/agent-infra-book/blob/7f6dec92c07ae1aa55d98f5c1823bc00917b7fdb/cloudflare/durable-object-storage/examples/dual-mode-website-builder/Dockerfile)
 - [Local development instructions](https://github.com/agent-infra-foundation/agent-infra-book/blob/7f6dec92c07ae1aa55d98f5c1823bc00917b7fdb/cloudflare/durable-object-storage/examples/dual-mode-website-builder/README.md)
 - [Complete English tutorial and cost calculation](https://github.com/agent-infra-foundation/agent-infra-book/blob/7f6dec92c07ae1aa55d98f5c1823bc00917b7fdb/cloudflare/durable-object-storage/chapters/PART-II.md)
+
+---
+
+## Continue with Agent Infra Book
+
+This experiment is one part of the open-source
+[Agent Infra Book](https://github.com/agent-infra-foundation/agent-infra-book).
+The repository connects architecture analysis with runnable implementations and
+measured evidence for agent infrastructure.
+
+- [Star and follow Agent Infra Book](https://github.com/agent-infra-foundation/agent-infra-book)
+- [Read the complete Cloudflare Durable Objects section](https://github.com/agent-infra-foundation/agent-infra-book/tree/main/cloudflare/durable-object-storage)
+- [Run the dual-mode website builder](https://github.com/agent-infra-foundation/agent-infra-book/tree/main/cloudflare/durable-object-storage/examples/dual-mode-website-builder)
+
+> **If you are building coding agents, sandboxes, or durable workspaces, the
+> repository is designed to be read, reproduced, and improved in public.**
 
 Cloudflare Computer is still preview software. APIs, limits, runtime behavior,
 and pricing may change. Recheck Cloudflare's current documentation and prices

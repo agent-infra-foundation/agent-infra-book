@@ -2,6 +2,9 @@
 
 **Agent 需要一个持续存在的工作区，但不需要一台始终运行的 Linux 机器。**
 
+本文来自开源项目 [Agent Infra Book](https://github.com/agent-infra-foundation/agent-infra-book)。
+这本系统工程书聚焦编码 Agent 背后的基础设施，包括沙箱、持久工作区与执行架构。
+
 AI Agent 经常需要读取文件、搜索代码、修改配置，并在必要时运行 `npm install`
 或构建命令。
 
@@ -275,6 +278,19 @@ Computer 则负责在两者之间完成 push、执行和 pull。
 - [本地运行说明](https://github.com/agent-infra-foundation/agent-infra-book/blob/7f6dec92c07ae1aa55d98f5c1823bc00917b7fdb/cloudflare/durable-object-storage/examples/dual-mode-website-builder/README.md)
 - [完整中文教程与成本计算](https://github.com/agent-infra-foundation/agent-infra-book/blob/7f6dec92c07ae1aa55d98f5c1823bc00917b7fdb/cloudflare/durable-object-storage/chapters/PART-II.zh-CN.md)
 
+---
+
+## 继续阅读 Agent Infra Book
+
+这个实验是开源项目
+[Agent Infra Book](https://github.com/agent-infra-foundation/agent-infra-book)
+的一部分。项目把 Agent 基础设施的架构分析、可运行实现和实测证据放在同一个仓库中。
+
+- [Star 并关注 Agent Infra Book](https://github.com/agent-infra-foundation/agent-infra-book)
+- [阅读完整的 Cloudflare Durable Objects 专题](https://github.com/agent-infra-foundation/agent-infra-book/tree/main/cloudflare/durable-object-storage)
+- [运行双模式网站构建示例](https://github.com/agent-infra-foundation/agent-infra-book/tree/main/cloudflare/durable-object-storage/examples/dual-mode-website-builder)
+
+> **如果你正在构建编码 Agent、沙箱或持久工作区，欢迎阅读、复现并共同完善这个项目。**
+
 Cloudflare Computer 仍是 preview 软件。API、限制、运行行为与计费都可能变化。在把
 本文模型用于生产预算之前，请重新核对 Cloudflare 的最新文档与价格。
-
