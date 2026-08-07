@@ -12,6 +12,13 @@ tables, and code.
 | [SQLite, synchronization, and FUSE](part-i/sqlite-fuse-workspace.png) | Architecture overview | FUSE exposes the disposable execution-side VFS rather than Durable Object SQLite directly. | Illustrative only; exact boundary is documented in the article |
 | [The cost of a tiny edit](part-i/tiny-edit-cost.png) | Storage mechanism | Edit shape determines how many fixed chunks are replaced. | Illustrative only; exact values come from the retained benchmark |
 
+## Part II Illustrations
+
+| Asset | Role | Message | Evidence status |
+| --- | --- | --- | --- |
+| [One Workspace, two modes](part-ii/one-workspace-two-modes.png) | Chapter 1 mental model | One authoritative durable Workspace supports lightweight isolate work and on-demand native Linux work. | Illustrative only; the exact physical-copy and synchronization model is documented in the article |
+| [Build a website in two modes](part-ii/build-website-two-modes.png) | Chapter 2 tutorial map | Author and inspect in isolates, build in a container, then verify from the durable Workspace. | Illustrative only; exact backend calls come from the runnable example |
+
 ## Planned Figure Inventory
 
 | Figure | Location | Working title | Editorial purpose |
@@ -22,10 +29,10 @@ tables, and code.
 | 1.3 | Part I | Legacy KV to SQLite | Compare APIs, transactions, gates, limits, PITR, and migration status without confusing API shape with storage backend |
 | 1.4 | Part I | File to Chunks to Manifest | Place Computer's fixed chunks, hashes, manifests, and deduplication above `ctx.storage.sql` |
 | 1.5 | Part I | Durable Files to `/workspace` | Show the authoritative DO VFS, synchronization, ephemeral container mirror, FUSE, and `/workspace` |
-| 2.1 | Part II | When a Write Becomes Visible | Trace an atomic VFS mutation through SQL, output gating, durability confirmation, and response release |
-| 2.2 | Part II | Filesystem Operations as Transactions | Follow path resolution, inode mutation, chunk replacement, and manifest update |
-| 2.3 | Part II | One Small Edit and Its Garbage | Compare referenced and orphaned blobs before and after a changed chunk |
-| 2.4 | Part II | Incremental Synchronization | Show revisions, watermarks, missing-chunk negotiation, conflict handling, and recovery |
+| 2.1 | Part II | One Workspace, Two Modes | Separate the authoritative Durable Object from isolate and container execution paths |
+| 2.2 | Part II | Build One Website in Two Modes | Present the isolate → isolate → container → isolate tutorial flow |
+| 2.3 | Part II | When Container Output Becomes Durable | Separate FUSE visibility, process exit, pull, and SQLite commit |
+| 2.4 | Part II | The 10% Container Cost Model | Compare the always-active and 10%-duty-cycle estimates with exact values |
 | 3.1 | Part III | One Workspace, Three Computers | Compare isolate JavaScript, `just-bash`, and container execution over one durable Workspace |
 | 3.2 | Part III | The Execution Ladder | Choose native capability, JavaScript, `just-bash`, or Linux by required authority |
 | 3.3 | Part III | Capability and Credential Boundary | Keep credentials and unrestricted external authority outside disposable isolate code |

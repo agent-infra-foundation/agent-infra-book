@@ -198,22 +198,24 @@ a concrete application of that model. It should answer:
 The part ends at `/workspace`, with a clear boundary between Durable Objects
 platform guarantees and Computer's application-level VFS design.
 
-### Part II — Engineering the Durable Computer
+### Part II — Cloudflare Computer: How to Cut AI Agent Sandboxing Costs by 80%
 
-Part II must examine Computer as a readable, open-source implementation rather
-than repeat its introductory architecture.
+Part II must turn Computer's dual-mode architecture into a runnable tutorial
+and a transparent cost model rather than repeat Part I's storage explanation.
 It should answer:
 
-- How does `Workspace` wrap a Durable Object storage handle?
-- How are paths and files represented in SQLite?
-- What do fixed chunks, hashes, manifests, and deduplication accomplish?
-- What happens to old chunks after edits and deletes?
-- How does a Linux container see and update the authoritative workspace?
-- How are synchronization conflicts and interrupted transfers recovered?
-- Which behavior is shipped, preview, deferred, or proposed?
+- How does one `Workspace` register isolate and container backends?
+- Which website-building operations can stay in `workspace.fs` or `just-bash`?
+- Why do `npm install` and a native Vite build escalate to Linux?
+- What is pushed before execution and pulled afterward?
+- When does container output become authoritative and durable?
+- Why is there one authoritative copy but a temporary second materialization?
+- Which pricing assumptions produce the article's 79.6% modeled reduction?
+- Which workloads invalidate the 10% container-duty-cycle assumption?
 
-The part ends with a durable filesystem that can survive object and container
-lifecycle changes.
+The part ends with a website authored and verified in isolates, built in a
+container, synchronized to Durable Object SQLite, and served from the durable
+Workspace.
 
 ### Part III — Giving State Hands
 

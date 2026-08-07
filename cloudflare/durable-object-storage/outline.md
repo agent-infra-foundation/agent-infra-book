@@ -143,82 +143,56 @@ Running system: measure `project-42` as 6,385 files and 274.781 MiB, duplicate
 its content, edit it across synchronization boundaries, delete it, and account
 for both elapsed time and retained payload bytes.
 
-## Part II — Engineering the Durable Computer
+## Part II — Cloudflare Computer: How to Cut AI Agent Sandboxing Costs by 80%
 
-### 6. Constructing `Workspace` from Source
+Part II is a medium-form tutorial built around one Vite website, two execution
+modes, and one authoritative Workspace. The 80% figure is a worked cost model,
+not a platform guarantee.
 
-- Pin and map the Computer monorepo and package boundaries.
-- Follow `withWorkspace`, schema initialization, `WorkspaceFilesystem`, runtime
-  registration, and Workers RPC end to end.
-- Separate DO-side authority, isolate capabilities, container services, and
-  local development substitutes.
+### Chapter 1 — The 10% Container Strategy
 
-Running system: instantiate one Workspace from a Durable Object storage handle
-and verify persistence across object reconstruction.
+- Separate routine agent operations from work that requires native Linux.
+- Price one always-active `standard-1` Cloudflare Container as the baseline.
+- Define container duty cycle as the variable the architecture can reduce.
+- Keep the Workspace Durable Object SQLite VFS authoritative.
+- Route direct files, `just-bash`, and JavaScript through isolates.
+- Materialize a disposable container VFS only for native commands.
+- Say explicitly that this is one authoritative copy plus a temporary second
+  physical representation—not a zero-copy shared mount.
 
-### 7. Filesystem Operations and Atomic Writes
+### Chapter 2 — Build One Website in Two Modes
 
-- Trace path resolution, inodes, directory entries, metadata, and revision
-  allocation through `mkdir`, `stat`, read, write, rename, and unlink.
-- Compare full, streaming, positional, and range-aware writes.
-- Show which SQL mutations commit atomically and which work can leave staged
-  content behind after failure.
-- Separate filesystem semantics from SQLite page layout and platform internals.
+- Register `WorkerShellBackend` and `CloudflareContainerBackend` on one
+  `Workspace`.
+- Author Vite source through `workspace.fs`.
+- Inspect it through `worker-shell`.
+- Run `npm install` and `npm run build` through the container.
+- Verify the pulled `dist/` tree from `worker-shell` and serve it from the
+  durable Workspace.
 
-Running system: build and mutate a project tree while inspecting VFS rows and
-transaction boundaries.
+Running system: the checked-in
+`examples/dual-mode-website-builder` project reports backend placement,
+duration, exit code, push count, pull count, and synchronization state.
 
-### 8. Synchronization, Conflicts, and Recovery
+### Chapter 3 — Follow One Command Across the Durability Boundary
 
-- Follow push, fetch cursors, watermarks, missing-object transfer, command
-  execution, pull, and accepted revisions.
-- Explain batching, interrupted transfers, resumability, tombstones, and
-  container re-baselining.
-- Reproduce concurrent-backend conflicts and document the current path-level
-  conflict behavior.
-- Compare real FUSE coherence with the weaker local materialization shim.
+- Trace push, FUSE execution, changed-path fetch, missing-chunk transfer, and
+  transactional apply to Durable Object SQLite.
+- Distinguish command success from completed post-command synchronization.
+- Explain why `node_modules` remains a disposable container-local cache while
+  source, lockfiles, and `dist/` become durable.
 
-Running system: interrupt a sync, restart the container, and reconcile two
-writers without treating the mirror as authoritative.
+### Chapter 4 — Calculate the 80% Reduction
 
-### 9. Edits, Garbage Collection, and Checkpoints
-
-- Measure full writes and efficient positional writes separately; note that the
-  current AI `edit` tool performs a full-file rewrite.
-- Edit one byte repeatedly and distinguish live references, reusable payloads,
-  orphaned blobs, logical bytes, allocated SQLite bytes, and billed storage.
-- Explain the internal one-hour GC safety window and the current absence of a
-  public or visibly automatic GC caller.
-- Show that current manifests and revisions do not form a retained version
-  graph.
-- Compare PITR, Git, snapshots, CAS plus CDC, and version-root tables; label any
-  checkpoint extension as a proposal.
-
-Running system: account for five small edits, collect eligible garbage, and
-design an explicit checkpoint layer without attributing it to Computer.
-
-### 10. Performance and Failure Testing
-
-- Make the headline comparison native WSL filesystem versus the complete local
-  Computer path: process, real FUSE mount, `computerd`, synchronization, and
-  local workerd Durable Object SQLite. Use the implementation shipped by
-  Computer rather than rebuilding the pipeline. Run each matrix operation
-  once, then verify the authoritative result.
-- Benchmark raw DO SQL, direct Computer file APIs, synchronization, FUSE-only,
-  and command execution as diagnostic layers. Never substitute the local
-  materialization shim for a result labeled FUSE.
-- Compare metadata-heavy workloads, range operations, large sequential I/O,
-  and a `node_modules`-style tree.
-- Inject failed streams, partial synchronization, object eviction, container
-  loss, and oversized capability responses.
-- Report hot/cold state, commit, package versions, execution policy, raw elapsed
-  time, logical size, SQLite allocation, and whether network layers are
-  included.
-- Close with a shipped/preview/planned matrix based on source rather than
-  forward-looking prose alone.
-
-Running system: produce a reproducible workspace performance and failure
-profile.
+- State every pricing and workload assumption before showing the result.
+- Compare $36.83 for an always-active `standard-1` container with $7.53 for a
+  10% duty cycle under included Worker and Durable Object allowances.
+- Include 5%, 10%, 25%, 50%, and 100% sensitivity rows.
+- Keep temporary chunk amplification separate from billed live workspace data.
+- Recommend it for metadata-heavy agent work with occasional native builds.
+- Show where continuous servers, native-everywhere workloads, large repeated
+  syncs, or multiple concurrent writers erode the advantage.
+- End with a capability rule: pay for Linux when the operation needs Linux.
 
 ## Part III — Giving State Hands
 

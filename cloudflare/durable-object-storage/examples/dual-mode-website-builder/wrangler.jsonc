@@ -1,0 +1,32 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "computer-dual-mode-website-builder",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-07-26",
+  "compatibility_flags": ["nodejs_compat", "experimental"],
+
+  "containers": [
+    {
+      "class_name": "SiteBuilder",
+      "image": "./Dockerfile",
+      "instance_type": "standard-1",
+      "max_instances": 5,
+      "rollout_active_grace_period": 0,
+      "rollout_step_percentage": [100]
+    }
+  ],
+
+  "worker_loaders": [{ "binding": "LOADER" }],
+
+  "durable_objects": {
+    "bindings": [{ "name": "SiteBuilder", "class_name": "SiteBuilder" }]
+  },
+
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["SiteBuilder"] }],
+
+  "observability": {
+    "enabled": true,
+    "traces": { "enabled": true }
+  }
+}
+
