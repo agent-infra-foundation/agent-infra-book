@@ -3,10 +3,6 @@
 **An agent needs a workspace that persists. It does not need a Linux machine
 that runs continuously.**
 
-This article is part of [Agent Infra Book](https://github.com/agent-infra-foundation/agent-infra-book),
-an open-source systems book about the infrastructure behind coding agents,
-sandboxes, durable workspaces, and agent execution.
-
 ## TL;DR
 
 - **One durable workspace:** a Workspace Durable Object and its SQLite VFS own
@@ -323,10 +319,12 @@ The resulting design principle is simple:
 
 ## Continue with Agent Infra Book
 
-This experiment is one part of the open-source
-[Agent Infra Book](https://github.com/agent-infra-foundation/agent-infra-book).
-The repository connects architecture analysis with runnable implementations and
-measured evidence for agent infrastructure.
+This article is part of the open-source
+[Agent Infra Book](https://github.com/agent-infra-foundation/agent-infra-book),
+a systems book about the infrastructure behind coding agents, including
+sandboxes, durable workspaces, and execution architecture. The repository
+connects architecture analysis with runnable implementations and measured
+evidence.
 
 - [Star and follow Agent Infra Book](https://github.com/agent-infra-foundation/agent-infra-book)
 - [Read the complete Cloudflare Durable Objects section](https://github.com/agent-infra-foundation/agent-infra-book/tree/main/cloudflare/durable-object-storage)

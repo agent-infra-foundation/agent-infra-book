@@ -2,9 +2,6 @@
 
 **Agent 需要一个持续存在的工作区，但不需要一台始终运行的 Linux 机器。**
 
-本文来自开源项目 [Agent Infra Book](https://github.com/agent-infra-foundation/agent-infra-book)。
-这本系统工程书聚焦编码 Agent 背后的基础设施，包括沙箱、持久工作区与执行架构。
-
 ## TL;DR
 
 - **一个持久工作区：** Workspace Durable Object 及其 SQLite VFS 持有项目状态。
@@ -294,9 +291,9 @@ Computer 则负责在两者之间完成 push、执行和 pull。
 
 ## 继续阅读 Agent Infra Book
 
-这个实验是开源项目
-[Agent Infra Book](https://github.com/agent-infra-foundation/agent-infra-book)
-的一部分。项目把 Agent 基础设施的架构分析、可运行实现和实测证据放在同一个仓库中。
+本文来自开源项目 [Agent Infra Book](https://github.com/agent-infra-foundation/agent-infra-book)。
+这本系统工程书聚焦编码 Agent 背后的基础设施，包括沙箱、持久工作区与执行架构。
+项目把架构分析、可运行实现和实测证据放在同一个仓库中。
 
 - [Star 并关注 Agent Infra Book](https://github.com/agent-infra-foundation/agent-infra-book)
 - [阅读完整的 Cloudflare Durable Objects 专题](https://github.com/agent-infra-foundation/agent-infra-book/tree/main/cloudflare/durable-object-storage)
