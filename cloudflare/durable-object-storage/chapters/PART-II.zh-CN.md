@@ -58,7 +58,7 @@ authoritative Workspace Durable Object
 > 成本降幅。**
 
 <p align="center">
-  <img src="../assets/part-ii/one-workspace-two-modes.png" alt="作为唯一事实源的 Durable Workspace 同时服务于负责读取、搜索与编辑的轻量 isolate，以及负责安装、构建与原生工具的按需 Linux container。" width="50%" />
+  <img src="../assets/part-ii/one-workspace-two-modes.png" alt="作为唯一事实源的 Durable Workspace 同时服务于负责读取、搜索与编辑的轻量 isolate，以及负责安装、构建与原生工具的按需 Linux container。" width="40%" />
 </p>
 
 *图 1：一个持久化 Workspace 同时支持轻量 isolate 路径和按需 Linux 兼容路径。
@@ -163,7 +163,7 @@ push -> spawn -> events/result -> pull
 > **isolate 负责编写和检查网站；只有 `npm install` 与 Vite 构建会启动 Linux。**
 
 <p align="center">
-  <img src="../assets/part-ii/build-website-two-modes.png" alt="网站经历四个阶段：在 isolate 中用 workspace.fs 编写，在 isolate 中用 just-bash 检查，在 Linux container 中用 npm 和 Vite 构建，再回到 isolate 中用 just-bash 验证。" width="50%" />
+  <img src="../assets/part-ii/build-website-two-modes.png" alt="网站经历四个阶段：在 isolate 中用 workspace.fs 编写，在 isolate 中用 just-bash 检查，在 Linux container 中用 npm 和 Vite 构建，再回到 isolate 中用 just-bash 验证。" width="40%" />
 </p>
 
 *图 2：网站沿着 isolate → isolate → container → isolate 的顺序移动。只有原生包安装与

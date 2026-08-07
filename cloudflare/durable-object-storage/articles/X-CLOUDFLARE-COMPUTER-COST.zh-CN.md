@@ -23,7 +23,9 @@ AI Agent 经常需要读取文件、搜索代码、修改配置，并在必要�
 
 ## 一个工作区，两种执行模式
 
-![一个 Durable Workspace 同时连接 isolate 与按需 Linux container](../assets/part-ii/one-workspace-two-modes.png)
+<p align="center">
+  <img src="../assets/part-ii/one-workspace-two-modes.png" alt="一个 Durable Workspace 同时连接 isolate 与按需 Linux container" width="40%" />
+</p>
 
 项目的唯一事实源，是 Workspace Durable Object 中的 SQLite VFS。
 
@@ -57,7 +59,9 @@ container 启动后，Computer 把需要的文件 `push` 到 `computerd` VFS。L
 
 ## 用两种模式构建同一个网站
 
-![网站依次在 isolate 中编写和检查、在 container 中构建、再回到 isolate 验证](../assets/part-ii/build-website-two-modes.png)
+<p align="center">
+  <img src="../assets/part-ii/build-website-two-modes.png" alt="网站依次在 isolate 中编写和检查、在 container 中构建、再回到 isolate 验证" width="40%" />
+</p>
 
 为了验证这套模型，我们使用 Cloudflare Computer 构建了一个 Vite 网站。
 

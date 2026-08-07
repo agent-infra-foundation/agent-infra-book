@@ -61,7 +61,7 @@ This article keeps three forms of evidence separate:
 > reduction for every workload.**
 
 <p align="center">
-  <img src="../assets/part-ii/one-workspace-two-modes.png" alt="One authoritative Durable Workspace serves a lightweight isolate for reading, searching, and editing, plus an on-demand Linux container for installation, builds, and native tools." width="50%" />
+  <img src="../assets/part-ii/one-workspace-two-modes.png" alt="One authoritative Durable Workspace serves a lightweight isolate for reading, searching, and editing, plus an on-demand Linux container for installation, builds, and native tools." width="40%" />
 </p>
 
 *Figure 1: One durable Workspace supports a lightweight isolate path and an
@@ -175,7 +175,7 @@ and [Cloudflare Containers pricing](https://developers.cloudflare.com/containers
 > install` and the Vite build.**
 
 <p align="center">
-  <img src="../assets/part-ii/build-website-two-modes.png" alt="A website moves through four stages: author with workspace.fs in an isolate, inspect with just-bash in an isolate, build with npm and Vite in a Linux container, and verify with just-bash in an isolate." width="50%" />
+  <img src="../assets/part-ii/build-website-two-modes.png" alt="A website moves through four stages: author with workspace.fs in an isolate, inspect with just-bash in an isolate, build with npm and Vite in a Linux container, and verify with just-bash in an isolate." width="40%" />
 </p>
 
 *Figure 2: The website follows isolate → isolate → container → isolate. Only
