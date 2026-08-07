@@ -327,8 +327,8 @@ connects architecture analysis with runnable implementations and measured
 evidence.
 
 - [Star and follow Agent Infra Book](https://github.com/agent-infra-foundation/agent-infra-book)
-- [Read the complete Cloudflare Durable Objects section](https://github.com/agent-infra-foundation/agent-infra-book/tree/main/cloudflare/durable-object-storage)
-- [Run the dual-mode website builder](https://github.com/agent-infra-foundation/agent-infra-book/tree/main/cloudflare/durable-object-storage/examples/dual-mode-website-builder)
+- [Read the complete Cloudflare Computer section](https://github.com/agent-infra-foundation/agent-infra-book/tree/main/cloudflare/computer)
+- [Run the dual-mode website builder](https://github.com/agent-infra-foundation/agent-infra-book/tree/main/cloudflare/computer/examples/dual-mode-website-builder)
 
 > **If you are building coding agents, sandboxes, or durable workspaces, the
 > repository is designed to be read, reproduced, and improved in public.**

@@ -296,8 +296,8 @@ Computer 则负责在两者之间完成 push、执行和 pull。
 项目把架构分析、可运行实现和实测证据放在同一个仓库中。
 
 - [Star 并关注 Agent Infra Book](https://github.com/agent-infra-foundation/agent-infra-book)
-- [阅读完整的 Cloudflare Durable Objects 专题](https://github.com/agent-infra-foundation/agent-infra-book/tree/main/cloudflare/durable-object-storage)
-- [运行双模式网站构建示例](https://github.com/agent-infra-foundation/agent-infra-book/tree/main/cloudflare/durable-object-storage/examples/dual-mode-website-builder)
+- [阅读完整的 Cloudflare Computer 专题](https://github.com/agent-infra-foundation/agent-infra-book/tree/main/cloudflare/computer)
+- [运行双模式网站构建示例](https://github.com/agent-infra-foundation/agent-infra-book/tree/main/cloudflare/computer/examples/dual-mode-website-builder)
 
 > **如果你正在构建编码 Agent、沙箱或持久工作区，欢迎阅读、复现并共同完善这个项目。**
 

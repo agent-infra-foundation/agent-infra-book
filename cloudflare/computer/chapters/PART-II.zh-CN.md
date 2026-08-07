@@ -380,7 +380,7 @@ container 命令成功，还证明构建产物已经跨过持久化边界。
 安装教程自身的依赖，并执行类型检查：
 
 ```powershell
-cd cloudflare\durable-object-storage\examples\dual-mode-website-builder
+cd cloudflare\computer\examples\dual-mode-website-builder
 npm install
 npm run types
 npm run typecheck

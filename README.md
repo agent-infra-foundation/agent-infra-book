@@ -42,12 +42,12 @@ attaching disposable execution environments to that durable state.
 
 *Building Durable Systems and Agent Workspaces with Cloudflare Durable Objects*
 
-- **Part I — Introducing Cloudflare Durable Objects** — [English](cloudflare/durable-object-storage/chapters/PART-I.md) · [简体中文](cloudflare/durable-object-storage/chapters/PART-I.zh-CN.md)
-- **Part II — Cloudflare Computer: How to Cut AI Agent Sandboxing Costs by 80%** — [English](cloudflare/durable-object-storage/chapters/PART-II.md) · [简体中文](cloudflare/durable-object-storage/chapters/PART-II.zh-CN.md) · X Article: [English](cloudflare/durable-object-storage/chapters/PART-II-X-ARTICLE.md) · [简体中文](cloudflare/durable-object-storage/chapters/PART-II-X-ARTICLE.zh-CN.md) · [Runnable example](cloudflare/durable-object-storage/examples/dual-mode-website-builder/)
+- **Part I — Introducing Cloudflare Durable Objects** — [English](cloudflare/computer/chapters/PART-I.md) · [简体中文](cloudflare/computer/chapters/PART-I.zh-CN.md)
+- **Part II — Cloudflare Computer: How to Cut AI Agent Sandboxing Costs by 80%** — [English](cloudflare/computer/chapters/PART-II.md) · [简体中文](cloudflare/computer/chapters/PART-II.zh-CN.md) · X Article: [English](cloudflare/computer/chapters/PART-II-X-ARTICLE.md) · [简体中文](cloudflare/computer/chapters/PART-II-X-ARTICLE.zh-CN.md) · [Runnable example](cloudflare/computer/examples/dual-mode-website-builder/)
 - **Part III — Giving State Hands** — Planned
-- **Companion storage benchmark** — [Method and findings](cloudflare/durable-object-storage/benchmarks/storage/BENCHMARK.md) · [Latest result](cloudflare/durable-object-storage/benchmarks/storage/results/medium-summary.md)
+- **Companion storage benchmark** — [Method and findings](cloudflare/computer/benchmarks/storage/BENCHMARK.md) · [Latest result](cloudflare/computer/benchmarks/storage/results/medium-summary.md)
 
-[Explore the book →](cloudflare/durable-object-storage/README.md)
+[Explore the book →](cloudflare/computer/README.md)
 
 The books distinguish implemented systems, experimental ideas, comparisons,
 and future design proposals. More agent-infrastructure categories and series

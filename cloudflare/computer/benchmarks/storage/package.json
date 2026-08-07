@@ -1,5 +1,5 @@
 {
-  "name": "@agent-infra-book/durable-object-storage-benchmark",
+  "name": "@agent-infra-book/computer-storage-benchmark",
   "version": "0.0.0",
   "private": true,
   "type": "module",

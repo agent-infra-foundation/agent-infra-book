@@ -396,7 +396,7 @@ Requirements:
 Install the tutorial itself and check its types:
 
 ```powershell
-cd cloudflare\durable-object-storage\examples\dual-mode-website-builder
+cd cloudflare\computer\examples\dual-mode-website-builder
 npm install
 npm run types
 npm run typecheck
