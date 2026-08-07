@@ -7,6 +7,20 @@ This article is part of [Agent Infra Book](https://github.com/agent-infra-founda
 an open-source systems book about the infrastructure behind coding agents,
 sandboxes, durable workspaces, and agent execution.
 
+## TL;DR
+
+- **One durable workspace:** a Workspace Durable Object and its SQLite VFS own
+  the project state.
+- **Keep the common path light:** `workspace.fs` and `just-bash` handle reads,
+  searches, writes, and small edits in an isolate.
+- **Start Linux only when needed:** native operations such as `npm install` and
+  `npm run build` run in an on-demand container.
+- **Process success is not durability:** container output becomes authoritative
+  only after the post-command pull completes.
+- **Modeled result, not a guaranteed discount:** reducing container-active time
+  to 10% lowers this scenario from **$36.83 to $7.53 per month—a 79.6%
+  reduction**.
+
 AI agents regularly read files, search code, edit configuration, and sometimes
 run commands such as `npm install` or a production build.
 

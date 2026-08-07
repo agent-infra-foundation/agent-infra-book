@@ -5,6 +5,18 @@
 本文来自开源项目 [Agent Infra Book](https://github.com/agent-infra-foundation/agent-infra-book)。
 这本系统工程书聚焦编码 Agent 背后的基础设施，包括沙箱、持久工作区与执行架构。
 
+## TL;DR
+
+- **一个持久工作区：** Workspace Durable Object 及其 SQLite VFS 持有项目状态。
+- **让常用路径保持轻量：** `workspace.fs` 和 `just-bash` 在 isolate 中处理读取、搜索、
+  写入和小型编辑。
+- **只在需要时启动 Linux：** `npm install`、`npm run build` 等原生操作进入按需
+  container。
+- **进程成功不等于持久化：** container 输出只有在命令后的 pull 完成后，才成为唯一
+  事实源状态。
+- **这是模型估算，不是固定折扣：** 把 container 活跃时间降到 10% 后，本文场景从
+  **$36.83/月降至 $7.53/月，降幅为 79.6%**。
+
 AI Agent 经常需要读取文件、搜索代码、修改配置，并在必要时运行 `npm install`
 或构建命令。
 
