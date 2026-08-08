@@ -52,3 +52,9 @@ attaching disposable execution environments to that durable state.
 The books distinguish implemented systems, experimental ideas, comparisons,
 and future design proposals. More agent-infrastructure categories and series
 will be added as the collection grows.
+
+## WeChat Community
+
+Join the Agent Infra Foundation WeChat group:
+
+![Agent Infra Foundation WeChat group invitation](wechat-invitation.jpg)
