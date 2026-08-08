@@ -57,4 +57,4 @@ will be added as the collection grows.
 
 Join the Agent Infra Foundation WeChat group:
 
-![Agent Infra Foundation WeChat group invitation](wechat-invitation.jpg)
+<img src="wechat-invitation.jpg" alt="Agent Infra Foundation WeChat group invitation" width="360" />
