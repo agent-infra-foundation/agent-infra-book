@@ -72,14 +72,15 @@ conflicts, garbage collection, checkpoints, and failure analysis.
 Part II must end with a durable filesystem whose source of truth survives the
 execution environments attached to it.
 
-### Part III: Give the Workspace Temporary Hands
+### Part III: Optimize Storage, Speed, and Multi-Agent Work
 
-Compare native capabilities, Code Mode, isolate JavaScript, `just-bash`, and
-containers. Move from least authority and lowest startup cost toward full Linux
-compatibility only when the workload requires it.
+Present C3 as a prototype application-level filesystem over Durable Object
+SQLite. Move from shared immutable CAS content through COW pages and CDC local
+publication to conflict-aware multi-agent branches.
 
-Part III must end by resolving the question from the prologue: the agent lives
-with its durable state, not inside a permanently running machine.
+Part III must end with reproducible storage, speed, and multi-agent evidence,
+while keeping the branch engine distinct from the still single-mount full
+Computer/FUSE integration.
 
 ## Evidence Discipline
 

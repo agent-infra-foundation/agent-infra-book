@@ -1,0 +1,30 @@
+{
+  "name": "@agent-infra-book/computer-cas-cdc-cow-benchmark",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --config vitest.config.ts src/tests",
+    "bench": "vitest run --config vitest.config.ts src/bench/benchmark.bench.ts",
+    "bench:scale": "vitest run --config vitest.config.ts src/bench/edit-scale.bench.ts",
+    "bench:volume": "vitest run --config vitest.config.ts src/bench/volume.bench.ts",
+    "bench:agents": "vitest run --config vitest.config.ts src/bench/multi-agent.bench.ts",
+    "report": "node ./scripts/report.mjs ./results/latest.json",
+    "report:scale": "node ./scripts/report-scale.mjs ./results/edit-scale-latest.json",
+    "report:volume": "node ./scripts/report-volume.mjs ./results/volume-latest.json",
+    "report:agents": "node ./scripts/report-multi-agent.mjs ./results/multi-agent-latest.json",
+    "run": "powershell -ExecutionPolicy Bypass -File ./scripts/run.ps1",
+    "run:scale": "powershell -ExecutionPolicy Bypass -File ./scripts/run-scale.ps1",
+    "run:volume": "powershell -ExecutionPolicy Bypass -File ./scripts/run-volume.ps1",
+    "run:agents": "powershell -ExecutionPolicy Bypass -File ./scripts/run-multi-agent.ps1"
+  },
+  "devDependencies": {
+    "@cloudflare/vitest-pool-workers": "0.16.10",
+    "@cloudflare/workers-types": "4.20260702.1",
+    "@types/node": "25.9.1",
+    "typescript": "6.0.3",
+    "vitest": "4.1.7",
+    "wrangler": "4.107.1"
+  }
+}

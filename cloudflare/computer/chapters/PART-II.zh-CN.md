@@ -1,5 +1,8 @@
 # 第二部分：Cloudflare Computer——如何将 AI Agent 沙箱成本降低 80%
 
+Part I 在第 4 章完成了持久文件系统与执行成本的测量。Part II 从**第 5
+章**继续，讨论 Agent 的工作应该在哪里运行。
+
 Agent 在整个任务期间都需要自己的工作区，但并非每一步都需要一台完整的
 Linux 机器。
 
@@ -51,7 +54,7 @@ authoritative Workspace Durable Object
 
 ---
 
-## 第 1 章：10% Container 策略
+## 第 5 章：10% Container 策略
 
 > <u>**经济边界：**</u>
 > **Computer 可以减少 container 使用时间，但不能保证每种工作负载都获得固定比例的
@@ -157,7 +160,7 @@ push -> spawn -> events/result -> pull
 
 ---
 
-## 第 2 章：用两种模式构建同一个网站
+## 第 6 章：用两种模式构建同一个网站
 
 > <u>**可运行证据：**</u>
 > **isolate 负责编写和检查网站；只有 `npm install` 与 Vite 构建会启动 Linux。**
@@ -412,7 +415,7 @@ Cloudflare Computer 的 [`examples/think`](https://github.com/cloudflare/compute
 
 ---
 
-## 第 3 章：跟随一条命令跨越持久化边界
+## 第 7 章：跟随一条命令跨越持久化边界
 
 > <u>**持久化边界：**</u>
 > **进程成功退出还不够；命令结束后的 pull 也必须完成。**
@@ -517,7 +520,7 @@ runtime 结果可能报告：
 
 ---
 
-## 第 4 章：计算 80% 的成本降幅
+## 第 8 章：计算 80% 的成本降幅
 
 > <u>**模型估算结果：**</u>
 > **在这个场景中，10% 的 container 活跃时间占比会产生 $7.53 的成本，而不是

@@ -1,0 +1,1069 @@
+{
+  "generatedAt": "2026-08-09T04:49:01.542Z",
+  "benchmarkLayer": "full Computer E2E (custom branch RPC adapter)",
+  "sourceCommit": "76d9e75c5688713b656bce85540d9e0071cece8b",
+  "baseline": {
+    "generatedAt": "2026-08-09T04:39:18.3798549+00:00",
+    "sourceCommit": "76d9e75c5688713b656bce85540d9e0071cece8b",
+    "variant": "baseline",
+    "profile": "branches",
+    "batchId": "branches-20260809043752",
+    "pairId": "branches-20260809043752-10",
+    "trial": 10,
+    "benchmarkSeed": 20260809,
+    "orderIndex": 1,
+    "objectName": "baseline-branches-7cfb7f411bf4",
+    "mounts": [
+      {
+        "backend": {
+          "kind": "fuse"
+        },
+        "mountPoint": "/tmp/cloudflare-computer-branch-baseline-7cfb7f411bf4-a/workspace",
+        "port": 59764
+      },
+      {
+        "backend": {
+          "kind": "fuse"
+        },
+        "mountPoint": "/tmp/cloudflare-computer-branch-baseline-7cfb7f411bf4-b/workspace",
+        "port": 59765
+      }
+    ],
+    "measurement": {
+      "variant": "baseline",
+      "pipeline": "Durable Object-owned branch store -> push -> dedicated computerd/FUSE -> shell -> pull -> branch -> publish",
+      "topology": {
+        "authoritativeSQLiteDatabases": 1,
+        "privateBranches": 2,
+        "independentComputerdProcesses": 2,
+        "independentFuseMounts": 2
+      },
+      "scenarios": {
+        "disjoint": {
+          "branches": [
+            "disjoint-a",
+            "disjoint-b"
+          ],
+          "privateCowPagePayloadBytes": 0,
+          "privateBranchExclusivePayloadBytes": 1049254,
+          "privateBranchDatabaseGrowthBytes": 1056768,
+          "privateStorage": {
+            "cowPageBytes": 0,
+            "patchBytes": 0,
+            "exclusiveObjectBytes": 1048614,
+            "exclusiveManifestBytes": 640,
+            "totalExclusivePayloadBytes": 1049254
+          },
+          "phases": {
+            "pushWallMs": 192,
+            "shellWallMs": 30,
+            "pullWallMs": 89,
+            "publishWallMs": 0,
+            "totalWallMs": 314
+          },
+          "agentA": {
+            "push": {
+              "durationMs": 189,
+              "files": 9,
+              "objects": 15,
+              "bytes": 2097232,
+              "cursor": {
+                "rev": 16,
+                "path": null
+              }
+            },
+            "exec": {
+              "durationMs": 30,
+              "exitCode": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "pull": {
+              "durationMs": 89,
+              "entries": 6,
+              "filesWritten": 4,
+              "filesDeleted": 2,
+              "cowFiles": 1,
+              "materializedFiles": 3,
+              "objectBytesFetched": 1048605,
+              "bytes": 1048605
+            },
+            "publish": {
+              "outcome": "merged",
+              "commit": 10,
+              "conflicts": [],
+              "durationMs": 0
+            }
+          },
+          "agentB": {
+            "push": {
+              "durationMs": 191,
+              "files": 9,
+              "objects": 15,
+              "bytes": 2097232,
+              "cursor": {
+                "rev": 16,
+                "path": null
+              }
+            },
+            "exec": {
+              "durationMs": 26,
+              "exitCode": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "pull": {
+              "durationMs": 76,
+              "entries": 3,
+              "filesWritten": 3,
+              "filesDeleted": 0,
+              "cowFiles": 1,
+              "materializedFiles": 2,
+              "objectBytesFetched": 1048595,
+              "bytes": 1048595
+            },
+            "publish": {
+              "outcome": "merged",
+              "commit": 11,
+              "conflicts": [],
+              "durationMs": 0
+            }
+          }
+        },
+        "sameFile": {
+          "branches": [
+            "same-file-a",
+            "same-file-b"
+          ],
+          "privateCowPagePayloadBytes": 0,
+          "privateBranchExclusivePayloadBytes": 196,
+          "privateBranchDatabaseGrowthBytes": 0,
+          "privateStorage": {
+            "cowPageBytes": 0,
+            "patchBytes": 0,
+            "exclusiveObjectBytes": 36,
+            "exclusiveManifestBytes": 160,
+            "totalExclusivePayloadBytes": 196
+          },
+          "phases": {
+            "pushWallMs": 70,
+            "shellWallMs": 11,
+            "pullWallMs": 9,
+            "publishWallMs": 0,
+            "totalWallMs": 94
+          },
+          "agentA": {
+            "push": {
+              "durationMs": 70,
+              "files": 10,
+              "objects": 4,
+              "bytes": 524307,
+              "cursor": {
+                "rev": 36,
+                "path": null
+              }
+            },
+            "exec": {
+              "durationMs": 11,
+              "exitCode": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "pull": {
+              "durationMs": 9,
+              "entries": 1,
+              "filesWritten": 1,
+              "filesDeleted": 0,
+              "cowFiles": 0,
+              "materializedFiles": 1,
+              "objectBytesFetched": 18,
+              "bytes": 18
+            },
+            "publish": {
+              "outcome": "merged",
+              "commit": 12,
+              "conflicts": [],
+              "durationMs": 0
+            }
+          },
+          "agentB": {
+            "push": {
+              "durationMs": 65,
+              "files": 10,
+              "objects": 4,
+              "bytes": 524307,
+              "cursor": {
+                "rev": 34,
+                "path": null
+              }
+            },
+            "exec": {
+              "durationMs": 9,
+              "exitCode": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "pull": {
+              "durationMs": 4,
+              "entries": 1,
+              "filesWritten": 1,
+              "filesDeleted": 0,
+              "cowFiles": 0,
+              "materializedFiles": 1,
+              "objectBytesFetched": 18,
+              "bytes": 18
+            },
+            "publish": {
+              "outcome": "merged",
+              "commit": 13,
+              "conflicts": [],
+              "durationMs": 0
+            }
+          }
+        },
+        "createCollision": {
+          "branches": [
+            "create-collision-a",
+            "create-collision-b"
+          ],
+          "privateCowPagePayloadBytes": 0,
+          "privateBranchExclusivePayloadBytes": 198,
+          "privateBranchDatabaseGrowthBytes": 0,
+          "privateStorage": {
+            "cowPageBytes": 0,
+            "patchBytes": 0,
+            "exclusiveObjectBytes": 38,
+            "exclusiveManifestBytes": 160,
+            "totalExclusivePayloadBytes": 198
+          },
+          "phases": {
+            "pushWallMs": 37,
+            "shellWallMs": 9,
+            "pullWallMs": 7,
+            "publishWallMs": 0,
+            "totalWallMs": 57
+          },
+          "agentA": {
+            "push": {
+              "durationMs": 35,
+              "files": 10,
+              "objects": 1,
+              "bytes": 18,
+              "cursor": {
+                "rev": 52,
+                "path": null
+              }
+            },
+            "exec": {
+              "durationMs": 9,
+              "exitCode": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "pull": {
+              "durationMs": 7,
+              "entries": 1,
+              "filesWritten": 1,
+              "filesDeleted": 0,
+              "cowFiles": 0,
+              "materializedFiles": 1,
+              "objectBytesFetched": 19,
+              "bytes": 19
+            },
+            "publish": {
+              "outcome": "merged",
+              "commit": 14,
+              "conflicts": [],
+              "durationMs": 0
+            }
+          },
+          "agentB": {
+            "push": {
+              "durationMs": 37,
+              "files": 10,
+              "objects": 0,
+              "bytes": 0,
+              "cursor": {
+                "rev": 50,
+                "path": null
+              }
+            },
+            "exec": {
+              "durationMs": 9,
+              "exitCode": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "pull": {
+              "durationMs": 5,
+              "entries": 1,
+              "filesWritten": 1,
+              "filesDeleted": 0,
+              "cowFiles": 0,
+              "materializedFiles": 1,
+              "objectBytesFetched": 19,
+              "bytes": 19
+            },
+            "publish": {
+              "outcome": "merged",
+              "commit": 15,
+              "conflicts": [],
+              "durationMs": 0
+            }
+          }
+        },
+        "deleteEdit": {
+          "branches": [
+            "delete-edit-a",
+            "delete-edit-b"
+          ],
+          "privateCowPagePayloadBytes": 0,
+          "privateBranchExclusivePayloadBytes": 98,
+          "privateBranchDatabaseGrowthBytes": 0,
+          "privateStorage": {
+            "cowPageBytes": 0,
+            "patchBytes": 0,
+            "exclusiveObjectBytes": 18,
+            "exclusiveManifestBytes": 80,
+            "totalExclusivePayloadBytes": 98
+          },
+          "phases": {
+            "pushWallMs": 37,
+            "shellWallMs": 9,
+            "pullWallMs": 6,
+            "publishWallMs": 0,
+            "totalWallMs": 56
+          },
+          "agentA": {
+            "push": {
+              "durationMs": 37,
+              "files": 11,
+              "objects": 1,
+              "bytes": 19,
+              "cursor": {
+                "rev": 69,
+                "path": null
+              }
+            },
+            "exec": {
+              "durationMs": 9,
+              "exitCode": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "pull": {
+              "durationMs": 2,
+              "entries": 1,
+              "filesWritten": 0,
+              "filesDeleted": 1,
+              "cowFiles": 0,
+              "materializedFiles": 0,
+              "objectBytesFetched": 0,
+              "bytes": 0
+            },
+            "publish": {
+              "outcome": "merged",
+              "commit": 16,
+              "conflicts": [],
+              "durationMs": 0
+            }
+          },
+          "agentB": {
+            "push": {
+              "durationMs": 33,
+              "files": 11,
+              "objects": 0,
+              "bytes": 0,
+              "cursor": {
+                "rev": 67,
+                "path": null
+              }
+            },
+            "exec": {
+              "durationMs": 8,
+              "exitCode": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "pull": {
+              "durationMs": 6,
+              "entries": 1,
+              "filesWritten": 1,
+              "filesDeleted": 0,
+              "cowFiles": 0,
+              "materializedFiles": 1,
+              "objectBytesFetched": 18,
+              "bytes": 18
+            },
+            "publish": {
+              "outcome": "merged",
+              "commit": 17,
+              "conflicts": [],
+              "durationMs": 0
+            }
+          }
+        },
+        "renameEdit": {
+          "branches": [
+            "rename-edit-a",
+            "rename-edit-b"
+          ],
+          "privateCowPagePayloadBytes": 0,
+          "privateBranchExclusivePayloadBytes": 107,
+          "privateBranchDatabaseGrowthBytes": 0,
+          "privateStorage": {
+            "cowPageBytes": 0,
+            "patchBytes": 0,
+            "exclusiveObjectBytes": 27,
+            "exclusiveManifestBytes": 80,
+            "totalExclusivePayloadBytes": 107
+          },
+          "phases": {
+            "pushWallMs": 35,
+            "shellWallMs": 12,
+            "pullWallMs": 7,
+            "publishWallMs": 1,
+            "totalWallMs": 58
+          },
+          "agentA": {
+            "push": {
+              "durationMs": 35,
+              "files": 11,
+              "objects": 1,
+              "bytes": 18,
+              "cursor": {
+                "rev": 86,
+                "path": null
+              }
+            },
+            "exec": {
+              "durationMs": 11,
+              "exitCode": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "pull": {
+              "durationMs": 7,
+              "entries": 2,
+              "filesWritten": 1,
+              "filesDeleted": 1,
+              "cowFiles": 0,
+              "materializedFiles": 1,
+              "objectBytesFetched": 17,
+              "bytes": 17
+            },
+            "publish": {
+              "outcome": "merged",
+              "commit": 18,
+              "conflicts": [],
+              "durationMs": 1
+            }
+          },
+          "agentB": {
+            "push": {
+              "durationMs": 35,
+              "files": 11,
+              "objects": 0,
+              "bytes": 0,
+              "cursor": {
+                "rev": 84,
+                "path": null
+              }
+            },
+            "exec": {
+              "durationMs": 12,
+              "exitCode": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "pull": {
+              "durationMs": 5,
+              "entries": 1,
+              "filesWritten": 1,
+              "filesDeleted": 0,
+              "cowFiles": 0,
+              "materializedFiles": 1,
+              "objectBytesFetched": 27,
+              "bytes": 27
+            },
+            "publish": {
+              "outcome": "merged",
+              "commit": 19,
+              "conflicts": [],
+              "durationMs": 0
+            }
+          }
+        }
+      },
+      "storage": {
+        "databaseBytes": 3350528,
+        "logicalBytes": 2097299,
+        "storedPayloadBytes": 3145965,
+        "reachablePayloadBytes": 2097299,
+        "orphanPayloadBytes": 1048666,
+        "branchPayloadBytes": 0,
+        "branchStorage": {
+          "cowPageBytes": 0,
+          "patchBytes": 0,
+          "exclusiveObjectBytes": 0,
+          "exclusiveManifestBytes": 0,
+          "totalExclusivePayloadBytes": 0
+        },
+        "objectCount": 23,
+        "versionCount": 27
+      },
+      "verification": {
+        "disjointMerged": true,
+        "sameFileConflict": false,
+        "createCollisionConflict": false,
+        "deleteEditConflict": false,
+        "renameEditConflict": false,
+        "silentLostUpdates": 4
+      }
+    }
+  },
+  "c3": {
+    "generatedAt": "2026-08-09T04:39:14.1066074+00:00",
+    "sourceCommit": "76d9e75c5688713b656bce85540d9e0071cece8b",
+    "variant": "c3",
+    "profile": "branches",
+    "batchId": "branches-20260809043752",
+    "pairId": "branches-20260809043752-10",
+    "trial": 10,
+    "benchmarkSeed": 20260809,
+    "orderIndex": 0,
+    "objectName": "c3-branches-18da2bfb5edb",
+    "mounts": [
+      {
+        "backend": {
+          "kind": "fuse"
+        },
+        "mountPoint": "/tmp/cloudflare-computer-branch-c3-18da2bfb5edb-a/workspace",
+        "port": 56087
+      },
+      {
+        "backend": {
+          "kind": "fuse"
+        },
+        "mountPoint": "/tmp/cloudflare-computer-branch-c3-18da2bfb5edb-b/workspace",
+        "port": 56088
+      }
+    ],
+    "measurement": {
+      "variant": "c3",
+      "pipeline": "Durable Object-owned branch store -> push -> dedicated computerd/FUSE -> shell -> pull -> branch -> publish",
+      "topology": {
+        "authoritativeSQLiteDatabases": 1,
+        "privateBranches": 2,
+        "independentComputerdProcesses": 2,
+        "independentFuseMounts": 2
+      },
+      "scenarios": {
+        "disjoint": {
+          "branches": [
+            "disjoint-a",
+            "disjoint-b"
+          ],
+          "privateCowPagePayloadBytes": 8192,
+          "privateBranchExclusivePayloadBytes": 8374,
+          "privateBranchDatabaseGrowthBytes": 8192,
+          "privateStorage": {
+            "cowPageBytes": 8192,
+            "patchBytes": 0,
+            "exclusiveObjectBytes": 38,
+            "exclusiveManifestBytes": 144,
+            "totalExclusivePayloadBytes": 8374
+          },
+          "phases": {
+            "pushWallMs": 189,
+            "shellWallMs": 35,
+            "pullWallMs": 89,
+            "publishWallMs": 5,
+            "totalWallMs": 320
+          },
+          "agentA": {
+            "push": {
+              "durationMs": 189,
+              "files": 9,
+              "objects": 15,
+              "bytes": 2097232,
+              "cursor": {
+                "rev": 16,
+                "path": null
+              }
+            },
+            "exec": {
+              "durationMs": 35,
+              "exitCode": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "pull": {
+              "durationMs": 89,
+              "entries": 6,
+              "filesWritten": 4,
+              "filesDeleted": 2,
+              "cowFiles": 1,
+              "materializedFiles": 3,
+              "objectBytesFetched": 1048605,
+              "bytes": 1048605
+            },
+            "publish": {
+              "outcome": "merged",
+              "commit": 10,
+              "conflicts": [],
+              "durationMs": 3
+            }
+          },
+          "agentB": {
+            "push": {
+              "durationMs": 184,
+              "files": 9,
+              "objects": 15,
+              "bytes": 2097232,
+              "cursor": {
+                "rev": 16,
+                "path": null
+              }
+            },
+            "exec": {
+              "durationMs": 30,
+              "exitCode": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "pull": {
+              "durationMs": 70,
+              "entries": 3,
+              "filesWritten": 3,
+              "filesDeleted": 0,
+              "cowFiles": 1,
+              "materializedFiles": 2,
+              "objectBytesFetched": 1048595,
+              "bytes": 1048595
+            },
+            "publish": {
+              "outcome": "merged",
+              "commit": 11,
+              "conflicts": [],
+              "durationMs": 2
+            }
+          }
+        },
+        "sameFile": {
+          "branches": [
+            "same-file-a",
+            "same-file-b"
+          ],
+          "privateCowPagePayloadBytes": 0,
+          "privateBranchExclusivePayloadBytes": 108,
+          "privateBranchDatabaseGrowthBytes": 0,
+          "privateStorage": {
+            "cowPageBytes": 0,
+            "patchBytes": 0,
+            "exclusiveObjectBytes": 36,
+            "exclusiveManifestBytes": 72,
+            "totalExclusivePayloadBytes": 108
+          },
+          "phases": {
+            "pushWallMs": 72,
+            "shellWallMs": 9,
+            "pullWallMs": 8,
+            "publishWallMs": 0,
+            "totalWallMs": 92
+          },
+          "agentA": {
+            "push": {
+              "durationMs": 72,
+              "files": 10,
+              "objects": 4,
+              "bytes": 524307,
+              "cursor": {
+                "rev": 36,
+                "path": null
+              }
+            },
+            "exec": {
+              "durationMs": 9,
+              "exitCode": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "pull": {
+              "durationMs": 5,
+              "entries": 1,
+              "filesWritten": 1,
+              "filesDeleted": 0,
+              "cowFiles": 0,
+              "materializedFiles": 1,
+              "objectBytesFetched": 18,
+              "bytes": 18
+            },
+            "publish": {
+              "outcome": "merged",
+              "commit": 12,
+              "conflicts": [],
+              "durationMs": 0
+            }
+          },
+          "agentB": {
+            "push": {
+              "durationMs": 69,
+              "files": 10,
+              "objects": 4,
+              "bytes": 524307,
+              "cursor": {
+                "rev": 34,
+                "path": null
+              }
+            },
+            "exec": {
+              "durationMs": 9,
+              "exitCode": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "pull": {
+              "durationMs": 8,
+              "entries": 1,
+              "filesWritten": 1,
+              "filesDeleted": 0,
+              "cowFiles": 0,
+              "materializedFiles": 1,
+              "objectBytesFetched": 18,
+              "bytes": 18
+            },
+            "publish": {
+              "outcome": "conflict",
+              "commit": null,
+              "conflicts": [
+                "/workspace/shared.txt"
+              ],
+              "durationMs": 0
+            }
+          }
+        },
+        "createCollision": {
+          "branches": [
+            "create-collision-a",
+            "create-collision-b"
+          ],
+          "privateCowPagePayloadBytes": 0,
+          "privateBranchExclusivePayloadBytes": 110,
+          "privateBranchDatabaseGrowthBytes": 0,
+          "privateStorage": {
+            "cowPageBytes": 0,
+            "patchBytes": 0,
+            "exclusiveObjectBytes": 38,
+            "exclusiveManifestBytes": 72,
+            "totalExclusivePayloadBytes": 110
+          },
+          "phases": {
+            "pushWallMs": 39,
+            "shellWallMs": 9,
+            "pullWallMs": 7,
+            "publishWallMs": 0,
+            "totalWallMs": 58
+          },
+          "agentA": {
+            "push": {
+              "durationMs": 34,
+              "files": 10,
+              "objects": 0,
+              "bytes": 0,
+              "cursor": {
+                "rev": 52,
+                "path": null
+              }
+            },
+            "exec": {
+              "durationMs": 9,
+              "exitCode": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "pull": {
+              "durationMs": 7,
+              "entries": 1,
+              "filesWritten": 1,
+              "filesDeleted": 0,
+              "cowFiles": 0,
+              "materializedFiles": 1,
+              "objectBytesFetched": 19,
+              "bytes": 19
+            },
+            "publish": {
+              "outcome": "merged",
+              "commit": 13,
+              "conflicts": [],
+              "durationMs": 0
+            }
+          },
+          "agentB": {
+            "push": {
+              "durationMs": 39,
+              "files": 10,
+              "objects": 1,
+              "bytes": 18,
+              "cursor": {
+                "rev": 50,
+                "path": null
+              }
+            },
+            "exec": {
+              "durationMs": 9,
+              "exitCode": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "pull": {
+              "durationMs": 4,
+              "entries": 1,
+              "filesWritten": 1,
+              "filesDeleted": 0,
+              "cowFiles": 0,
+              "materializedFiles": 1,
+              "objectBytesFetched": 19,
+              "bytes": 19
+            },
+            "publish": {
+              "outcome": "conflict",
+              "commit": null,
+              "conflicts": [
+                "/workspace/collision.txt"
+              ],
+              "durationMs": 0
+            }
+          }
+        },
+        "deleteEdit": {
+          "branches": [
+            "delete-edit-a",
+            "delete-edit-b"
+          ],
+          "privateCowPagePayloadBytes": 0,
+          "privateBranchExclusivePayloadBytes": 54,
+          "privateBranchDatabaseGrowthBytes": 0,
+          "privateStorage": {
+            "cowPageBytes": 0,
+            "patchBytes": 0,
+            "exclusiveObjectBytes": 18,
+            "exclusiveManifestBytes": 36,
+            "totalExclusivePayloadBytes": 54
+          },
+          "phases": {
+            "pushWallMs": 34,
+            "shellWallMs": 9,
+            "pullWallMs": 7,
+            "publishWallMs": 0,
+            "totalWallMs": 52
+          },
+          "agentA": {
+            "push": {
+              "durationMs": 32,
+              "files": 11,
+              "objects": 0,
+              "bytes": 0,
+              "cursor": {
+                "rev": 69,
+                "path": null
+              }
+            },
+            "exec": {
+              "durationMs": 8,
+              "exitCode": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "pull": {
+              "durationMs": 2,
+              "entries": 1,
+              "filesWritten": 0,
+              "filesDeleted": 1,
+              "cowFiles": 0,
+              "materializedFiles": 0,
+              "objectBytesFetched": 0,
+              "bytes": 0
+            },
+            "publish": {
+              "outcome": "merged",
+              "commit": 14,
+              "conflicts": [],
+              "durationMs": 0
+            }
+          },
+          "agentB": {
+            "push": {
+              "durationMs": 34,
+              "files": 11,
+              "objects": 1,
+              "bytes": 19,
+              "cursor": {
+                "rev": 67,
+                "path": null
+              }
+            },
+            "exec": {
+              "durationMs": 9,
+              "exitCode": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "pull": {
+              "durationMs": 7,
+              "entries": 1,
+              "filesWritten": 1,
+              "filesDeleted": 0,
+              "cowFiles": 0,
+              "materializedFiles": 1,
+              "objectBytesFetched": 18,
+              "bytes": 18
+            },
+            "publish": {
+              "outcome": "conflict",
+              "commit": null,
+              "conflicts": [
+                "/workspace/delete-edit.txt"
+              ],
+              "durationMs": 0
+            }
+          }
+        },
+        "renameEdit": {
+          "branches": [
+            "rename-edit-a",
+            "rename-edit-b"
+          ],
+          "privateCowPagePayloadBytes": 0,
+          "privateBranchExclusivePayloadBytes": 63,
+          "privateBranchDatabaseGrowthBytes": 0,
+          "privateStorage": {
+            "cowPageBytes": 0,
+            "patchBytes": 0,
+            "exclusiveObjectBytes": 27,
+            "exclusiveManifestBytes": 36,
+            "totalExclusivePayloadBytes": 63
+          },
+          "phases": {
+            "pushWallMs": 32,
+            "shellWallMs": 9,
+            "pullWallMs": 69,
+            "publishWallMs": 0,
+            "totalWallMs": 113
+          },
+          "agentA": {
+            "push": {
+              "durationMs": 32,
+              "files": 10,
+              "objects": 0,
+              "bytes": 0,
+              "cursor": {
+                "rev": 85,
+                "path": null
+              }
+            },
+            "exec": {
+              "durationMs": 9,
+              "exitCode": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "pull": {
+              "durationMs": 69,
+              "entries": 2,
+              "filesWritten": 1,
+              "filesDeleted": 1,
+              "cowFiles": 0,
+              "materializedFiles": 1,
+              "objectBytesFetched": 17,
+              "bytes": 17
+            },
+            "publish": {
+              "outcome": "merged",
+              "commit": 15,
+              "conflicts": [],
+              "durationMs": 0
+            }
+          },
+          "agentB": {
+            "push": {
+              "durationMs": 31,
+              "files": 10,
+              "objects": 0,
+              "bytes": 0,
+              "cursor": {
+                "rev": 83,
+                "path": null
+              }
+            },
+            "exec": {
+              "durationMs": 8,
+              "exitCode": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "pull": {
+              "durationMs": 5,
+              "entries": 1,
+              "filesWritten": 1,
+              "filesDeleted": 0,
+              "cowFiles": 0,
+              "materializedFiles": 1,
+              "objectBytesFetched": 27,
+              "bytes": 27
+            },
+            "publish": {
+              "outcome": "conflict",
+              "commit": null,
+              "conflicts": [
+                "/workspace/rename-edit.txt"
+              ],
+              "durationMs": 0
+            }
+          }
+        }
+      },
+      "storage": {
+        "databaseBytes": 2859008,
+        "logicalBytes": 2097254,
+        "storedPayloadBytes": 2620211,
+        "reachablePayloadBytes": 2097254,
+        "orphanPayloadBytes": 522957,
+        "branchPayloadBytes": 0,
+        "branchStorage": {
+          "cowPageBytes": 0,
+          "patchBytes": 0,
+          "exclusiveObjectBytes": 0,
+          "exclusiveManifestBytes": 0,
+          "totalExclusivePayloadBytes": 0
+        },
+        "objectCount": 33,
+        "versionCount": 23
+      },
+      "verification": {
+        "disjointMerged": true,
+        "sameFileConflict": true,
+        "createCollisionConflict": true,
+        "deleteEditConflict": true,
+        "renameEditConflict": true,
+        "silentLostUpdates": 0
+      }
+    }
+  },
+  "comparison": {
+    "privateCowPagePayloadBytes": {
+      "baseline": 0,
+      "c3": 8192
+    },
+    "branchExclusivePayloadBytes": {
+      "baseline": 1049254,
+      "c3": 8374,
+      "reductionPercent": 99.20190916594075
+    },
+    "branchDatabaseGrowthBytes": {
+      "baseline": 1056768,
+      "c3": 8192,
+      "reductionPercent": 99.2248062015504
+    }
+  }
+}

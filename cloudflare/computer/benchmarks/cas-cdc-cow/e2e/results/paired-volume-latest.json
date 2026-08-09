@@ -1,0 +1,226 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-08-09T05:05:43.065Z",
+  "batchId": "volume-20260809043931",
+  "profile": "volume",
+  "benchmarkLayer": "full Computer E2E (upstream Workspace.runtime.exec)",
+  "pairCount": 10,
+  "randomizationSeed": 20260809,
+  "quartileMethod": "linear interpolation at (n - 1) * q",
+  "metrics": {
+    "createMs": {
+      "baseline": {
+        "median": 1618.5,
+        "q1": 1609.25,
+        "q3": 1630.75,
+        "min": 1586,
+        "max": 1839
+      },
+      "c3": {
+        "median": 2219,
+        "q1": 2169,
+        "q3": 2276,
+        "min": 2137,
+        "max": 2329
+      }
+    },
+    "checkpointEditsMs": {
+      "baseline": {
+        "median": 5122,
+        "q1": 5100.5,
+        "q3": 5159,
+        "min": 5014,
+        "max": 5405
+      },
+      "c3": {
+        "median": 1608.5,
+        "q1": 1569.5,
+        "q3": 1615.5,
+        "min": 1546,
+        "max": 1644
+      }
+    },
+    "frontInsertMs": {
+      "baseline": {
+        "median": 1638,
+        "q1": 1628.25,
+        "q3": 1682.75,
+        "min": 1617,
+        "max": 1733
+      },
+      "c3": {
+        "median": 430,
+        "q1": 424.25,
+        "q3": 443.75,
+        "min": 423,
+        "max": 772
+      }
+    },
+    "readMs": {
+      "baseline": {
+        "median": 207,
+        "q1": 202.25,
+        "q3": 208.5,
+        "min": 202,
+        "max": 224
+      },
+      "c3": {
+        "median": 155.5,
+        "q1": 154,
+        "q3": 157.75,
+        "min": 149,
+        "max": 159
+      }
+    },
+    "editBlobGrowthBytes": {
+      "baseline": {
+        "median": 8388608,
+        "q1": 8388608,
+        "q3": 8388608,
+        "min": 8388608,
+        "max": 8388608
+      },
+      "c3": {
+        "median": 3352968,
+        "q1": 3352968,
+        "q3": 3352968,
+        "min": 3352968,
+        "max": 3352968
+      }
+    },
+    "prependBlobGrowthBytes": {
+      "baseline": {
+        "median": 33554442,
+        "q1": 33554442,
+        "q3": 33554442,
+        "min": 33554442,
+        "max": 33554442
+      },
+      "c3": {
+        "median": 197472,
+        "q1": 197472,
+        "q3": 197472,
+        "min": 197472,
+        "max": 197472
+      }
+    },
+    "finalDatabaseBytes": {
+      "baseline": {
+        "median": 75829248,
+        "q1": 75829248,
+        "q3": 75829248,
+        "min": 75829248,
+        "max": 75829248
+      },
+      "c3": {
+        "median": 37629952,
+        "q1": 37629952,
+        "q3": 37629952,
+        "min": 37629952,
+        "max": 37629952
+      }
+    }
+  },
+  "pairs": [
+    {
+      "pairId": "volume-20260809043931-01",
+      "trial": 1,
+      "executionOrder": [
+        "baseline",
+        "c3"
+      ],
+      "baselineObject": "baseline-volume-7c8e1c9a4c6d",
+      "c3Object": "c3-volume-dbfe9bcee186"
+    },
+    {
+      "pairId": "volume-20260809043931-02",
+      "trial": 2,
+      "executionOrder": [
+        "baseline",
+        "c3"
+      ],
+      "baselineObject": "baseline-volume-bedbf505a0bd",
+      "c3Object": "c3-volume-0c28d1b14032"
+    },
+    {
+      "pairId": "volume-20260809043931-03",
+      "trial": 3,
+      "executionOrder": [
+        "c3",
+        "baseline"
+      ],
+      "baselineObject": "baseline-volume-967bcf35b8e4",
+      "c3Object": "c3-volume-cf91fa1b5d1d"
+    },
+    {
+      "pairId": "volume-20260809043931-04",
+      "trial": 4,
+      "executionOrder": [
+        "baseline",
+        "c3"
+      ],
+      "baselineObject": "baseline-volume-7b8e0e005577",
+      "c3Object": "c3-volume-f855605e79b4"
+    },
+    {
+      "pairId": "volume-20260809043931-05",
+      "trial": 5,
+      "executionOrder": [
+        "c3",
+        "baseline"
+      ],
+      "baselineObject": "baseline-volume-1383507376dd",
+      "c3Object": "c3-volume-53f35a2c0ca9"
+    },
+    {
+      "pairId": "volume-20260809043931-06",
+      "trial": 6,
+      "executionOrder": [
+        "baseline",
+        "c3"
+      ],
+      "baselineObject": "baseline-volume-78151ac886d1",
+      "c3Object": "c3-volume-94e91ecf550f"
+    },
+    {
+      "pairId": "volume-20260809043931-07",
+      "trial": 7,
+      "executionOrder": [
+        "baseline",
+        "c3"
+      ],
+      "baselineObject": "baseline-volume-29ba4a66c807",
+      "c3Object": "c3-volume-c7ed3a01a417"
+    },
+    {
+      "pairId": "volume-20260809043931-08",
+      "trial": 8,
+      "executionOrder": [
+        "baseline",
+        "c3"
+      ],
+      "baselineObject": "baseline-volume-947cd450a465",
+      "c3Object": "c3-volume-6907b35cf306"
+    },
+    {
+      "pairId": "volume-20260809043931-09",
+      "trial": 9,
+      "executionOrder": [
+        "baseline",
+        "c3"
+      ],
+      "baselineObject": "baseline-volume-1caabc2272f2",
+      "c3Object": "c3-volume-e589fa870ccc"
+    },
+    {
+      "pairId": "volume-20260809043931-10",
+      "trial": 10,
+      "executionOrder": [
+        "c3",
+        "baseline"
+      ],
+      "baselineObject": "baseline-volume-f492f54244b3",
+      "c3Object": "c3-volume-531d00070ff6"
+    }
+  ]
+}

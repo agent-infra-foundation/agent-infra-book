@@ -1,0 +1,18 @@
+{
+  "name": "@agent-infra-book/computer-e2e-baseline",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@cloudflare/computer": "file:../../../../storage/vendor/cloudflare-computer-0.1.0-alpha.1.tgz",
+    "@cloudflare/computer-rpc": "file:../../../../storage/vendor/cloudflare-computer-rpc-0.0.0-full.tgz",
+    "@cloudflare/computerd": "file:../../../../storage/vendor/cloudflare-computerd-0.1.0-alpha.1.tgz",
+    "@cloudflare/dofs": "file:../../../../storage/vendor/cloudflare-dofs-0.0.0-full.tgz"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "4.20260702.1",
+    "@types/node": "25.9.1",
+    "typescript": "6.0.3",
+    "wrangler": "4.107.1"
+  }
+}

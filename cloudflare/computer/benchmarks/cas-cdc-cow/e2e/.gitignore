@@ -1,0 +1,10 @@
+.build/
+.wrangler/
+variants/*/generated/
+variants/*/node_modules/
+variants/*/.wrangler/
+variants/*/package-lock.json
+variants/*/wrangler.jsonc
+vendor/c3/*.tgz
+results/raw/*
+!results/raw/.gitkeep

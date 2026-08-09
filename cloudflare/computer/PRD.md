@@ -217,18 +217,23 @@ The part ends with a website authored and verified in isolates, built in a
 container, synchronized to Durable Object SQLite, and served from the durable
 Workspace.
 
-### Part III — Giving State Hands
+### Part III — C3: Optimizing Cloudflare Computer for Storage, Speed, and Multi-Agent Workloads
 
-Part III must compare execution surfaces over one workspace. It should answer:
+Part III must present C3 as an independent prototype built on Durable Object
+SQLite. It should answer:
 
-- When is a native capability enough?
-- When should an agent write JavaScript instead of issuing many tool calls?
-- What shell behavior does `just-bash` provide without an operating system?
-- Which tasks require a real container?
-- How should authority, secrets, networking, and resources be scoped?
+- How do CAS references make private branches space-efficient?
+- How do 4 KiB COW pages reduce private edit cost?
+- When does CDC reduce structural-edit amplification, and what does it cost?
+- How do file-level optimistic checks merge disjoint work and reject stale
+  same-file publication?
+- Which results come from the storage engine, and which pass through the full
+  Computer/FUSE pipeline?
 
-The part ends with an execution ladder and an integrated durable coding
-workspace.
+The part ends with measured storage, speed, and 50-agent results plus a
+two-agent branch-aware Computer run through independent computerd/FUSE mirrors.
+It must separate implemented regular-file semantics from production gaps such
+as directory metadata, symlinks, pooling, recovery, and quotas.
 
 ## 11. Chapter Rhythm
 

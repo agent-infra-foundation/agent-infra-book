@@ -1,0 +1,19 @@
+{
+  "name": "cas-cdc-cow-benchmark",
+  "main": "./worker.ts",
+  "compatibility_date": "2026-05-26",
+  "durable_objects": {
+    "bindings": [
+      {
+        "name": "BenchmarkStorage",
+        "class_name": "BenchmarkStorage"
+      }
+    ]
+  },
+  "migrations": [
+    {
+      "tag": "v1",
+      "new_sqlite_classes": ["BenchmarkStorage"]
+    }
+  ]
+}

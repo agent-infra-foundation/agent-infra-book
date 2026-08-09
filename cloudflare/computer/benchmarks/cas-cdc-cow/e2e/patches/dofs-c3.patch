@@ -1,0 +1,904 @@
+diff --git a/packages/dofs/src/fs/readFile.ts b/packages/dofs/src/fs/readFile.ts
+index 7f89de4..e02fe55 100644
+--- a/packages/dofs/src/fs/readFile.ts
++++ b/packages/dofs/src/fs/readFile.ts
+@@ -4,7 +4,7 @@ import type { Database } from "../storage.js";
+ import { getBlobBytes } from "./blobCache.js";
+ import { resolveInode } from "./resolve.js";
+ import { getPendingWriteBufferByPath, getWriteBuffer } from "./writeBuffer.js";
+-import { CHUNK_SIZE } from "./writeFile.js";
++import { materializeBufferedFile, readBufferedRange } from "./writeFile.js";
+ 
+ export interface ReadFileOptions {
+   encoding?: "utf8";
+@@ -61,8 +61,7 @@ export async function readFile(
+   // truth. Skip the chunk store and serve the buffered bytes.
+   const buffered = getWriteBuffer(db, node.inode);
+   if (buffered?.dirty) {
+-    const snapshot = new Uint8Array(buffered.size);
+-    snapshot.set(buffered.buf.subarray(0, buffered.size));
++    const snapshot = materializeBufferedFile(db, node.inode, buffered);
+     if (wantString) return new TextDecoder().decode(snapshot);
+     return new ReadableStream<Uint8Array>({
+       start(controller) {
+@@ -156,39 +155,39 @@ export function readRangeSync(
+   // Reading from SQLite here would return stale bytes.
+   const buffered = getWriteBuffer(db, node.inode);
+   if (buffered?.dirty) {
+-    if (offset >= buffered.size) return new Uint8Array();
+-    const end = Math.min(offset + length, buffered.size);
+-    return buffered.buf.subarray(offset, end);
++    return readBufferedRange(db, node.inode, buffered, offset, length);
+   }
+ 
+   // node.size is the cached value resolveInode just loaded.
+   const totalSize = node.size;
+   if (offset >= totalSize) return new Uint8Array();
+   const end = Math.min(offset + length, totalSize);
+-  const firstIdx = Math.floor(offset / CHUNK_SIZE);
+-  const lastIdx = Math.floor((end - 1) / CHUNK_SIZE);
+-  // Pull every overlapping chunk in one indexed range scan. Missing
+-  // indices (a sparse file) simply don't come back, so the assembly
+-  // below compacts around the gaps exactly as a per-index walk would.
+-  const chunks = db.all<{ idx: number; hash: Uint8Array }>(
+-    "SELECT idx, hash FROM vfs_chunks WHERE inode = ? AND idx BETWEEN ? AND ? ORDER BY idx",
++  const chunks = db.all<{ hash: Uint8Array; size: number }>(
++    "SELECT hash, size FROM vfs_chunks WHERE inode = ? ORDER BY idx",
+     node.inode,
+-    firstIdx,
+-    lastIdx,
+   );
+   const out = new Uint8Array(end - offset);
++  let chunkStart = 0;
+   let written = 0;
+-  for (const { idx, hash } of chunks) {
+-    const start = idx * CHUNK_SIZE;
++  for (const { hash, size } of chunks) {
++    const chunkEnd = chunkStart + size;
++    if (chunkEnd <= offset) {
++      chunkStart = chunkEnd;
++      continue;
++    }
++    if (chunkStart >= end) break;
+     const bytes = getBlobBytes(db, hash);
+     if (bytes === undefined) {
+       throw createWorkspaceError("EIO", `missing blob bytes for ${path}`, path);
+     }
+-    const srcStart = Math.max(0, offset - start);
+-    const srcEnd = Math.min(bytes.byteLength, end - start);
+-    if (srcEnd <= srcStart) continue;
+-    out.set(bytes.subarray(srcStart, srcEnd), written);
+-    written += srcEnd - srcStart;
++    const srcStart = Math.max(0, offset - chunkStart);
++    const srcEnd = Math.min(bytes.byteLength, end - chunkStart);
++    if (srcEnd > srcStart) {
++      const destination = Math.max(0, chunkStart - offset);
++      out.set(bytes.subarray(srcStart, srcEnd), destination);
++      written = Math.max(written, destination + srcEnd - srcStart);
++    }
++    chunkStart = chunkEnd;
+   }
+   return written === out.byteLength ? out : out.subarray(0, written);
+ }
+diff --git a/packages/dofs/src/fs/writeBuffer.ts b/packages/dofs/src/fs/writeBuffer.ts
+index 72ff047..03234f7 100644
+--- a/packages/dofs/src/fs/writeBuffer.ts
++++ b/packages/dofs/src/fs/writeBuffer.ts
+@@ -12,6 +12,11 @@
+ 
+ import type { Database } from "../storage.js";
+ 
++export interface WritePatch {
++  offset: number;
++  bytes: Uint8Array;
++}
++
+ export interface WriteBufferEntry {
+   // Growable backing store. byteLength is capacity; logical length
+   // lives in `size`.
+@@ -29,6 +34,14 @@ export interface WriteBufferEntry {
+   // Mode the caller wants persisted on release. Defaults to the
+   // inode's existing mode at open time when the caller has none.
+   mode: number;
++  // Existing files use a sparse copy-on-write overlay instead of
++  // hydrating their complete contents on the first small write.
++  // `storedSize` never changes while the file is open; `baseSize`
++  // shrinks after truncate so bytes beyond the new EOF cannot
++  // reappear if the file is grown again.
++  storedSize: number;
++  baseSize: number;
++  patches: WritePatch[];
+   // Pending-create state. When set, no inode row exists yet; release
+   // will INSERT the node + dirent + chunks in one transaction. The
+   // synthetic inode id used to key this entry in the cache is stored
+@@ -136,3 +149,20 @@ export function ensureCapacity(entry: WriteBufferEntry, needed: number): void {
+   next.set(entry.buf.subarray(0, entry.size), 0);
+   entry.buf = next;
+ }
++
++export function appendPatch(entry: WriteBufferEntry, offset: number, bytes: Uint8Array): void {
++  // FUSE may reuse its caller-owned buffer after write returns.
++  // Keep an immutable snapshot in the overlay.
++  entry.patches.push({ offset, bytes: bytes.slice() });
++  entry.dirty = true;
++}
++
++export function truncatePatches(entry: WriteBufferEntry, size: number): void {
++  const kept: WritePatch[] = [];
++  for (const patch of entry.patches) {
++    if (patch.offset >= size) continue;
++    const available = Math.min(patch.bytes.byteLength, size - patch.offset);
++    if (available > 0) kept.push({ offset: patch.offset, bytes: patch.bytes.subarray(0, available) });
++  }
++  entry.patches = kept;
++}
+diff --git a/packages/dofs/src/fs/writeFile.ts b/packages/dofs/src/fs/writeFile.ts
+index 48f6fc5..1fb7c9f 100644
+--- a/packages/dofs/src/fs/writeFile.ts
++++ b/packages/dofs/src/fs/writeFile.ts
+@@ -11,18 +11,31 @@ import { assertNotReadOnly } from "./mount-guard.js";
+ import { invalidateResolveExact } from "./resolveCache.js";
+ import {
+   allocatePendingInode,
++  appendPatch,
+   deleteWriteBuffer,
+   ensureCapacity as ensureBufferCapacity,
+   getPendingWriteBufferByPath,
+   getWriteBuffer,
+   promotePendingToInode,
+   setWriteBuffer,
++  truncatePatches,
+   type WriteBufferEntry,
+ } from "./writeBuffer.js";
+ 
+ // Fixed chunk size. Exported so tests can size inputs precisely
+ // without hard-coding the magic number twice.
+ export const CHUNK_SIZE = 512 * 1024;
++export const CDC_MIN_SIZE = 32 * 1024;
++export const CDC_AVERAGE_SIZE = 128 * 1024;
++
++const GEAR = new Uint32Array(256);
++let gearSeed = 0x9e3779b9;
++for (let index = 0; index < GEAR.length; index++) {
++  gearSeed ^= gearSeed << 13;
++  gearSeed ^= gearSeed >>> 17;
++  gearSeed ^= gearSeed << 5;
++  GEAR[index] = gearSeed >>> 0;
++}
+ 
+ export type WriteFileContent = string | Uint8Array | ReadableStream<Uint8Array>;
+ 
+@@ -99,15 +112,31 @@ interface ChunkRef {
+   size: number;
+ }
+ 
++function findCdcBoundary(bytes: Uint8Array, start: number): number {
++  const minimum = Math.min(start + CDC_MIN_SIZE, bytes.byteLength);
++  const normal = Math.min(start + CDC_AVERAGE_SIZE, bytes.byteLength);
++  const maximum = Math.min(start + CHUNK_SIZE, bytes.byteLength);
++  if (minimum >= bytes.byteLength) return bytes.byteLength;
++  const earlyMask = (2 ** 18 - 1) >>> 0;
++  const lateMask = (2 ** 16 - 1) >>> 0;
++  let hash = 0;
++  for (let cursor = minimum; cursor < maximum; cursor++) {
++    hash = ((hash << 1) + GEAR[bytes[cursor]]) >>> 0;
++    if ((hash & (cursor < normal ? earlyMask : lateMask)) === 0) return cursor + 1;
++  }
++  return maximum;
++}
++
+ export function chunksOf(bytes: Uint8Array): PreparedChunk[] {
+   const chunks: PreparedChunk[] = [];
+-  for (let offset = 0; offset < bytes.byteLength; offset += CHUNK_SIZE) {
+-    const end = Math.min(offset + CHUNK_SIZE, bytes.byteLength);
++  for (let offset = 0; offset < bytes.byteLength; ) {
++    const end = findCdcBoundary(bytes, offset);
+     // subarray (not slice) avoids an extra copy; sha256() takes its own
+     // copy when needed.
+     const slice = bytes.subarray(offset, end);
+     const hash = sha256(slice);
+     chunks.push({ hash, bytes: slice, size: slice.byteLength });
++    offset = end;
+   }
+   return chunks;
+ }
+@@ -306,7 +335,7 @@ function insertFileNode(db: Database, mode: number, mtime: number): number {
+ 
+ function upsertChunkBlob(db: Database, chunk: PreparedChunk, lastSeen: number): void {
+   db.run(
+-    "INSERT INTO vfs_blobs (hash, size, last_seen) VALUES (?, ?, ?) ON CONFLICT(hash) DO UPDATE SET last_seen = excluded.last_seen",
++    "INSERT INTO vfs_blobs (hash, size, last_seen) VALUES (?, ?, ?) ON CONFLICT(hash) DO NOTHING",
+     chunk.hash,
+     chunk.size,
+     lastSeen,
+@@ -388,6 +417,160 @@ function readChunkBytes(db: Database, inode: number, idx: number): Uint8Array {
+   return bytes;
+ }
+ 
++interface OffsetChunk extends ChunkRef {
++  start: number;
++  end: number;
++}
++
++function offsetChunkRefs(db: Database, inode: number): OffsetChunk[] {
++  const refs = existingChunkRefs(db, inode);
++  let offset = 0;
++  return refs.map((ref) => {
++    const row = { ...ref, start: offset, end: offset + ref.size };
++    offset = row.end;
++    return row;
++  });
++}
++
++function readStoredRangeForInode(
++  db: Database,
++  inode: number,
++  offset: number,
++  length: number,
++): Uint8Array {
++  const end = offset + length;
++  const out = new Uint8Array(length);
++  let cursor = 0;
++  for (const chunk of offsetChunkRefs(db, inode)) {
++    if (chunk.end <= offset) continue;
++    if (chunk.start >= end) break;
++    const bytes = getBlobBytes(db, chunk.hash);
++    if (bytes === undefined) throw createWorkspaceError("EIO", "missing blob bytes");
++    const from = Math.max(offset, chunk.start);
++    const to = Math.min(end, chunk.end);
++    out.set(bytes.subarray(from - chunk.start, to - chunk.start), from - offset);
++    cursor = Math.max(cursor, to - offset);
++  }
++  return cursor === out.byteLength ? out : out.subarray(0, cursor);
++}
++
++function materializeBufferedRange(
++  db: Database,
++  inode: number,
++  entry: WriteBufferEntry,
++  offset: number,
++  length: number,
++): Uint8Array {
++  const out = new Uint8Array(length);
++  const end = offset + length;
++  const baseEnd = Math.min(end, entry.baseSize);
++  if (baseEnd > offset) {
++    out.set(readStoredRangeForInode(db, inode, offset, baseEnd - offset), 0);
++  }
++  for (const patch of entry.patches) {
++    const patchEnd = patch.offset + patch.bytes.byteLength;
++    const from = Math.max(offset, patch.offset);
++    const to = Math.min(end, patchEnd);
++    if (to <= from) continue;
++    out.set(patch.bytes.subarray(from - patch.offset, to - patch.offset), from - offset);
++  }
++  return out;
++}
++
++export function materializeBufferedFile(
++  db: Database,
++  inode: number,
++  entry: WriteBufferEntry,
++): Uint8Array {
++  return materializeBufferedRange(db, inode, entry, 0, entry.size);
++}
++
++export function readBufferedRange(
++  db: Database,
++  inode: number,
++  entry: WriteBufferEntry,
++  offset: number,
++  length: number,
++): Uint8Array {
++  if (offset >= entry.size || length === 0) return new Uint8Array();
++  return materializeBufferedRange(db, inode, entry, offset, Math.min(length, entry.size - offset));
++}
++
++function stagePreparedChunks(db: Database, bytes: Uint8Array, now: number): ChunkRef[] {
++  const chunks = chunksOf(bytes);
++  for (const chunk of chunks) upsertChunkBlob(db, chunk, now);
++  return chunks.map(({ hash, size }) => ({ hash, size }));
++}
++
++function chunkIndexAt(chunks: OffsetChunk[], offset: number): number {
++  for (let index = 0; index < chunks.length; index++) {
++    if (offset < chunks[index].end) return index;
++  }
++  return Math.max(0, chunks.length - 1);
++}
++
++function buildC3ChunkRefs(
++  db: Database,
++  inode: number,
++  entry: WriteBufferEntry,
++  now: number,
++): ChunkRef[] {
++  const old = offsetChunkRefs(db, inode);
++  if (entry.size === 0) return [];
++  if (old.length === 0 || entry.baseSize === 0) {
++    return stagePreparedChunks(db, materializeBufferedFile(db, inode, entry), now);
++  }
++
++  // A size change shifts all bytes after the changed EOF. Preserve a
++  // stable prefix, include one context chunk, and content-define only
++  // the tail. Front insertion written through a temporary file takes
++  // the new-file path above and naturally re-synchronizes boundaries.
++  if (entry.size !== entry.storedSize || entry.baseSize !== entry.storedSize) {
++    let changedAt = Math.min(entry.size, entry.baseSize, entry.storedSize);
++    for (const patch of entry.patches) changedAt = Math.min(changedAt, patch.offset);
++    const first = Math.max(0, chunkIndexAt(old, changedAt) - 1);
++    const start = old[first]?.start ?? 0;
++    const prefix = old.slice(0, first).map(({ hash, size }) => ({ hash, size }));
++    const tail = materializeBufferedRange(db, inode, entry, start, entry.size - start);
++    return [...prefix, ...stagePreparedChunks(db, tail, now)];
++  }
++
++  // Same-size overwrites can be disjoint. Re-chunk a one-chunk halo
++  // around each dirty interval and retain every chunk between those
++  // intervals by hash. This is the local FastCDC resynchronization
++  // path that prevents a tiny edit from scanning or copying the file.
++  const intervals = entry.patches
++    .filter((patch) => patch.bytes.byteLength > 0)
++    .map((patch) => {
++      const first = chunkIndexAt(old, patch.offset);
++      const last = chunkIndexAt(old, patch.offset + patch.bytes.byteLength - 1);
++      return { first: Math.max(0, first - 1), last: Math.min(old.length - 1, last + 1) };
++    })
++    .sort((a, b) => a.first - b.first);
++  const merged: Array<{ first: number; last: number }> = [];
++  for (const interval of intervals) {
++    const previous = merged.at(-1);
++    if (previous === undefined || interval.first > previous.last + 1) merged.push({ ...interval });
++    else previous.last = Math.max(previous.last, interval.last);
++  }
++  if (merged.length === 0) return old.map(({ hash, size }) => ({ hash, size }));
++
++  const next: ChunkRef[] = [];
++  let cursor = 0;
++  for (const interval of merged) {
++    for (; cursor < interval.first; cursor++) {
++      next.push({ hash: old[cursor].hash, size: old[cursor].size });
++    }
++    const start = old[interval.first].start;
++    const end = old[interval.last].end;
++    const region = materializeBufferedRange(db, inode, entry, start, end - start);
++    next.push(...stagePreparedChunks(db, region, now));
++    cursor = interval.last + 1;
++  }
++  for (; cursor < old.length; cursor++) next.push({ hash: old[cursor].hash, size: old[cursor].size });
++  return next;
++}
++
+ function resolveFileInode(db: Database, path: string): { inode: number; mode: number } {
+   const { path: canonical } = canonicalizePath(path);
+   const node = db.one<{ inode: number; type: "file" | "dir"; mode: number }>(
+@@ -531,12 +714,16 @@ export function openWriteBufferSync(db: Database, path: string): void {
+     existing.openCount += 1;
+     return;
+   }
++  const storedSize = fileSizeForInode(db, inode);
+   setWriteBuffer(db, inode, {
+     buf: new Uint8Array(0),
+-    size: 0,
++    size: storedSize,
+     dirty: false,
+     openCount: 1,
+     mode,
++    storedSize,
++    baseSize: storedSize,
++    patches: [],
+   });
+ }
+ 
+@@ -578,6 +765,9 @@ export function openWriteBufferForCreateSync(
+     dirty: true,
+     openCount: 1,
+     mode,
++    storedSize: 0,
++    baseSize: 0,
++    patches: [],
+     pending: { parentInode, leafName, canonicalPath: canonical, pendingInode, mtime },
+   });
+ }
+@@ -607,8 +797,6 @@ export function releaseWriteBufferSync(db: Database, path: string, now: () => nu
+ 
+   const mtime = now();
+   const mode = entry.mode & 0o7777;
+-  const buffered = entry.buf.subarray(0, entry.size);
+-
+   db.transactionSync(() => {
+     if (entry.size === 0) {
+       // An empty file owns no chunk rows; clear any old ones the
+@@ -624,14 +812,17 @@ export function releaseWriteBufferSync(db: Database, path: string, now: () => nu
+       );
+       return;
+     }
+-    applyChunkedInodeUpdate(
+-      db,
+-      node.inode,
+-      entry.size,
++    const nextChunks = buildC3ChunkRefs(db, node.inode, entry, mtime);
++    const manifestHash = replaceChunkRows(db, node.inode, nextChunks, mtime);
++    const rev = incrementRev(db);
++    db.run(
++      "UPDATE vfs_nodes SET mode = ?, mtime = ?, rev = ?, size = ?, manifest_hash = ? WHERE inode = ?",
+       mode,
+       mtime,
+-      (_idx, start, end) => start < entry.size && end > 0,
+-      (_idx, start, end) => buffered.subarray(start, Math.min(end, entry.size)),
++      rev,
++      entry.size,
++      manifestHash,
++      node.inode,
+     );
+   });
+ 
+@@ -683,16 +874,9 @@ function commitPendingBuffer(db: Database, entry: WriteBufferEntry, now: () => n
+       insertFileDirent(db, parentInode, leafName, row.inode, canonicalPath);
+       if (entry.size > 0) {
+         const inode = row.inode;
+-        const chunkCount = Math.ceil(entry.size / CHUNK_SIZE);
+-        for (let idx = 0; idx < chunkCount; idx++) {
+-          const start = idx * CHUNK_SIZE;
+-          const end = Math.min(start + CHUNK_SIZE, entry.size);
+-          const chunkBytes = buffered.subarray(start, end);
+-          const chunk = {
+-            hash: sha256(chunkBytes),
+-            bytes: chunkBytes,
+-            size: chunkBytes.byteLength,
+-          };
++        const chunks = chunksOf(buffered);
++        for (let idx = 0; idx < chunks.length; idx++) {
++          const chunk = chunks[idx];
+           upsertChunkBlob(db, chunk, mtime);
+           db.run(
+             "INSERT INTO vfs_chunks (inode, idx, hash, size) VALUES (?, ?, ?, ?)",
+@@ -702,6 +886,8 @@ function commitPendingBuffer(db: Database, entry: WriteBufferEntry, now: () => n
+             chunk.size,
+           );
+         }
++        const manifestHash = buildManifest(db, chunks, mtime);
++        db.run("UPDATE vfs_nodes SET manifest_hash = ? WHERE inode = ?", manifestHash, inode);
+       }
+       realInode = row.inode;
+     });
+@@ -712,6 +898,12 @@ function commitPendingBuffer(db: Database, entry: WriteBufferEntry, now: () => n
+     throw error;
+   }
+   promotePendingToInode(db, pendingInode, realInode);
++  // The pending bytes are now represented by committed chunks.
++  // A still-open descriptor can continue with a fresh sparse overlay.
++  entry.storedSize = entry.size;
++  entry.baseSize = entry.size;
++  entry.patches = [];
++  entry.dirty = false;
+   return realInode;
+ }
+ 
+@@ -804,16 +996,10 @@ export function writeRangeSync(
+   // writes until release. Reads through the same Database see the
+   // buffer's current bytes via readRangeSync's buffer check.
+   if (buffered !== undefined) {
+-    hydrateBufferIfNeeded(db, inode, buffered);
+     const writeEnd = offset + bytes.byteLength;
+-    ensureBufferCapacity(buffered, writeEnd);
+-    if (offset > buffered.size) {
+-      buffered.buf.fill(0, buffered.size, offset);
+-    }
+-    buffered.buf.set(bytes, offset);
++    appendPatch(buffered, offset, bytes);
+     if (writeEnd > buffered.size) buffered.size = writeEnd;
+     buffered.mode = mode;
+-    buffered.dirty = true;
+     return bytes.byteLength;
+   }
+ 
+@@ -821,24 +1007,27 @@ export function writeRangeSync(
+     const oldSize = fileSizeForInode(db, inode);
+     const writeEnd = offset + bytes.byteLength;
+     const nextSize = Math.max(oldSize, writeEnd);
+-
+-    applyChunkedInodeUpdate(
+-      db,
+-      inode,
+-      nextSize,
++    const entry: WriteBufferEntry = {
++      buf: new Uint8Array(0),
++      size: nextSize,
++      dirty: true,
++      openCount: 0,
++      mode,
++      storedSize: oldSize,
++      baseSize: oldSize,
++      patches: [{ offset, bytes: bytes.slice() }],
++    };
++    const chunks = buildC3ChunkRefs(db, inode, entry, mtime);
++    const manifestHash = replaceChunkRows(db, inode, chunks, mtime);
++    const rev = incrementRev(db);
++    db.run(
++      "UPDATE vfs_nodes SET mode = ?, mtime = ?, rev = ?, size = ?, manifest_hash = ? WHERE inode = ?",
+       mode,
+       mtime,
+-      (_idx, start, end) => offset < end && start < writeEnd,
+-      (_idx, start, end, existing) => {
+-        const chunkBytes = new Uint8Array(end - start);
+-        chunkBytes.set(existing.subarray(0, Math.min(existing.byteLength, chunkBytes.byteLength)));
+-        if (offset < end && start < writeEnd) {
+-          const copyStart = Math.max(start, offset);
+-          const copyEnd = Math.min(end, writeEnd);
+-          chunkBytes.set(bytes.subarray(copyStart - offset, copyEnd - offset), copyStart - start);
+-        }
+-        return chunkBytes;
+-      },
++      rev,
++      nextSize,
++      manifestHash,
++      inode,
+     );
+   });
+ 
+@@ -874,11 +1063,8 @@ export function truncateFileSync(
+   const buffered = getWriteBuffer(db, inode);
+ 
+   if (buffered !== undefined) {
+-    hydrateBufferIfNeeded(db, inode, buffered);
+-    if (size > buffered.size) {
+-      ensureBufferCapacity(buffered, size);
+-      buffered.buf.fill(0, buffered.size, size);
+-    }
++    if (size < buffered.size) truncatePatches(buffered, size);
++    if (size < buffered.baseSize) buffered.baseSize = size;
+     buffered.size = size;
+     buffered.dirty = true;
+     return;
+@@ -901,18 +1087,27 @@ export function truncateFileSync(
+       return;
+     }
+ 
+-    applyChunkedInodeUpdate(
+-      db,
+-      inode,
++    const entry: WriteBufferEntry = {
++      buf: new Uint8Array(0),
+       size,
++      dirty: true,
++      openCount: 0,
++      mode,
++      storedSize: oldSize,
++      baseSize: Math.min(oldSize, size),
++      patches: [],
++    };
++    const chunks = buildC3ChunkRefs(db, inode, entry, mtime);
++    const manifestHash = replaceChunkRows(db, inode, chunks, mtime);
++    const rev = incrementRev(db);
++    db.run(
++      "UPDATE vfs_nodes SET mode = ?, mtime = ?, rev = ?, size = ?, manifest_hash = ? WHERE inode = ?",
+       mode,
+       mtime,
+-      () => false,
+-      (_idx, start, end, existing) => {
+-        const chunkBytes = new Uint8Array(end - start);
+-        chunkBytes.set(existing.subarray(0, Math.min(existing.byteLength, chunkBytes.byteLength)));
+-        return chunkBytes;
+-      },
++      rev,
++      size,
++      manifestHash,
++      inode,
+     );
+   });
+ }
+diff --git a/packages/dofs/src/fs/writeRange.test.ts b/packages/dofs/src/fs/writeRange.test.ts
+index 46d0854..556f8dc 100644
+--- a/packages/dofs/src/fs/writeRange.test.ts
++++ b/packages/dofs/src/fs/writeRange.test.ts
+@@ -158,7 +158,7 @@ describe("direct range writes", () => {
+     });
+   });
+ 
+-  it("invalidates the manifest hash after a direct range write", async () => {
++  it("rebuilds the compact manifest hash after a direct range write", async () => {
+     await withDB(async (db) => {
+       const original = new Uint8Array(CHUNK_SIZE * 2);
+       original.fill(1, 0, CHUNK_SIZE);
+@@ -167,7 +167,7 @@ describe("direct range writes", () => {
+       expect(manifestHash(db, "/large.bin")).not.toBe(null);
+ 
+       writeRangeSync(db, "/large.bin", new Uint8Array([5]), 10, {}, () => 1001);
+-      expect(manifestHash(db, "/large.bin")).toBe(null);
++      expect(manifestHash(db, "/large.bin")).not.toBe(null);
+     });
+   });
+ 
+diff --git a/packages/dofs/src/provider.ts b/packages/dofs/src/provider.ts
+index 5adcafc..d3d177c 100644
+--- a/packages/dofs/src/provider.ts
++++ b/packages/dofs/src/provider.ts
+@@ -35,6 +35,7 @@ import {
+ import {
+   createFileSync as createFileSyncImpl,
+   flushPendingByPath,
++  materializeBufferedFile,
+   openWriteBufferForCreateSync as openWriteBufferForCreateSyncImpl,
+   openWriteBufferSync as openWriteBufferSyncImpl,
+   releaseWriteBufferSync as releaseWriteBufferSyncImpl,
+@@ -374,8 +375,7 @@ export class SQLiteWorkspaceProvider {
+     // bytes; serve from it instead of the chunk store.
+     const buffered = getWriteBuffer(this.db, node.inode);
+     if (buffered?.dirty) {
+-      const snapshot = Buffer.alloc(buffered.size);
+-      snapshot.set(buffered.buf.subarray(0, buffered.size));
++      const snapshot = Buffer.from(materializeBufferedFile(this.db, node.inode, buffered));
+       return encoding ? snapshot.toString(encoding) : snapshot;
+     }
+     const chunks = this.db.all<{ hash: Uint8Array; size: number }>(
+diff --git a/packages/dofs/src/sync/apply.ts b/packages/dofs/src/sync/apply.ts
+index 4986c98..e017ca5 100644
+--- a/packages/dofs/src/sync/apply.ts
++++ b/packages/dofs/src/sync/apply.ts
+@@ -5,12 +5,13 @@ import { invalidateResolveSubtree } from "../fs/resolveCache.js";
+ import { rm } from "../fs/rm.js";
+ import { symlink } from "../fs/symlink.js";
+ import { unlinkDirent } from "../fs/unlink.js";
+-import { writeFile, writeFileSync } from "../fs/writeFile.js";
++import { writeFileSync } from "../fs/writeFile.js";
+ import { canonicalizePath } from "../path.js";
+ import { incrementRev } from "../rev.js";
+ import type { Database } from "../storage.js";
+ import type { ChangeEntry } from "./changes.js";
+-import { computeManifestHash } from "./manifests.js";
++import { stageBlob } from "./blobs.js";
++import { buildManifest, computeManifestHash } from "./manifests.js";
+ 
+ // One container-side change that landed under a read-only mount and
+ // was therefore skipped rather than applied. Callers (the workspace
+@@ -93,6 +94,65 @@ function removeReplaceableFinalEntry(
+   removeInodeTreeAtPath(db, path, existing.inode, existing.type);
+ }
+ 
++function installFileEntry(
++  db: Database,
++  entry: Extract<ChangeEntry, { kind: "file" }>,
++  objects: Map<string, Uint8Array>,
++): number {
++  let total = 0;
++  for (const chunk of entry.chunks) {
++    const key = hex(chunk.hash);
++    let bytes = objects.get(key);
++    if (bytes === undefined) {
++      bytes = db.one<{ bytes: Uint8Array }>(
++        "SELECT bytes FROM vfs_blob_bytes WHERE hash = ?",
++        chunk.hash,
++      )?.bytes;
++    }
++    if (bytes === undefined) {
++      throw new Error(`applyChanges: missing object ${key} for ${entry.path}`);
++    }
++    if (bytes.byteLength !== chunk.size) {
++      throw new Error(`applyChanges: object size mismatch ${key} for ${entry.path}`);
++    }
++    if (objects.has(key)) stageBlob(db, chunk.hash, bytes, entry.mtime);
++    total += chunk.size;
++  }
++  if (total !== entry.size) {
++    throw new Error(`applyChanges: manifest size ${total} != ${entry.size} for ${entry.path}`);
++  }
++
++  removeReplaceableFinalEntry(db, entry.path, "file");
++  // Reuse writeFileSync for path creation, mode handling, and revision
++  // stamping, but install the already-verified CAS references directly.
++  // This avoids reassembling and re-chunking the complete file on pull.
++  writeFileSync(db, entry.path, new Uint8Array(), { mode: entry.mode }, () => entry.mtime);
++  const node = resolveInode(db, entry.path, { followSymlinks: false });
++  if (node === null || node.type !== "file") {
++    throw new Error(`applyChanges: failed to create file ${entry.path}`);
++  }
++  db.transactionSync(() => {
++    for (let index = 0; index < entry.chunks.length; index++) {
++      const chunk = entry.chunks[index];
++      db.run(
++        "INSERT INTO vfs_chunks (inode, idx, hash, size) VALUES (?, ?, ?, ?)",
++        node.inode,
++        index,
++        chunk.hash,
++        chunk.size,
++      );
++    }
++    const manifestHash = buildManifest(db, entry.chunks, entry.mtime);
++    db.run(
++      "UPDATE vfs_nodes SET size = ?, manifest_hash = ? WHERE inode = ?",
++      entry.size,
++      manifestHash,
++      node.inode,
++    );
++  });
++  return total;
++}
++
+ // Structural conflict cleanup for upstream applies. This removes
+ // the local shape without recording tombstones because the incoming
+ // entry is the authoritative state for this path.
+@@ -289,35 +349,7 @@ export async function applyChanges(
+       if (pathsInBatch >= maxPaths) flush();
+       continue;
+     }
+-    // file: assemble chunk bytes. First check the in-memory map
+-    // (the streaming hand-off); fall back to vfs_blob_bytes (the
+-    // staged-via-pushObjects path).
+-    const parts: Uint8Array[] = [];
+-    let total = 0;
+-    for (const c of entry.chunks) {
+-      const k = hex(c.hash);
+-      let bytes = objects.get(k);
+-      if (bytes === undefined) {
+-        const row = db.one<{ bytes: Uint8Array }>(
+-          "SELECT bytes FROM vfs_blob_bytes WHERE hash = ?",
+-          c.hash,
+-        );
+-        bytes = row?.bytes;
+-      }
+-      if (bytes === undefined) {
+-        throw new Error(`applyChanges: missing object ${k} for ${entry.path}`);
+-      }
+-      parts.push(bytes);
+-      total += bytes.byteLength;
+-    }
+-    const buf = new Uint8Array(total);
+-    let off = 0;
+-    for (const p of parts) {
+-      buf.set(p, off);
+-      off += p.byteLength;
+-    }
+-    removeReplaceableFinalEntry(db, entry.path, "file");
+-    await writeFile(db, entry.path, buf, { mode: entry.mode }, () => entry.mtime);
++    const total = installFileEntry(db, entry, objects);
+     applied++;
+     bytesInBatch += total;
+     pathsInBatch++;
+@@ -408,32 +440,7 @@ export function applyChangesSync(
+       if (pathsInBatch >= maxPaths) flush();
+       continue;
+     }
+-    const parts: Uint8Array[] = [];
+-    let total = 0;
+-    for (const c of entry.chunks) {
+-      const k = hex(c.hash);
+-      let bytes = objects.get(k);
+-      if (bytes === undefined) {
+-        const row = db.one<{ bytes: Uint8Array }>(
+-          "SELECT bytes FROM vfs_blob_bytes WHERE hash = ?",
+-          c.hash,
+-        );
+-        bytes = row?.bytes;
+-      }
+-      if (bytes === undefined) {
+-        throw new Error(`applyChanges: missing object ${k} for ${entry.path}`);
+-      }
+-      parts.push(bytes);
+-      total += bytes.byteLength;
+-    }
+-    const buf = new Uint8Array(total);
+-    let off = 0;
+-    for (const p of parts) {
+-      buf.set(p, off);
+-      off += p.byteLength;
+-    }
+-    removeReplaceableFinalEntry(db, entry.path, "file");
+-    writeFileSync(db, entry.path, buf, { mode: entry.mode }, () => entry.mtime);
++    const total = installFileEntry(db, entry, objects);
+     applied++;
+     bytesInBatch += total;
+     pathsInBatch++;
+diff --git a/packages/dofs/src/sync/fetch.ts b/packages/dofs/src/sync/fetch.ts
+index 317540f..63e005a 100644
+--- a/packages/dofs/src/sync/fetch.ts
++++ b/packages/dofs/src/sync/fetch.ts
+@@ -35,7 +35,10 @@ function toHex(bytes: Uint8Array): string {
+ // Largest hash list bound into one IN (…) probe. Comfortably under
+ // SQLite's bound-parameter limit, so a large probe splits into a few
+ // index-backed lookups instead of one oversized statement.
+-const PROBE_BATCH = 256;
++// Durable Object SQLite exposes a lower bind-variable ceiling than
++// desktop SQLite in some local workerd builds. Keep this below 100 so
++// CDC manifests with hundreds of chunks remain portable.
++const PROBE_BATCH = 64;
+ 
+ // Subset-test the input hashes against complete local objects. A
+ // metadata row alone is not enough: the payload must exist and its
+diff --git a/packages/dofs/src/sync/manifests.test.ts b/packages/dofs/src/sync/manifests.test.ts
+index 15a649d..3ce9c58 100644
+--- a/packages/dofs/src/sync/manifests.test.ts
++++ b/packages/dofs/src/sync/manifests.test.ts
+@@ -39,7 +39,7 @@ describe("manifests", () => {
+     });
+   });
+ 
+-  it("vfs_manifests row carries the chunk list as JSON", async () => {
++  it("vfs_manifests row carries a compact binary chunk list", async () => {
+     await withDB(async (db) => {
+       await writeFile(db, "/hi.txt", "hi", {}, () => 1);
+       const row = db.one<{ encoded: Uint8Array; size: number }>(
+@@ -47,12 +47,13 @@ describe("manifests", () => {
+       );
+       expect(row).toBeDefined();
+       expect(row?.size).toBe(2);
+-      const decoded = JSON.parse(new TextDecoder().decode(row?.encoded));
+-      expect(decoded.version).toBe(1);
+-      expect(decoded.chunks).toHaveLength(1);
+-      expect(decoded.chunks[0].size).toBe(2);
+-      expect(typeof decoded.chunks[0].hash).toBe("string");
+-      expect(decoded.chunks[0].hash).toMatch(/^[0-9a-f]{64}$/);
++      const encoded = row?.encoded ?? new Uint8Array();
++      expect(encoded.byteLength).toBe(37);
++      expect(encoded[0]).toBe(2);
++      expect(
++        new DataView(encoded.buffer, encoded.byteOffset, encoded.byteLength).getUint32(33, true),
++      ).toBe(2);
++      expect(encoded.subarray(1, 33)).toHaveLength(32);
+     });
+   });
+ 
+diff --git a/packages/dofs/src/sync/manifests.ts b/packages/dofs/src/sync/manifests.ts
+index 98dfcfb..b4ac71a 100644
+--- a/packages/dofs/src/sync/manifests.ts
++++ b/packages/dofs/src/sync/manifests.ts
+@@ -16,20 +16,9 @@ export interface ManifestChunk {
+   size: number;
+ }
+ 
+-export const MANIFEST_VERSION = 1;
+-
+-interface EncodedManifest {
+-  version: number;
+-  chunks: { hash: string; size: number }[];
+-}
+-
+-function toHex(bytes: Uint8Array): string {
+-  let out = "";
+-  for (let i = 0; i < bytes.byteLength; i++) {
+-    out += bytes[i].toString(16).padStart(2, "0");
+-  }
+-  return out;
+-}
++export const MANIFEST_VERSION = 2;
++const HASH_BYTES = 32;
++const ENTRY_BYTES = HASH_BYTES + 4;
+ 
+ function sha256(bytes: Uint8Array): Uint8Array {
+   return new Uint8Array(createHash("sha256").update(bytes).digest());
+@@ -39,11 +28,20 @@ function sha256(bytes: Uint8Array): Uint8Array {
+ // hash is taken over these bytes and the same bytes are stored, so
+ // producing them once keeps the two in step.
+ function encodeManifest(chunks: ManifestChunk[]): Uint8Array {
+-  const encoded: EncodedManifest = {
+-    version: MANIFEST_VERSION,
+-    chunks: chunks.map((c) => ({ hash: toHex(c.hash), size: c.size })),
+-  };
+-  return new TextEncoder().encode(JSON.stringify(encoded));
++  const encoded = new Uint8Array(1 + chunks.length * ENTRY_BYTES);
++  encoded[0] = MANIFEST_VERSION;
++  const view = new DataView(encoded.buffer);
++  for (let index = 0; index < chunks.length; index++) {
++    const chunk = chunks[index];
++    if (chunk.hash.byteLength !== HASH_BYTES) throw new Error("manifest hash must be SHA-256");
++    if (!Number.isSafeInteger(chunk.size) || chunk.size < 0 || chunk.size > 0xffff_ffff) {
++      throw new RangeError(`invalid manifest chunk size ${chunk.size}`);
++    }
++    const offset = 1 + index * ENTRY_BYTES;
++    encoded.set(chunk.hash, offset);
++    view.setUint32(offset + HASH_BYTES, chunk.size, true);
++  }
++  return encoded;
+ }
+ 
+ // Compute the manifest hash for a chunk list without touching the
+warning: in the working copy of 'packages/dofs/src/fs/readFile.ts', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/dofs/src/fs/writeBuffer.ts', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/dofs/src/fs/writeFile.ts', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/dofs/src/fs/writeRange.test.ts', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/dofs/src/provider.ts', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/dofs/src/sync/apply.ts', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/dofs/src/sync/fetch.ts', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/dofs/src/sync/manifests.test.ts', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'packages/dofs/src/sync/manifests.ts', LF will be replaced by CRLF the next time Git touches it
+

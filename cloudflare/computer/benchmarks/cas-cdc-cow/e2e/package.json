@@ -1,0 +1,14 @@
+{
+  "name": "@agent-infra-book/computer-c3-full-pipeline",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "prepare": "powershell -ExecutionPolicy Bypass -File ./scripts/prepare-variants.ps1",
+    "smoke": "powershell -ExecutionPolicy Bypass -File ./scripts/run-all.ps1 -Profile smoke",
+    "benchmark": "powershell -ExecutionPolicy Bypass -File ./scripts/run-all.ps1 -Profile volume",
+    "branches": "powershell -ExecutionPolicy Bypass -File ./scripts/run-branches.ps1",
+    "paired:volume": "powershell -ExecutionPolicy Bypass -File ./scripts/run-paired.ps1 -Profile volume -Iterations 10",
+    "paired:branches": "powershell -ExecutionPolicy Bypass -File ./scripts/run-paired.ps1 -Profile branches -Iterations 10"
+  }
+}

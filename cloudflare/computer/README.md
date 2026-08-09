@@ -5,9 +5,10 @@
 This book explains how Cloudflare Durable Objects combine identity,
 coordination, compute, and private transactional storage. It then uses
 Cloudflare Computer as an open-source case study in building a durable virtual
-filesystem inside a Durable Object. The final part compares Code Mode,
-isolate JavaScript, `just-bash`, and Linux containers as execution surfaces
-over the same durable workspace.
+filesystem inside a Durable Object. The final part introduces C3, an
+experimental CAS, CDC, and COW filesystem design for reducing storage
+amplification, accelerating incremental work, and supporting private
+multi-agent branches.
 
 The central thesis is:
 
@@ -21,8 +22,8 @@ answers three questions:
 
 1. How does a Durable Object give state an identity and an owner?
 2. How can that state become a durable computer workspace?
-3. How should an agent choose between JavaScript, a shell interpreter, and a
-   real Linux container?
+3. How can one durable workspace support cheaper edits and multiple agents
+   without silently losing work?
 
 ## Parts
 
@@ -34,9 +35,9 @@ answers three questions:
   80%** turns the architecture into a runnable dual-mode website tutorial. It
   keeps ordinary work in isolates, escalates npm and Vite to a container, and
   derives the cost claim from a transparent monthly model.
-- **Part III — Giving State Hands** compares Code Mode, isolate JavaScript,
-  `just-bash`, and containers, ending with an integrated durable coding
-  workspace.
+- **Part III — Reengineering Cloudflare Computer: 98.4% Less Branch Storage,
+  3.18× Faster Edits, and Safe Multi-Agent Parallelism** builds and measures an experimental CAS, CDC, COW,
+  and conflict-aware branching layer over Durable Object SQLite.
 
 ## Scope and Evidence
 
@@ -58,8 +59,9 @@ choices, not Durable Objects storage guarantees.
 The book is in editorial development. Part I is a canonical four-chapter
 article available in English and Simplified Chinese. Both editions share the
 same source notes, evidence audit, and benchmark. Part II is a runnable tutorial
-available in English and Simplified Chinese; Part III remains a manuscript shell. The source-pinned storage
-benchmark and its first full result support the benchmark chapter. The
+available in English and Simplified Chinese. Part III is also available in both
+languages and is backed by the C3 storage, multi-agent, and full Computer/FUSE benchmarks.
+The source-pinned storage benchmark and its first full result support the benchmark chapter. The
 publication benchmark uses the native WSL
 filesystem as its baseline and measures the existing Computer pipeline through
 real FUSE, `computerd`, synchronization, and local workerd Durable Object
@@ -77,7 +79,8 @@ SQLite.
 - [Part I chapter research sources](chapters/part-i/)
 - **Part II — Cloudflare Computer: How to Cut AI Agent Sandboxing Costs by 80%** — [English](chapters/PART-II.md) · [简体中文](chapters/PART-II.zh-CN.md)
 - **Part II X Article editorial edition** — [English](chapters/PART-II-X-ARTICLE.md) · [简体中文](chapters/PART-II-X-ARTICLE.zh-CN.md)
-- [Part III manuscript shell](chapters/PART-III.md)
+- **Part III — Reengineering Cloudflare Computer: 98.4% Less Branch Storage, 3.18× Faster Edits, and Safe Multi-Agent Parallelism** — [English](chapters/PART-III.md) · [简体中文](chapters/PART-III.zh-CN.md)
+- [C3 prototype and benchmarks](benchmarks/cas-cdc-cow/)
 - [Dual-mode website builder tutorial](examples/dual-mode-website-builder/)
 - [Durable Object storage benchmarks](benchmarks/storage/)
 - [Native filesystem vs Computer benchmark document](benchmarks/storage/BENCHMARK.md)

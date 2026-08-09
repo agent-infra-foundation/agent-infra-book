@@ -149,7 +149,7 @@ Part II is a medium-form tutorial built around one Vite website, two execution
 modes, and one authoritative Workspace. The 80% figure is a worked cost model,
 not a platform guarantee.
 
-### Chapter 1 — The 10% Container Strategy
+### Chapter 5 — The 10% Container Strategy
 
 - Separate routine agent operations from work that requires native Linux.
 - Price one always-active `standard-1` Cloudflare Container as the baseline.
@@ -160,7 +160,7 @@ not a platform guarantee.
 - Say explicitly that this is one authoritative copy plus a temporary second
   physical representation—not a zero-copy shared mount.
 
-### Chapter 2 — Build One Website in Two Modes
+### Chapter 6 — Build One Website in Two Modes
 
 - Register `WorkerShellBackend` and `CloudflareContainerBackend` on one
   `Workspace`.
@@ -174,7 +174,7 @@ Running system: the checked-in
 `examples/dual-mode-website-builder` project reports backend placement,
 duration, exit code, push count, pull count, and synchronization state.
 
-### Chapter 3 — Follow One Command Across the Durability Boundary
+### Chapter 7 — Follow One Command Across the Durability Boundary
 
 - Trace push, FUSE execution, changed-path fetch, missing-chunk transfer, and
   transactional apply to Durable Object SQLite.
@@ -182,7 +182,7 @@ duration, exit code, push count, pull count, and synchronization state.
 - Explain why `node_modules` remains a disposable container-local cache while
   source, lockfiles, and `dist/` become durable.
 
-### Chapter 4 — Calculate the 80% Reduction
+### Chapter 8 — Calculate the 80% Reduction
 
 - State every pricing and workload assumption before showing the result.
 - Compare $36.83 for an always-active `standard-1` container with $7.53 for a
@@ -194,76 +194,37 @@ duration, exit code, push count, pull count, and synchronization state.
   syncs, or multiple concurrent writers erode the advantage.
 - End with a capability rule: pay for Linux when the operation needs Linux.
 
-## Part III — Giving State Hands
+## Part III — C3: Optimizing Cloudflare Computer for Storage, Speed, and Multi-Agent Workloads
 
-### 11. One Workspace, Three Computers
+### Chapter 9 — CAS: Store Once, Share Everywhere
 
-- Separate authoritative state from the execution environment.
-- Introduce native capabilities, isolate JavaScript, `just-bash`, and
-  container/FUSE as an execution ladder.
-- Define compatibility, authority, startup cost, memory, process, network, and
-  filesystem criteria.
+- Preserve Computer's SHA-256 content-addressed foundation.
+- Represent file versions with immutable compact manifests.
+- Create agent branches as metadata references to shared content.
 
-Running system: add a runtime policy to the Workspace object.
+### Chapter 10 — COW: Write Only What Changed
 
-### 12. Code Mode: Programs Instead of Tool Calls
+- Store small private overwrites as 4 KiB branch pages.
+- Coalesce repeated writes to the same page.
+- Explain structural patches and full-materialization fallbacks.
 
-- Explain generated typed APIs and JavaScript composition over capabilities.
-- Show loops, branches, filtering, aggregation, and reduced model round trips.
-- Keep credentials and unrestricted network authority outside the sandbox.
-- Distinguish the Code Mode product pattern from Computer's specific JavaScript
-  backend.
+### Chapter 11 — CDC: Keep Small Changes Small
 
-Running system: inspect project state and return only an aggregated result.
+- Replace fixed positions with content-defined boundaries.
+- Use 32/128/512 KiB FastCDC minimum, average, and maximum sizes.
+- Rechunk local dirty windows and reconnect to old manifest boundaries.
 
-### 13. Isolate JavaScript over Durable Files
+### Chapter 12 — Branch and Publish: Many Agents, One Durable Main
 
-- Execute a fresh ECMAScript module in a Dynamic Worker.
-- Use structured input and results, durable relative imports, configured bare
-  modules, Workspace-backed `node:fs/promises`, and trusted modules.
-- Explain why this is not a general Node installation or dynamic package
-  manager.
+- Give each agent a private branch based on a main commit.
+- Merge disjoint-file changes through one transactional authority.
+- Reject stale same-file publications explicitly.
+- Carry branch identity through the implemented Computer push/shell/pull
+  adapter and verify two independent FUSE mounts.
 
-Running system: generate a report and save it into the durable workspace.
+### Chapter 13 — Benchmark: Storage, Speed, and Multi-Agent Execution
 
-### 14. `just-bash`: A Shell Without Linux
-
-- Explain Bash parsing and JavaScript implementations of familiar commands.
-- Trace file operations over Workers RPC directly to the authoritative
-  Workspace.
-- Demonstrate useful pipelines for search and text transformation.
-- Fail `npm`, native binaries, and a long-running server deliberately to reveal
-  the boundary.
-
-Running system: run the same file-analysis task with `just-bash` and JavaScript.
-
-### 15. Containers When You Need an Operating System
-
-- Explain native binaries, Node, package installation, compilation, processes,
-  networking, and port publication.
-- Mount or synchronize the durable workspace without making the container the
-  source of truth.
-- Discuss short-lived builds, dependency caches, generated outputs, and cleanup.
-
-Running system: run `npm install` and a build in Linux, then persist only the
-desired results.
-
-### 16. The Durable Agent Computer
-
-- Integrate object identity, SQLite state, durable files, recovery, runtime
-  selection, credentials, network policy, and observability.
-- Apply the least-powerful sufficient runtime rule.
-- Compare the finished architecture with the always-on VM from the prologue.
-- State the remaining limits: preview dependencies, application-level
-  versioning, garbage collection, cross-object workflows, and external side
-  effects.
-
-Final model:
-
-```text
-durable identity and state
-          +
-capability-scoped disposable execution
-          =
-an agent computer without an always-on machine
-```
+- Compare exact storage amplification and edit speed.
+- Verify C3 through the complete Computer, computerd, FUSE, and pull path.
+- Send 50 independent agent requests through one local Durable Object.
+- Publish regressions, unsupported claims, and production-hardening gaps.

@@ -1,0 +1,15 @@
+{
+    "upstream":  "https://github.com/cloudflare/computer",
+    "sourceCommit":  "76d9e75c5688713b656bce85540d9e0071cece8b",
+    "patch":  "patches/dofs-c3.patch",
+    "patchSha256":  "bdee9a1a252a6ee9caab1949ce3b380373663fafa6cb91f09e682d7c604903fc",
+    "packages":  {
+                     "cloudflare-computer-0.1.0-alpha.1.tgz":  "6242871fee6310af2f84bed9684693cb7bcfdf8cefa1a2651c099ac0c644d3c8",
+                     "cloudflare-computer-rpc-0.0.0-full.tgz":  "95dd7e9089a92a29b7d430147faf7720324df568b98de2c857c89364e84e7b88",
+                     "cloudflare-computerd-0.1.0-alpha.1.tgz":  "1d8e20bf8f1cf0db819fef168e665df07999e5c6e794434472b0fd0ba7476737",
+                     "cloudflare-dofs-0.0.0-full.tgz":  "7cada53dd808dbf637ed4fff1cbdd77a496627dc2249a8cbf813c8244f3b20da"
+                 },
+    "dofsTests":  "436 passed",
+    "bothEndsPatched":  true,
+    "generatedAt":  "2026-08-09T04:33:43.6994517+00:00"
+}
