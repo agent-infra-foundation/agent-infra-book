@@ -1,0 +1,5825 @@
+{
+  "schemaVersion": 1,
+  "benchmarkLayer": "engine",
+  "experiment": "adaptive-c3-route-v0.1",
+  "author": "Wang Runyuan",
+  "repositoryRevision": "d63eec0a10c327fa52c52e83897cf6e43490df68",
+  "configuration": {
+    "repetitions": 5,
+    "currentRule": {
+      "maxChangedBytes": 65536,
+      "maxRanges": 256
+    },
+    "calibrationFileBytes": 4194304,
+    "heldOutFileBytes": [
+      1048576,
+      16777216
+    ],
+    "sampleColumns": [
+      "applyMs",
+      "publishMs",
+      "totalMs",
+      "sqlitePayloadBytes",
+      "peakBranchBytes",
+      "retainedGrowthBytes",
+      "databaseGrowthBytes"
+    ]
+  },
+  "calibratedRule": {
+    "maxChangedBytes": 65536,
+    "maxRanges": 1,
+    "maxDirtySpanRatio": 0.125
+  },
+  "aggregates": {
+    "calibration": {
+      "current": {
+        "totalMs": 355,
+        "sqlitePayloadBytes": 35952435,
+        "selections": {
+          "incremental": 10,
+          "materialized": 5
+        }
+      },
+      "adaptive": {
+        "totalMs": 180,
+        "sqlitePayloadBytes": 30627635,
+        "selections": {
+          "incremental": 2,
+          "materialized": 13
+        }
+      },
+      "oracle": {
+        "totalMs": 180,
+        "sqlitePayloadBytes": 30627635,
+        "selections": {
+          "incremental": 2,
+          "materialized": 13
+        }
+      }
+    },
+    "heldOut": {
+      "current": {
+        "totalMs": 1078,
+        "sqlitePayloadBytes": 117513079,
+        "selections": {
+          "incremental": 20,
+          "materialized": 10
+        }
+      },
+      "adaptive": {
+        "totalMs": 711,
+        "sqlitePayloadBytes": 106888055,
+        "selections": {
+          "incremental": 4,
+          "materialized": 26
+        }
+      },
+      "oracle": {
+        "totalMs": 698,
+        "sqlitePayloadBytes": 107395959,
+        "selections": {
+          "incremental": 4,
+          "materialized": 26
+        }
+      }
+    }
+  },
+  "hypotheses": {
+    "H1_opportunity": {
+      "passed": true,
+      "opportunityCount": 16,
+      "heldOutScenarios": 30
+    },
+    "H2_usefulGate": {
+      "passed": true,
+      "speedup": 1.516
+    },
+    "H3_lowerRegret": {
+      "passed": true,
+      "currentExcessMs": 380,
+      "adaptiveExcessMs": 13,
+      "excessRemovedFraction": 0.966
+    },
+    "H4_correctness": {
+      "passed": true,
+      "executions": 452
+    }
+  },
+  "results": [
+    {
+      "id": "1m-4k-1r-midpoint",
+      "fileBytes": 1048576,
+      "changedBytes": 4096,
+      "rangeCount": 1,
+      "distribution": "midpoint",
+      "dirtySpanBytes": 4096,
+      "dirtySpanRatio": 0.004,
+      "touchedPages": 2,
+      "touchedPageRatio": 0.008,
+      "routes": {
+        "incremental": {
+          "applyMs": 0,
+          "publishMs": 3,
+          "totalMs": 3,
+          "sqlitePayloadBytes": 283895,
+          "peakBranchBytes": 8192,
+          "retainedGrowthBytes": 275703,
+          "databaseGrowthBytes": 274432,
+          "samples": [
+            [
+              0,
+              3,
+              3,
+              283895,
+              8192,
+              275703,
+              274432
+            ],
+            [
+              0,
+              3,
+              3,
+              283895,
+              8192,
+              275703,
+              274432
+            ],
+            [
+              1,
+              2,
+              3,
+              283895,
+              8192,
+              275703,
+              274432
+            ],
+            [
+              0,
+              3,
+              3,
+              283895,
+              8192,
+              275703,
+              274432
+            ],
+            [
+              0,
+              2,
+              2,
+              283895,
+              8192,
+              275703,
+              274432
+            ]
+          ]
+        },
+        "materialized": {
+          "applyMs": 2,
+          "publishMs": 0,
+          "totalMs": 2,
+          "sqlitePayloadBytes": 275703,
+          "peakBranchBytes": 275919,
+          "retainedGrowthBytes": 275703,
+          "databaseGrowthBytes": 274432,
+          "samples": [
+            [
+              2,
+              0,
+              2,
+              275703,
+              275919,
+              275703,
+              274432
+            ],
+            [
+              2,
+              0,
+              2,
+              275703,
+              275919,
+              275703,
+              274432
+            ],
+            [
+              2,
+              1,
+              3,
+              275703,
+              275919,
+              275703,
+              274432
+            ],
+            [
+              2,
+              0,
+              2,
+              275703,
+              275919,
+              275703,
+              274432
+            ],
+            [
+              2,
+              0,
+              2,
+              275703,
+              275919,
+              275703,
+              274432
+            ]
+          ]
+        }
+      },
+      "currentRoute": "incremental",
+      "oracleRoute": "materialized"
+    },
+    {
+      "id": "1m-4k-64r-clustered",
+      "fileBytes": 1048576,
+      "changedBytes": 4096,
+      "rangeCount": 64,
+      "distribution": "clustered",
+      "dirtySpanBytes": 131072,
+      "dirtySpanRatio": 0.125,
+      "touchedPages": 32,
+      "touchedPageRatio": 0.125,
+      "routes": {
+        "incremental": {
+          "applyMs": 4,
+          "publishMs": 3,
+          "totalMs": 7,
+          "sqlitePayloadBytes": 818091,
+          "peakBranchBytes": 131072,
+          "retainedGrowthBytes": 555947,
+          "databaseGrowthBytes": 557056,
+          "samples": [
+            [
+              4,
+              4,
+              8,
+              818091,
+              131072,
+              555947,
+              557056
+            ],
+            [
+              4,
+              3,
+              7,
+              818091,
+              131072,
+              555947,
+              557056
+            ],
+            [
+              4,
+              3,
+              7,
+              818091,
+              131072,
+              555947,
+              557056
+            ],
+            [
+              6,
+              3,
+              9,
+              818091,
+              131072,
+              555947,
+              557056
+            ],
+            [
+              4,
+              3,
+              7,
+              818091,
+              131072,
+              555947,
+              557056
+            ]
+          ]
+        },
+        "materialized": {
+          "applyMs": 2,
+          "publishMs": 0,
+          "totalMs": 2,
+          "sqlitePayloadBytes": 555947,
+          "peakBranchBytes": 556163,
+          "retainedGrowthBytes": 555947,
+          "databaseGrowthBytes": 557056,
+          "samples": [
+            [
+              2,
+              0,
+              2,
+              555947,
+              556163,
+              555947,
+              557056
+            ],
+            [
+              3,
+              0,
+              3,
+              555947,
+              556163,
+              555947,
+              557056
+            ],
+            [
+              2,
+              0,
+              2,
+              555947,
+              556163,
+              555947,
+              557056
+            ],
+            [
+              1,
+              0,
+              1,
+              555947,
+              556163,
+              555947,
+              557056
+            ],
+            [
+              2,
+              1,
+              3,
+              555947,
+              556163,
+              555947,
+              557056
+            ]
+          ]
+        }
+      },
+      "currentRoute": "incremental",
+      "oracleRoute": "materialized"
+    },
+    {
+      "id": "1m-4k-64r-spread",
+      "fileBytes": 1048576,
+      "changedBytes": 4096,
+      "rangeCount": 64,
+      "distribution": "spread",
+      "dirtySpanBytes": 1048576,
+      "dirtySpanRatio": 1,
+      "touchedPages": 64,
+      "touchedPageRatio": 0.25,
+      "routes": {
+        "incremental": {
+          "applyMs": 5,
+          "publishMs": 7,
+          "totalMs": 12,
+          "sqlitePayloadBytes": 1310720,
+          "peakBranchBytes": 262144,
+          "retainedGrowthBytes": 1048576,
+          "databaseGrowthBytes": 1052672,
+          "samples": [
+            [
+              5,
+              7,
+              12,
+              1310720,
+              262144,
+              1048576,
+              1052672
+            ],
+            [
+              5,
+              7,
+              12,
+              1310720,
+              262144,
+              1048576,
+              1052672
+            ],
+            [
+              7,
+              7,
+              14,
+              1310720,
+              262144,
+              1048576,
+              1052672
+            ],
+            [
+              5,
+              6,
+              11,
+              1310720,
+              262144,
+              1048576,
+              1052672
+            ],
+            [
+              5,
+              10,
+              15,
+              1310720,
+              262144,
+              1048576,
+              1052672
+            ]
+          ]
+        },
+        "materialized": {
+          "applyMs": 5,
+          "publishMs": 0,
+          "totalMs": 5,
+          "sqlitePayloadBytes": 1048576,
+          "peakBranchBytes": 1048792,
+          "retainedGrowthBytes": 1048576,
+          "databaseGrowthBytes": 1052672,
+          "samples": [
+            [
+              5,
+              0,
+              5,
+              1048576,
+              1048792,
+              1048576,
+              1052672
+            ],
+            [
+              5,
+              1,
+              6,
+              1048576,
+              1048792,
+              1048576,
+              1052672
+            ],
+            [
+              4,
+              0,
+              4,
+              1048576,
+              1048792,
+              1048576,
+              1052672
+            ],
+            [
+              5,
+              0,
+              5,
+              1048576,
+              1048792,
+              1048576,
+              1052672
+            ],
+            [
+              5,
+              1,
+              6,
+              1048576,
+              1048792,
+              1048576,
+              1052672
+            ]
+          ]
+        }
+      },
+      "currentRoute": "incremental",
+      "oracleRoute": "materialized"
+    },
+    {
+      "id": "1m-4k-256r-clustered",
+      "fileBytes": 1048576,
+      "changedBytes": 4096,
+      "rangeCount": 256,
+      "distribution": "clustered",
+      "dirtySpanBytes": 131072,
+      "dirtySpanRatio": 0.125,
+      "touchedPages": 32,
+      "touchedPageRatio": 0.125,
+      "routes": {
+        "incremental": {
+          "applyMs": 9,
+          "publishMs": 3,
+          "totalMs": 12,
+          "sqlitePayloadBytes": 1604523,
+          "peakBranchBytes": 131072,
+          "retainedGrowthBytes": 555947,
+          "databaseGrowthBytes": 557056,
+          "samples": [
+            [
+              9,
+              3,
+              12,
+              1604523,
+              131072,
+              555947,
+              557056
+            ],
+            [
+              9,
+              3,
+              12,
+              1604523,
+              131072,
+              555947,
+              557056
+            ],
+            [
+              11,
+              2,
+              13,
+              1604523,
+              131072,
+              555947,
+              557056
+            ],
+            [
+              8,
+              3,
+              11,
+              1604523,
+              131072,
+              555947,
+              557056
+            ],
+            [
+              9,
+              4,
+              13,
+              1604523,
+              131072,
+              555947,
+              557056
+            ]
+          ]
+        },
+        "materialized": {
+          "applyMs": 2,
+          "publishMs": 0,
+          "totalMs": 2,
+          "sqlitePayloadBytes": 555947,
+          "peakBranchBytes": 556163,
+          "retainedGrowthBytes": 555947,
+          "databaseGrowthBytes": 557056,
+          "samples": [
+            [
+              2,
+              0,
+              2,
+              555947,
+              556163,
+              555947,
+              557056
+            ],
+            [
+              3,
+              0,
+              3,
+              555947,
+              556163,
+              555947,
+              557056
+            ],
+            [
+              2,
+              0,
+              2,
+              555947,
+              556163,
+              555947,
+              557056
+            ],
+            [
+              2,
+              0,
+              2,
+              555947,
+              556163,
+              555947,
+              557056
+            ],
+            [
+              2,
+              0,
+              2,
+              555947,
+              556163,
+              555947,
+              557056
+            ]
+          ]
+        }
+      },
+      "currentRoute": "incremental",
+      "oracleRoute": "materialized"
+    },
+    {
+      "id": "1m-4k-256r-spread",
+      "fileBytes": 1048576,
+      "changedBytes": 4096,
+      "rangeCount": 256,
+      "distribution": "spread",
+      "dirtySpanBytes": 1048576,
+      "dirtySpanRatio": 1,
+      "touchedPages": 256,
+      "touchedPageRatio": 1,
+      "routes": {
+        "incremental": {
+          "applyMs": 23,
+          "publishMs": 10,
+          "totalMs": 33,
+          "sqlitePayloadBytes": 2097152,
+          "peakBranchBytes": 1048576,
+          "retainedGrowthBytes": 1048576,
+          "databaseGrowthBytes": 1052672,
+          "samples": [
+            [
+              21,
+              10,
+              31,
+              2097152,
+              1048576,
+              1048576,
+              1052672
+            ],
+            [
+              24,
+              10,
+              34,
+              2097152,
+              1048576,
+              1048576,
+              1052672
+            ],
+            [
+              24,
+              9,
+              33,
+              2097152,
+              1048576,
+              1048576,
+              1052672
+            ],
+            [
+              23,
+              10,
+              33,
+              2097152,
+              1048576,
+              1048576,
+              1052672
+            ],
+            [
+              23,
+              10,
+              33,
+              2097152,
+              1048576,
+              1048576,
+              1052672
+            ]
+          ]
+        },
+        "materialized": {
+          "applyMs": 5,
+          "publishMs": 0,
+          "totalMs": 5,
+          "sqlitePayloadBytes": 1048576,
+          "peakBranchBytes": 1048792,
+          "retainedGrowthBytes": 1048576,
+          "databaseGrowthBytes": 1052672,
+          "samples": [
+            [
+              5,
+              1,
+              6,
+              1048576,
+              1048792,
+              1048576,
+              1052672
+            ],
+            [
+              4,
+              0,
+              4,
+              1048576,
+              1048792,
+              1048576,
+              1052672
+            ],
+            [
+              5,
+              0,
+              5,
+              1048576,
+              1048792,
+              1048576,
+              1052672
+            ],
+            [
+              4,
+              0,
+              4,
+              1048576,
+              1048792,
+              1048576,
+              1052672
+            ],
+            [
+              5,
+              0,
+              5,
+              1048576,
+              1048792,
+              1048576,
+              1052672
+            ]
+          ]
+        }
+      },
+      "currentRoute": "incremental",
+      "oracleRoute": "materialized"
+    },
+    {
+      "id": "1m-64k-1r-midpoint",
+      "fileBytes": 1048576,
+      "changedBytes": 65536,
+      "rangeCount": 1,
+      "distribution": "midpoint",
+      "dirtySpanBytes": 65536,
+      "dirtySpanRatio": 0.063,
+      "touchedPages": 16,
+      "touchedPageRatio": 0.063,
+      "routes": {
+        "incremental": {
+          "applyMs": 2,
+          "publishMs": 3,
+          "totalMs": 5,
+          "sqlitePayloadBytes": 621483,
+          "peakBranchBytes": 65536,
+          "retainedGrowthBytes": 555947,
+          "databaseGrowthBytes": 557056,
+          "samples": [
+            [
+              2,
+              3,
+              5,
+              621483,
+              65536,
+              555947,
+              557056
+            ],
+            [
+              2,
+              2,
+              4,
+              621483,
+              65536,
+              555947,
+              557056
+            ],
+            [
+              4,
+              3,
+              7,
+              621483,
+              65536,
+              555947,
+              557056
+            ],
+            [
+              2,
+              3,
+              5,
+              621483,
+              65536,
+              555947,
+              557056
+            ],
+            [
+              2,
+              4,
+              6,
+              621483,
+              65536,
+              555947,
+              557056
+            ]
+          ]
+        },
+        "materialized": {
+          "applyMs": 2,
+          "publishMs": 0,
+          "totalMs": 2,
+          "sqlitePayloadBytes": 555947,
+          "peakBranchBytes": 556163,
+          "retainedGrowthBytes": 555947,
+          "databaseGrowthBytes": 557056,
+          "samples": [
+            [
+              2,
+              0,
+              2,
+              555947,
+              556163,
+              555947,
+              557056
+            ],
+            [
+              1,
+              0,
+              1,
+              555947,
+              556163,
+              555947,
+              557056
+            ],
+            [
+              2,
+              0,
+              2,
+              555947,
+              556163,
+              555947,
+              557056
+            ],
+            [
+              2,
+              0,
+              2,
+              555947,
+              556163,
+              555947,
+              557056
+            ],
+            [
+              4,
+              0,
+              4,
+              555947,
+              556163,
+              555947,
+              557056
+            ]
+          ]
+        }
+      },
+      "currentRoute": "incremental",
+      "oracleRoute": "materialized"
+    },
+    {
+      "id": "1m-64k-64r-clustered",
+      "fileBytes": 1048576,
+      "changedBytes": 65536,
+      "rangeCount": 64,
+      "distribution": "clustered",
+      "dirtySpanBytes": 131072,
+      "dirtySpanRatio": 0.125,
+      "touchedPages": 32,
+      "touchedPageRatio": 0.125,
+      "routes": {
+        "incremental": {
+          "applyMs": 7,
+          "publishMs": 4,
+          "totalMs": 10,
+          "sqlitePayloadBytes": 818091,
+          "peakBranchBytes": 131072,
+          "retainedGrowthBytes": 555947,
+          "databaseGrowthBytes": 557056,
+          "samples": [
+            [
+              6,
+              4,
+              10,
+              818091,
+              131072,
+              555947,
+              557056
+            ],
+            [
+              7,
+              3,
+              10,
+              818091,
+              131072,
+              555947,
+              557056
+            ],
+            [
+              7,
+              3,
+              10,
+              818091,
+              131072,
+              555947,
+              557056
+            ],
+            [
+              7,
+              4,
+              11,
+              818091,
+              131072,
+              555947,
+              557056
+            ],
+            [
+              6,
+              4,
+              10,
+              818091,
+              131072,
+              555947,
+              557056
+            ]
+          ]
+        },
+        "materialized": {
+          "applyMs": 3,
+          "publishMs": 0,
+          "totalMs": 3,
+          "sqlitePayloadBytes": 555947,
+          "peakBranchBytes": 556163,
+          "retainedGrowthBytes": 555947,
+          "databaseGrowthBytes": 557056,
+          "samples": [
+            [
+              3,
+              0,
+              3,
+              555947,
+              556163,
+              555947,
+              557056
+            ],
+            [
+              3,
+              0,
+              3,
+              555947,
+              556163,
+              555947,
+              557056
+            ],
+            [
+              3,
+              0,
+              3,
+              555947,
+              556163,
+              555947,
+              557056
+            ],
+            [
+              3,
+              0,
+              3,
+              555947,
+              556163,
+              555947,
+              557056
+            ],
+            [
+              3,
+              1,
+              4,
+              555947,
+              556163,
+              555947,
+              557056
+            ]
+          ]
+        }
+      },
+      "currentRoute": "incremental",
+      "oracleRoute": "materialized"
+    },
+    {
+      "id": "1m-64k-64r-spread",
+      "fileBytes": 1048576,
+      "changedBytes": 65536,
+      "rangeCount": 64,
+      "distribution": "spread",
+      "dirtySpanBytes": 1048576,
+      "dirtySpanRatio": 1,
+      "touchedPages": 76,
+      "touchedPageRatio": 0.297,
+      "routes": {
+        "incremental": {
+          "applyMs": 11,
+          "publishMs": 6,
+          "totalMs": 18,
+          "sqlitePayloadBytes": 1359872,
+          "peakBranchBytes": 311296,
+          "retainedGrowthBytes": 1048576,
+          "databaseGrowthBytes": 1052672,
+          "samples": [
+            [
+              14,
+              5,
+              19,
+              1359872,
+              311296,
+              1048576,
+              1052672
+            ],
+            [
+              11,
+              6,
+              17,
+              1359872,
+              311296,
+              1048576,
+              1052672
+            ],
+            [
+              10,
+              8,
+              18,
+              1359872,
+              311296,
+              1048576,
+              1052672
+            ],
+            [
+              10,
+              6,
+              16,
+              1359872,
+              311296,
+              1048576,
+              1052672
+            ],
+            [
+              11,
+              8,
+              19,
+              1359872,
+              311296,
+              1048576,
+              1052672
+            ]
+          ]
+        },
+        "materialized": {
+          "applyMs": 4,
+          "publishMs": 0,
+          "totalMs": 4,
+          "sqlitePayloadBytes": 1048576,
+          "peakBranchBytes": 1048756,
+          "retainedGrowthBytes": 1048576,
+          "databaseGrowthBytes": 1052672,
+          "samples": [
+            [
+              4,
+              0,
+              4,
+              1048576,
+              1048756,
+              1048576,
+              1052672
+            ],
+            [
+              3,
+              1,
+              4,
+              1048576,
+              1048756,
+              1048576,
+              1052672
+            ],
+            [
+              4,
+              0,
+              4,
+              1048576,
+              1048756,
+              1048576,
+              1052672
+            ],
+            [
+              4,
+              0,
+              4,
+              1048576,
+              1048756,
+              1048576,
+              1052672
+            ],
+            [
+              4,
+              1,
+              5,
+              1048576,
+              1048756,
+              1048576,
+              1052672
+            ]
+          ]
+        }
+      },
+      "currentRoute": "incremental",
+      "oracleRoute": "materialized"
+    },
+    {
+      "id": "1m-64k-256r-clustered",
+      "fileBytes": 1048576,
+      "changedBytes": 65536,
+      "rangeCount": 256,
+      "distribution": "clustered",
+      "dirtySpanBytes": 131072,
+      "dirtySpanRatio": 0.125,
+      "touchedPages": 32,
+      "touchedPageRatio": 0.125,
+      "routes": {
+        "incremental": {
+          "applyMs": 15,
+          "publishMs": 4,
+          "totalMs": 19,
+          "sqlitePayloadBytes": 1604523,
+          "peakBranchBytes": 131072,
+          "retainedGrowthBytes": 555947,
+          "databaseGrowthBytes": 557056,
+          "samples": [
+            [
+              16,
+              4,
+              20,
+              1604523,
+              131072,
+              555947,
+              557056
+            ],
+            [
+              15,
+              4,
+              19,
+              1604523,
+              131072,
+              555947,
+              557056
+            ],
+            [
+              17,
+              4,
+              21,
+              1604523,
+              131072,
+              555947,
+              557056
+            ],
+            [
+              15,
+              4,
+              19,
+              1604523,
+              131072,
+              555947,
+              557056
+            ],
+            [
+              14,
+              4,
+              18,
+              1604523,
+              131072,
+              555947,
+              557056
+            ]
+          ]
+        },
+        "materialized": {
+          "applyMs": 3,
+          "publishMs": 0,
+          "totalMs": 3,
+          "sqlitePayloadBytes": 555947,
+          "peakBranchBytes": 556199,
+          "retainedGrowthBytes": 555947,
+          "databaseGrowthBytes": 557056,
+          "samples": [
+            [
+              3,
+              0,
+              3,
+              555947,
+              556199,
+              555947,
+              557056
+            ],
+            [
+              3,
+              0,
+              3,
+              555947,
+              556199,
+              555947,
+              557056
+            ],
+            [
+              3,
+              0,
+              3,
+              555947,
+              556199,
+              555947,
+              557056
+            ],
+            [
+              3,
+              0,
+              3,
+              555947,
+              556199,
+              555947,
+              557056
+            ],
+            [
+              3,
+              0,
+              3,
+              555947,
+              556199,
+              555947,
+              557056
+            ]
+          ]
+        }
+      },
+      "currentRoute": "incremental",
+      "oracleRoute": "materialized"
+    },
+    {
+      "id": "1m-64k-256r-spread",
+      "fileBytes": 1048576,
+      "changedBytes": 65536,
+      "rangeCount": 256,
+      "distribution": "spread",
+      "dirtySpanBytes": 1048576,
+      "dirtySpanRatio": 1,
+      "touchedPages": 256,
+      "touchedPageRatio": 1,
+      "routes": {
+        "incremental": {
+          "applyMs": 38,
+          "publishMs": 7,
+          "totalMs": 45,
+          "sqlitePayloadBytes": 2097152,
+          "peakBranchBytes": 1048576,
+          "retainedGrowthBytes": 1048576,
+          "databaseGrowthBytes": 1056768,
+          "samples": [
+            [
+              56,
+              9,
+              65,
+              2097152,
+              1048576,
+              1048576,
+              1056768
+            ],
+            [
+              38,
+              7,
+              45,
+              2097152,
+              1048576,
+              1048576,
+              1056768
+            ],
+            [
+              37,
+              7,
+              44,
+              2097152,
+              1048576,
+              1048576,
+              1056768
+            ],
+            [
+              40,
+              9,
+              49,
+              2097152,
+              1048576,
+              1048576,
+              1056768
+            ],
+            [
+              38,
+              7,
+              45,
+              2097152,
+              1048576,
+              1048576,
+              1056768
+            ]
+          ]
+        },
+        "materialized": {
+          "applyMs": 4,
+          "publishMs": 0,
+          "totalMs": 4,
+          "sqlitePayloadBytes": 1048576,
+          "peakBranchBytes": 1048792,
+          "retainedGrowthBytes": 1048576,
+          "databaseGrowthBytes": 1056768,
+          "samples": [
+            [
+              3,
+              1,
+              4,
+              1048576,
+              1048792,
+              1048576,
+              1056768
+            ],
+            [
+              4,
+              0,
+              4,
+              1048576,
+              1048792,
+              1048576,
+              1056768
+            ],
+            [
+              4,
+              0,
+              4,
+              1048576,
+              1048792,
+              1048576,
+              1056768
+            ],
+            [
+              5,
+              1,
+              6,
+              1048576,
+              1048792,
+              1048576,
+              1056768
+            ],
+            [
+              4,
+              0,
+              4,
+              1048576,
+              1048792,
+              1048576,
+              1056768
+            ]
+          ]
+        }
+      },
+      "currentRoute": "incremental",
+      "oracleRoute": "materialized"
+    },
+    {
+      "id": "1m-256k-1r-midpoint",
+      "fileBytes": 1048576,
+      "changedBytes": 262144,
+      "rangeCount": 1,
+      "distribution": "midpoint",
+      "dirtySpanBytes": 262144,
+      "dirtySpanRatio": 0.25,
+      "touchedPages": 64,
+      "touchedPageRatio": 0.25,
+      "routes": {
+        "incremental": {
+          "applyMs": 1,
+          "publishMs": 6,
+          "totalMs": 7,
+          "sqlitePayloadBytes": 985266,
+          "peakBranchBytes": 262144,
+          "retainedGrowthBytes": 723122,
+          "databaseGrowthBytes": 724992,
+          "samples": [
+            [
+              0,
+              5,
+              5,
+              985266,
+              262144,
+              723122,
+              724992
+            ],
+            [
+              0,
+              6,
+              6,
+              985266,
+              262144,
+              723122,
+              724992
+            ],
+            [
+              1,
+              6,
+              7,
+              985266,
+              262144,
+              723122,
+              724992
+            ],
+            [
+              1,
+              6,
+              7,
+              985266,
+              262144,
+              723122,
+              724992
+            ],
+            [
+              1,
+              6,
+              7,
+              985266,
+              262144,
+              723122,
+              724992
+            ]
+          ]
+        },
+        "materialized": {
+          "applyMs": 3,
+          "publishMs": 0,
+          "totalMs": 3,
+          "sqlitePayloadBytes": 723122,
+          "peakBranchBytes": 723302,
+          "retainedGrowthBytes": 723122,
+          "databaseGrowthBytes": 724992,
+          "samples": [
+            [
+              3,
+              0,
+              3,
+              723122,
+              723302,
+              723122,
+              724992
+            ],
+            [
+              3,
+              1,
+              4,
+              723122,
+              723302,
+              723122,
+              724992
+            ],
+            [
+              3,
+              0,
+              3,
+              723122,
+              723302,
+              723122,
+              724992
+            ],
+            [
+              3,
+              0,
+              3,
+              723122,
+              723302,
+              723122,
+              724992
+            ],
+            [
+              3,
+              0,
+              3,
+              723122,
+              723302,
+              723122,
+              724992
+            ]
+          ]
+        }
+      },
+      "currentRoute": "materialized",
+      "oracleRoute": "materialized"
+    },
+    {
+      "id": "1m-256k-64r-clustered",
+      "fileBytes": 1048576,
+      "changedBytes": 262144,
+      "rangeCount": 64,
+      "distribution": "clustered",
+      "dirtySpanBytes": 524288,
+      "dirtySpanRatio": 0.5,
+      "touchedPages": 126,
+      "touchedPageRatio": 0.492,
+      "routes": {
+        "incremental": {
+          "applyMs": 20,
+          "publishMs": 5,
+          "totalMs": 24,
+          "sqlitePayloadBytes": 1072043,
+          "peakBranchBytes": 516096,
+          "retainedGrowthBytes": 555947,
+          "databaseGrowthBytes": 557056,
+          "samples": [
+            [
+              21,
+              5,
+              26,
+              1072043,
+              516096,
+              555947,
+              557056
+            ],
+            [
+              20,
+              4,
+              24,
+              1072043,
+              516096,
+              555947,
+              557056
+            ],
+            [
+              19,
+              5,
+              24,
+              1072043,
+              516096,
+              555947,
+              557056
+            ],
+            [
+              19,
+              5,
+              24,
+              1072043,
+              516096,
+              555947,
+              557056
+            ],
+            [
+              20,
+              5,
+              25,
+              1072043,
+              516096,
+              555947,
+              557056
+            ]
+          ]
+        },
+        "materialized": {
+          "applyMs": 3,
+          "publishMs": 0,
+          "totalMs": 4,
+          "sqlitePayloadBytes": 555947,
+          "peakBranchBytes": 556199,
+          "retainedGrowthBytes": 555947,
+          "databaseGrowthBytes": 557056,
+          "samples": [
+            [
+              3,
+              0,
+              3,
+              555947,
+              556199,
+              555947,
+              557056
+            ],
+            [
+              4,
+              0,
+              4,
+              555947,
+              556199,
+              555947,
+              557056
+            ],
+            [
+              5,
+              0,
+              5,
+              555947,
+              556199,
+              555947,
+              557056
+            ],
+            [
+              3,
+              1,
+              4,
+              555947,
+              556199,
+              555947,
+              557056
+            ],
+            [
+              3,
+              0,
+              3,
+              555947,
+              556199,
+              555947,
+              557056
+            ]
+          ]
+        }
+      },
+      "currentRoute": "materialized",
+      "oracleRoute": "materialized"
+    },
+    {
+      "id": "1m-256k-64r-spread",
+      "fileBytes": 1048576,
+      "changedBytes": 262144,
+      "rangeCount": 64,
+      "distribution": "spread",
+      "dirtySpanBytes": 1048576,
+      "dirtySpanRatio": 1,
+      "touchedPages": 124,
+      "touchedPageRatio": 0.484,
+      "routes": {
+        "incremental": {
+          "applyMs": 16,
+          "publishMs": 6,
+          "totalMs": 23,
+          "sqlitePayloadBytes": 1556480,
+          "peakBranchBytes": 507904,
+          "retainedGrowthBytes": 1048576,
+          "databaseGrowthBytes": 1052672,
+          "samples": [
+            [
+              16,
+              6,
+              22,
+              1556480,
+              507904,
+              1048576,
+              1052672
+            ],
+            [
+              16,
+              7,
+              23,
+              1556480,
+              507904,
+              1048576,
+              1052672
+            ],
+            [
+              18,
+              6,
+              24,
+              1556480,
+              507904,
+              1048576,
+              1052672
+            ],
+            [
+              16,
+              7,
+              23,
+              1556480,
+              507904,
+              1048576,
+              1052672
+            ],
+            [
+              16,
+              6,
+              22,
+              1556480,
+              507904,
+              1048576,
+              1052672
+            ]
+          ]
+        },
+        "materialized": {
+          "applyMs": 4,
+          "publishMs": 0,
+          "totalMs": 4,
+          "sqlitePayloadBytes": 1048576,
+          "peakBranchBytes": 1048720,
+          "retainedGrowthBytes": 1048576,
+          "databaseGrowthBytes": 1052672,
+          "samples": [
+            [
+              4,
+              0,
+              4,
+              1048576,
+              1048720,
+              1048576,
+              1052672
+            ],
+            [
+              4,
+              1,
+              5,
+              1048576,
+              1048720,
+              1048576,
+              1052672
+            ],
+            [
+              4,
+              0,
+              4,
+              1048576,
+              1048720,
+              1048576,
+              1052672
+            ],
+            [
+              4,
+              0,
+              4,
+              1048576,
+              1048720,
+              1048576,
+              1052672
+            ],
+            [
+              4,
+              0,
+              4,
+              1048576,
+              1048720,
+              1048576,
+              1052672
+            ]
+          ]
+        }
+      },
+      "currentRoute": "materialized",
+      "oracleRoute": "materialized"
+    },
+    {
+      "id": "1m-256k-256r-clustered",
+      "fileBytes": 1048576,
+      "changedBytes": 262144,
+      "rangeCount": 256,
+      "distribution": "clustered",
+      "dirtySpanBytes": 524288,
+      "dirtySpanRatio": 0.5,
+      "touchedPages": 128,
+      "touchedPageRatio": 0.5,
+      "routes": {
+        "incremental": {
+          "applyMs": 28,
+          "publishMs": 5,
+          "totalMs": 32,
+          "sqlitePayloadBytes": 1604523,
+          "peakBranchBytes": 524288,
+          "retainedGrowthBytes": 555947,
+          "databaseGrowthBytes": 557056,
+          "samples": [
+            [
+              28,
+              5,
+              33,
+              1604523,
+              524288,
+              555947,
+              557056
+            ],
+            [
+              29,
+              5,
+              34,
+              1604523,
+              524288,
+              555947,
+              557056
+            ],
+            [
+              27,
+              5,
+              32,
+              1604523,
+              524288,
+              555947,
+              557056
+            ],
+            [
+              26,
+              4,
+              30,
+              1604523,
+              524288,
+              555947,
+              557056
+            ],
+            [
+              28,
+              4,
+              32,
+              1604523,
+              524288,
+              555947,
+              557056
+            ]
+          ]
+        },
+        "materialized": {
+          "applyMs": 3,
+          "publishMs": 0,
+          "totalMs": 4,
+          "sqlitePayloadBytes": 555947,
+          "peakBranchBytes": 556163,
+          "retainedGrowthBytes": 555947,
+          "databaseGrowthBytes": 557056,
+          "samples": [
+            [
+              4,
+              0,
+              4,
+              555947,
+              556163,
+              555947,
+              557056
+            ],
+            [
+              3,
+              0,
+              3,
+              555947,
+              556163,
+              555947,
+              557056
+            ],
+            [
+              3,
+              0,
+              3,
+              555947,
+              556163,
+              555947,
+              557056
+            ],
+            [
+              6,
+              0,
+              6,
+              555947,
+              556163,
+              555947,
+              557056
+            ],
+            [
+              3,
+              1,
+              4,
+              555947,
+              556163,
+              555947,
+              557056
+            ]
+          ]
+        }
+      },
+      "currentRoute": "materialized",
+      "oracleRoute": "materialized"
+    },
+    {
+      "id": "1m-256k-256r-spread",
+      "fileBytes": 1048576,
+      "changedBytes": 262144,
+      "rangeCount": 256,
+      "distribution": "spread",
+      "dirtySpanBytes": 1048576,
+      "dirtySpanRatio": 1,
+      "touchedPages": 256,
+      "touchedPageRatio": 1,
+      "routes": {
+        "incremental": {
+          "applyMs": 38,
+          "publishMs": 8,
+          "totalMs": 46,
+          "sqlitePayloadBytes": 2097152,
+          "peakBranchBytes": 1048576,
+          "retainedGrowthBytes": 1048576,
+          "databaseGrowthBytes": 1056768,
+          "samples": [
+            [
+              37,
+              8,
+              45,
+              2097152,
+              1048576,
+              1048576,
+              1056768
+            ],
+            [
+              37,
+              8,
+              45,
+              2097152,
+              1048576,
+              1048576,
+              1056768
+            ],
+            [
+              38,
+              8,
+              46,
+              2097152,
+              1048576,
+              1048576,
+              1056768
+            ],
+            [
+              38,
+              8,
+              46,
+              2097152,
+              1048576,
+              1048576,
+              1056768
+            ],
+            [
+              39,
+              7,
+              46,
+              2097152,
+              1048576,
+              1048576,
+              1056768
+            ]
+          ]
+        },
+        "materialized": {
+          "applyMs": 4,
+          "publishMs": 0,
+          "totalMs": 4,
+          "sqlitePayloadBytes": 1048576,
+          "peakBranchBytes": 1048792,
+          "retainedGrowthBytes": 1048576,
+          "databaseGrowthBytes": 1056768,
+          "samples": [
+            [
+              4,
+              0,
+              4,
+              1048576,
+              1048792,
+              1048576,
+              1056768
+            ],
+            [
+              4,
+              0,
+              4,
+              1048576,
+              1048792,
+              1048576,
+              1056768
+            ],
+            [
+              39,
+              0,
+              39,
+              1048576,
+              1048792,
+              1048576,
+              1056768
+            ],
+            [
+              3,
+              1,
+              4,
+              1048576,
+              1048792,
+              1048576,
+              1056768
+            ],
+            [
+              4,
+              0,
+              4,
+              1048576,
+              1048792,
+              1048576,
+              1056768
+            ]
+          ]
+        }
+      },
+      "currentRoute": "materialized",
+      "oracleRoute": "materialized"
+    },
+    {
+      "id": "4m-4k-1r-midpoint",
+      "fileBytes": 4194304,
+      "changedBytes": 4096,
+      "rangeCount": 1,
+      "distribution": "midpoint",
+      "dirtySpanBytes": 4096,
+      "dirtySpanRatio": 0.001,
+      "touchedPages": 2,
+      "touchedPageRatio": 0.002,
+      "routes": {
+        "incremental": {
+          "applyMs": 0,
+          "publishMs": 3,
+          "totalMs": 3,
+          "sqlitePayloadBytes": 213055,
+          "peakBranchBytes": 8192,
+          "retainedGrowthBytes": 204863,
+          "databaseGrowthBytes": 204800,
+          "samples": [
+            [
+              0,
+              4,
+              4,
+              213055,
+              8192,
+              204863,
+              204800
+            ],
+            [
+              0,
+              3,
+              3,
+              213055,
+              8192,
+              204863,
+              204800
+            ],
+            [
+              0,
+              3,
+              3,
+              213055,
+              8192,
+              204863,
+              204800
+            ],
+            [
+              0,
+              3,
+              3,
+              213055,
+              8192,
+              204863,
+              204800
+            ],
+            [
+              0,
+              3,
+              3,
+              213055,
+              8192,
+              204863,
+              204800
+            ]
+          ]
+        },
+        "materialized": {
+          "applyMs": 7,
+          "publishMs": 1,
+          "totalMs": 8,
+          "sqlitePayloadBytes": 204863,
+          "peakBranchBytes": 205871,
+          "retainedGrowthBytes": 204863,
+          "databaseGrowthBytes": 204800,
+          "samples": [
+            [
+              7,
+              1,
+              8,
+              204863,
+              205871,
+              204863,
+              204800
+            ],
+            [
+              9,
+              0,
+              9,
+              204863,
+              205871,
+              204863,
+              204800
+            ],
+            [
+              8,
+              1,
+              9,
+              204863,
+              205871,
+              204863,
+              204800
+            ],
+            [
+              7,
+              1,
+              8,
+              204863,
+              205871,
+              204863,
+              204800
+            ],
+            [
+              7,
+              0,
+              7,
+              204863,
+              205871,
+              204863,
+              204800
+            ]
+          ]
+        }
+      },
+      "currentRoute": "incremental",
+      "oracleRoute": "incremental"
+    },
+    {
+      "id": "4m-4k-64r-clustered",
+      "fileBytes": 4194304,
+      "changedBytes": 4096,
+      "rangeCount": 64,
+      "distribution": "clustered",
+      "dirtySpanBytes": 524288,
+      "dirtySpanRatio": 0.125,
+      "touchedPages": 64,
+      "touchedPageRatio": 0.063,
+      "routes": {
+        "incremental": {
+          "applyMs": 10,
+          "publishMs": 5,
+          "totalMs": 16,
+          "sqlitePayloadBytes": 845727,
+          "peakBranchBytes": 262144,
+          "retainedGrowthBytes": 583583,
+          "databaseGrowthBytes": 585728,
+          "samples": [
+            [
+              12,
+              5,
+              17,
+              845727,
+              262144,
+              583583,
+              585728
+            ],
+            [
+              10,
+              6,
+              16,
+              845727,
+              262144,
+              583583,
+              585728
+            ],
+            [
+              11,
+              7,
+              18,
+              845727,
+              262144,
+              583583,
+              585728
+            ],
+            [
+              10,
+              5,
+              15,
+              845727,
+              262144,
+              583583,
+              585728
+            ],
+            [
+              10,
+              5,
+              15,
+              845727,
+              262144,
+              583583,
+              585728
+            ]
+          ]
+        },
+        "materialized": {
+          "applyMs": 8,
+          "publishMs": 0,
+          "totalMs": 8,
+          "sqlitePayloadBytes": 583583,
+          "peakBranchBytes": 584591,
+          "retainedGrowthBytes": 583583,
+          "databaseGrowthBytes": 585728,
+          "samples": [
+            [
+              8,
+              0,
+              8,
+              583583,
+              584591,
+              583583,
+              585728
+            ],
+            [
+              8,
+              0,
+              8,
+              583583,
+              584591,
+              583583,
+              585728
+            ],
+            [
+              21,
+              0,
+              21,
+              583583,
+              584591,
+              583583,
+              585728
+            ],
+            [
+              8,
+              1,
+              9,
+              583583,
+              584591,
+              583583,
+              585728
+            ],
+            [
+              7,
+              1,
+              8,
+              583583,
+              584591,
+              583583,
+              585728
+            ]
+          ]
+        }
+      },
+      "currentRoute": "incremental",
+      "oracleRoute": "materialized"
+    },
+    {
+      "id": "4m-4k-64r-spread",
+      "fileBytes": 4194304,
+      "changedBytes": 4096,
+      "rangeCount": 64,
+      "distribution": "spread",
+      "dirtySpanBytes": 4194304,
+      "dirtySpanRatio": 1,
+      "touchedPages": 64,
+      "touchedPageRatio": 0.063,
+      "routes": {
+        "incremental": {
+          "applyMs": 9,
+          "publishMs": 18,
+          "totalMs": 28,
+          "sqlitePayloadBytes": 4456448,
+          "peakBranchBytes": 262144,
+          "retainedGrowthBytes": 4194304,
+          "databaseGrowthBytes": 4227072,
+          "samples": [
+            [
+              9,
+              18,
+              27,
+              4456448,
+              262144,
+              4194304,
+              4227072
+            ],
+            [
+              9,
+              18,
+              27,
+              4456448,
+              262144,
+              4194304,
+              4227072
+            ],
+            [
+              10,
+              18,
+              28,
+              4456448,
+              262144,
+              4194304,
+              4227072
+            ],
+            [
+              9,
+              19,
+              28,
+              4456448,
+              262144,
+              4194304,
+              4227072
+            ],
+            [
+              9,
+              45,
+              54,
+              4456448,
+              262144,
+              4194304,
+              4227072
+            ]
+          ]
+        },
+        "materialized": {
+          "applyMs": 16,
+          "publishMs": 0,
+          "totalMs": 16,
+          "sqlitePayloadBytes": 4194304,
+          "peakBranchBytes": 4195312,
+          "retainedGrowthBytes": 4194304,
+          "databaseGrowthBytes": 4227072,
+          "samples": [
+            [
+              15,
+              0,
+              15,
+              4194304,
+              4195312,
+              4194304,
+              4227072
+            ],
+            [
+              17,
+              1,
+              18,
+              4194304,
+              4195312,
+              4194304,
+              4227072
+            ],
+            [
+              16,
+              0,
+              16,
+              4194304,
+              4195312,
+              4194304,
+              4227072
+            ],
+            [
+              18,
+              1,
+              19,
+              4194304,
+              4195312,
+              4194304,
+              4227072
+            ],
+            [
+              16,
+              0,
+              16,
+              4194304,
+              4195312,
+              4194304,
+              4227072
+            ]
+          ]
+        }
+      },
+      "currentRoute": "incremental",
+      "oracleRoute": "materialized"
+    },
+    {
+      "id": "4m-4k-256r-clustered",
+      "fileBytes": 4194304,
+      "changedBytes": 4096,
+      "rangeCount": 256,
+      "distribution": "clustered",
+      "dirtySpanBytes": 524288,
+      "dirtySpanRatio": 0.125,
+      "touchedPages": 128,
+      "touchedPageRatio": 0.125,
+      "routes": {
+        "incremental": {
+          "applyMs": 29,
+          "publishMs": 7,
+          "totalMs": 36,
+          "sqlitePayloadBytes": 1632159,
+          "peakBranchBytes": 524288,
+          "retainedGrowthBytes": 583583,
+          "databaseGrowthBytes": 585728,
+          "samples": [
+            [
+              65,
+              52,
+              117,
+              1632159,
+              524288,
+              583583,
+              585728
+            ],
+            [
+              31,
+              8,
+              39,
+              1632159,
+              524288,
+              583583,
+              585728
+            ],
+            [
+              27,
+              5,
+              32,
+              1632159,
+              524288,
+              583583,
+              585728
+            ],
+            [
+              26,
+              5,
+              31,
+              1632159,
+              524288,
+              583583,
+              585728
+            ],
+            [
+              29,
+              7,
+              36,
+              1632159,
+              524288,
+              583583,
+              585728
+            ]
+          ]
+        },
+        "materialized": {
+          "applyMs": 8,
+          "publishMs": 0,
+          "totalMs": 8,
+          "sqlitePayloadBytes": 583583,
+          "peakBranchBytes": 584591,
+          "retainedGrowthBytes": 583583,
+          "databaseGrowthBytes": 585728,
+          "samples": [
+            [
+              10,
+              0,
+              10,
+              583583,
+              584591,
+              583583,
+              585728
+            ],
+            [
+              7,
+              1,
+              8,
+              583583,
+              584591,
+              583583,
+              585728
+            ],
+            [
+              8,
+              1,
+              9,
+              583583,
+              584591,
+              583583,
+              585728
+            ],
+            [
+              8,
+              0,
+              8,
+              583583,
+              584591,
+              583583,
+              585728
+            ],
+            [
+              8,
+              0,
+              8,
+              583583,
+              584591,
+              583583,
+              585728
+            ]
+          ]
+        }
+      },
+      "currentRoute": "incremental",
+      "oracleRoute": "materialized"
+    },
+    {
+      "id": "4m-4k-256r-spread",
+      "fileBytes": 4194304,
+      "changedBytes": 4096,
+      "rangeCount": 256,
+      "distribution": "spread",
+      "dirtySpanBytes": 4194304,
+      "dirtySpanRatio": 1,
+      "touchedPages": 256,
+      "touchedPageRatio": 0.25,
+      "routes": {
+        "incremental": {
+          "applyMs": 42,
+          "publishMs": 23,
+          "totalMs": 64,
+          "sqlitePayloadBytes": 5242880,
+          "peakBranchBytes": 1048576,
+          "retainedGrowthBytes": 4194304,
+          "databaseGrowthBytes": 4227072,
+          "samples": [
+            [
+              40,
+              23,
+              63,
+              5242880,
+              1048576,
+              4194304,
+              4227072
+            ],
+            [
+              84,
+              25,
+              109,
+              5242880,
+              1048576,
+              4194304,
+              4227072
+            ],
+            [
+              40,
+              21,
+              61,
+              5242880,
+              1048576,
+              4194304,
+              4227072
+            ],
+            [
+              42,
+              23,
+              65,
+              5242880,
+              1048576,
+              4194304,
+              4227072
+            ],
+            [
+              42,
+              22,
+              64,
+              5242880,
+              1048576,
+              4194304,
+              4227072
+            ]
+          ]
+        },
+        "materialized": {
+          "applyMs": 18,
+          "publishMs": 0,
+          "totalMs": 18,
+          "sqlitePayloadBytes": 4194304,
+          "peakBranchBytes": 4195312,
+          "retainedGrowthBytes": 4194304,
+          "databaseGrowthBytes": 4227072,
+          "samples": [
+            [
+              29,
+              0,
+              29,
+              4194304,
+              4195312,
+              4194304,
+              4227072
+            ],
+            [
+              51,
+              1,
+              52,
+              4194304,
+              4195312,
+              4194304,
+              4227072
+            ],
+            [
+              18,
+              0,
+              18,
+              4194304,
+              4195312,
+              4194304,
+              4227072
+            ],
+            [
+              16,
+              1,
+              17,
+              4194304,
+              4195312,
+              4194304,
+              4227072
+            ],
+            [
+              16,
+              0,
+              16,
+              4194304,
+              4195312,
+              4194304,
+              4227072
+            ]
+          ]
+        }
+      },
+      "currentRoute": "incremental",
+      "oracleRoute": "materialized"
+    },
+    {
+      "id": "4m-64k-1r-midpoint",
+      "fileBytes": 4194304,
+      "changedBytes": 65536,
+      "rangeCount": 1,
+      "distribution": "midpoint",
+      "dirtySpanBytes": 65536,
+      "dirtySpanRatio": 0.016,
+      "touchedPages": 16,
+      "touchedPageRatio": 0.016,
+      "routes": {
+        "incremental": {
+          "applyMs": 2,
+          "publishMs": 5,
+          "totalMs": 8,
+          "sqlitePayloadBytes": 906397,
+          "peakBranchBytes": 65536,
+          "retainedGrowthBytes": 840861,
+          "databaseGrowthBytes": 847872,
+          "samples": [
+            [
+              2,
+              6,
+              8,
+              906397,
+              65536,
+              840861,
+              847872
+            ],
+            [
+              1,
+              41,
+              42,
+              906397,
+              65536,
+              840861,
+              847872
+            ],
+            [
+              3,
+              5,
+              8,
+              906397,
+              65536,
+              840861,
+              847872
+            ],
+            [
+              2,
+              5,
+              7,
+              906397,
+              65536,
+              840861,
+              847872
+            ],
+            [
+              2,
+              4,
+              6,
+              906397,
+              65536,
+              840861,
+              847872
+            ]
+          ]
+        },
+        "materialized": {
+          "applyMs": 9,
+          "publishMs": 0,
+          "totalMs": 9,
+          "sqlitePayloadBytes": 840861,
+          "peakBranchBytes": 841905,
+          "retainedGrowthBytes": 840861,
+          "databaseGrowthBytes": 847872,
+          "samples": [
+            [
+              8,
+              1,
+              9,
+              840861,
+              841905,
+              840861,
+              847872
+            ],
+            [
+              8,
+              0,
+              8,
+              840861,
+              841905,
+              840861,
+              847872
+            ],
+            [
+              9,
+              0,
+              9,
+              840861,
+              841905,
+              840861,
+              847872
+            ],
+            [
+              9,
+              1,
+              10,
+              840861,
+              841905,
+              840861,
+              847872
+            ],
+            [
+              10,
+              0,
+              10,
+              840861,
+              841905,
+              840861,
+              847872
+            ]
+          ]
+        }
+      },
+      "currentRoute": "incremental",
+      "oracleRoute": "incremental"
+    },
+    {
+      "id": "4m-64k-64r-clustered",
+      "fileBytes": 4194304,
+      "changedBytes": 65536,
+      "rangeCount": 64,
+      "distribution": "clustered",
+      "dirtySpanBytes": 524288,
+      "dirtySpanRatio": 0.125,
+      "touchedPages": 72,
+      "touchedPageRatio": 0.07,
+      "routes": {
+        "incremental": {
+          "applyMs": 12,
+          "publishMs": 6,
+          "totalMs": 18,
+          "sqlitePayloadBytes": 878495,
+          "peakBranchBytes": 294912,
+          "retainedGrowthBytes": 583583,
+          "databaseGrowthBytes": 585728,
+          "samples": [
+            [
+              13,
+              7,
+              20,
+              878495,
+              294912,
+              583583,
+              585728
+            ],
+            [
+              11,
+              6,
+              17,
+              878495,
+              294912,
+              583583,
+              585728
+            ],
+            [
+              13,
+              7,
+              20,
+              878495,
+              294912,
+              583583,
+              585728
+            ],
+            [
+              10,
+              6,
+              16,
+              878495,
+              294912,
+              583583,
+              585728
+            ],
+            [
+              12,
+              6,
+              18,
+              878495,
+              294912,
+              583583,
+              585728
+            ]
+          ]
+        },
+        "materialized": {
+          "applyMs": 9,
+          "publishMs": 0,
+          "totalMs": 9,
+          "sqlitePayloadBytes": 583583,
+          "peakBranchBytes": 584591,
+          "retainedGrowthBytes": 583583,
+          "databaseGrowthBytes": 585728,
+          "samples": [
+            [
+              9,
+              0,
+              9,
+              583583,
+              584591,
+              583583,
+              585728
+            ],
+            [
+              9,
+              0,
+              9,
+              583583,
+              584591,
+              583583,
+              585728
+            ],
+            [
+              8,
+              0,
+              8,
+              583583,
+              584591,
+              583583,
+              585728
+            ],
+            [
+              8,
+              1,
+              9,
+              583583,
+              584591,
+              583583,
+              585728
+            ],
+            [
+              9,
+              1,
+              10,
+              583583,
+              584591,
+              583583,
+              585728
+            ]
+          ]
+        }
+      },
+      "currentRoute": "incremental",
+      "oracleRoute": "materialized"
+    },
+    {
+      "id": "4m-64k-64r-spread",
+      "fileBytes": 4194304,
+      "changedBytes": 65536,
+      "rangeCount": 64,
+      "distribution": "spread",
+      "dirtySpanBytes": 4194304,
+      "dirtySpanRatio": 1,
+      "touchedPages": 64,
+      "touchedPageRatio": 0.063,
+      "routes": {
+        "incremental": {
+          "applyMs": 10,
+          "publishMs": 21,
+          "totalMs": 31,
+          "sqlitePayloadBytes": 4456448,
+          "peakBranchBytes": 262144,
+          "retainedGrowthBytes": 4194304,
+          "databaseGrowthBytes": 4231168,
+          "samples": [
+            [
+              10,
+              24,
+              34,
+              4456448,
+              262144,
+              4194304,
+              4231168
+            ],
+            [
+              22,
+              23,
+              45,
+              4456448,
+              262144,
+              4194304,
+              4231168
+            ],
+            [
+              10,
+              21,
+              31,
+              4456448,
+              262144,
+              4194304,
+              4231168
+            ],
+            [
+              8,
+              21,
+              29,
+              4456448,
+              262144,
+              4194304,
+              4231168
+            ],
+            [
+              8,
+              21,
+              29,
+              4456448,
+              262144,
+              4194304,
+              4231168
+            ]
+          ]
+        },
+        "materialized": {
+          "applyMs": 19,
+          "publishMs": 0,
+          "totalMs": 20,
+          "sqlitePayloadBytes": 4194304,
+          "peakBranchBytes": 4195276,
+          "retainedGrowthBytes": 4194304,
+          "databaseGrowthBytes": 4231168,
+          "samples": [
+            [
+              22,
+              0,
+              22,
+              4194304,
+              4195276,
+              4194304,
+              4231168
+            ],
+            [
+              20,
+              0,
+              20,
+              4194304,
+              4195276,
+              4194304,
+              4231168
+            ],
+            [
+              17,
+              0,
+              17,
+              4194304,
+              4195276,
+              4194304,
+              4231168
+            ],
+            [
+              17,
+              0,
+              17,
+              4194304,
+              4195276,
+              4194304,
+              4231168
+            ],
+            [
+              19,
+              1,
+              20,
+              4194304,
+              4195276,
+              4194304,
+              4231168
+            ]
+          ]
+        }
+      },
+      "currentRoute": "incremental",
+      "oracleRoute": "materialized"
+    },
+    {
+      "id": "4m-64k-256r-clustered",
+      "fileBytes": 4194304,
+      "changedBytes": 65536,
+      "rangeCount": 256,
+      "distribution": "clustered",
+      "dirtySpanBytes": 524288,
+      "dirtySpanRatio": 0.125,
+      "touchedPages": 128,
+      "touchedPageRatio": 0.125,
+      "routes": {
+        "incremental": {
+          "applyMs": 24,
+          "publishMs": 6,
+          "totalMs": 30,
+          "sqlitePayloadBytes": 1632159,
+          "peakBranchBytes": 524288,
+          "retainedGrowthBytes": 583583,
+          "databaseGrowthBytes": 585728,
+          "samples": [
+            [
+              22,
+              6,
+              28,
+              1632159,
+              524288,
+              583583,
+              585728
+            ],
+            [
+              25,
+              6,
+              31,
+              1632159,
+              524288,
+              583583,
+              585728
+            ],
+            [
+              24,
+              6,
+              30,
+              1632159,
+              524288,
+              583583,
+              585728
+            ],
+            [
+              22,
+              5,
+              27,
+              1632159,
+              524288,
+              583583,
+              585728
+            ],
+            [
+              25,
+              6,
+              31,
+              1632159,
+              524288,
+              583583,
+              585728
+            ]
+          ]
+        },
+        "materialized": {
+          "applyMs": 9,
+          "publishMs": 1,
+          "totalMs": 10,
+          "sqlitePayloadBytes": 583583,
+          "peakBranchBytes": 584591,
+          "retainedGrowthBytes": 583583,
+          "databaseGrowthBytes": 585728,
+          "samples": [
+            [
+              10,
+              1,
+              11,
+              583583,
+              584591,
+              583583,
+              585728
+            ],
+            [
+              9,
+              1,
+              10,
+              583583,
+              584591,
+              583583,
+              585728
+            ],
+            [
+              8,
+              0,
+              8,
+              583583,
+              584591,
+              583583,
+              585728
+            ],
+            [
+              9,
+              1,
+              10,
+              583583,
+              584591,
+              583583,
+              585728
+            ],
+            [
+              8,
+              0,
+              8,
+              583583,
+              584591,
+              583583,
+              585728
+            ]
+          ]
+        }
+      },
+      "currentRoute": "incremental",
+      "oracleRoute": "materialized"
+    },
+    {
+      "id": "4m-64k-256r-spread",
+      "fileBytes": 4194304,
+      "changedBytes": 65536,
+      "rangeCount": 256,
+      "distribution": "spread",
+      "dirtySpanBytes": 4194304,
+      "dirtySpanRatio": 1,
+      "touchedPages": 268,
+      "touchedPageRatio": 0.262,
+      "routes": {
+        "incremental": {
+          "applyMs": 39,
+          "publishMs": 22,
+          "totalMs": 61,
+          "sqlitePayloadBytes": 5292032,
+          "peakBranchBytes": 1097728,
+          "retainedGrowthBytes": 4194304,
+          "databaseGrowthBytes": 4235264,
+          "samples": [
+            [
+              37,
+              22,
+              59,
+              5292032,
+              1097728,
+              4194304,
+              4235264
+            ],
+            [
+              37,
+              22,
+              59,
+              5292032,
+              1097728,
+              4194304,
+              4235264
+            ],
+            [
+              39,
+              23,
+              62,
+              5292032,
+              1097728,
+              4194304,
+              4235264
+            ],
+            [
+              40,
+              23,
+              63,
+              5292032,
+              1097728,
+              4194304,
+              4235264
+            ],
+            [
+              39,
+              22,
+              61,
+              5292032,
+              1097728,
+              4194304,
+              4235264
+            ]
+          ]
+        },
+        "materialized": {
+          "applyMs": 19,
+          "publishMs": 1,
+          "totalMs": 20,
+          "sqlitePayloadBytes": 4194304,
+          "peakBranchBytes": 4195348,
+          "retainedGrowthBytes": 4194304,
+          "databaseGrowthBytes": 4235264,
+          "samples": [
+            [
+              18,
+              1,
+              19,
+              4194304,
+              4195348,
+              4194304,
+              4235264
+            ],
+            [
+              20,
+              0,
+              20,
+              4194304,
+              4195348,
+              4194304,
+              4235264
+            ],
+            [
+              19,
+              0,
+              19,
+              4194304,
+              4195348,
+              4194304,
+              4235264
+            ],
+            [
+              19,
+              1,
+              20,
+              4194304,
+              4195348,
+              4194304,
+              4235264
+            ],
+            [
+              20,
+              1,
+              21,
+              4194304,
+              4195348,
+              4194304,
+              4235264
+            ]
+          ]
+        }
+      },
+      "currentRoute": "incremental",
+      "oracleRoute": "materialized"
+    },
+    {
+      "id": "4m-256k-1r-midpoint",
+      "fileBytes": 4194304,
+      "changedBytes": 262144,
+      "rangeCount": 1,
+      "distribution": "midpoint",
+      "dirtySpanBytes": 262144,
+      "dirtySpanRatio": 0.063,
+      "touchedPages": 64,
+      "touchedPageRatio": 0.063,
+      "routes": {
+        "incremental": {
+          "applyMs": 1,
+          "publishMs": 13,
+          "totalMs": 14,
+          "sqlitePayloadBytes": 1103005,
+          "peakBranchBytes": 262144,
+          "retainedGrowthBytes": 840861,
+          "databaseGrowthBytes": 847872,
+          "samples": [
+            [
+              1,
+              13,
+              14,
+              1103005,
+              262144,
+              840861,
+              847872
+            ],
+            [
+              1,
+              13,
+              14,
+              1103005,
+              262144,
+              840861,
+              847872
+            ],
+            [
+              1,
+              12,
+              13,
+              1103005,
+              262144,
+              840861,
+              847872
+            ],
+            [
+              1,
+              13,
+              14,
+              1103005,
+              262144,
+              840861,
+              847872
+            ],
+            [
+              1,
+              11,
+              12,
+              1103005,
+              262144,
+              840861,
+              847872
+            ]
+          ]
+        },
+        "materialized": {
+          "applyMs": 10,
+          "publishMs": 0,
+          "totalMs": 10,
+          "sqlitePayloadBytes": 840861,
+          "peakBranchBytes": 841941,
+          "retainedGrowthBytes": 840861,
+          "databaseGrowthBytes": 847872,
+          "samples": [
+            [
+              11,
+              0,
+              11,
+              840861,
+              841941,
+              840861,
+              847872
+            ],
+            [
+              10,
+              0,
+              10,
+              840861,
+              841941,
+              840861,
+              847872
+            ],
+            [
+              10,
+              1,
+              11,
+              840861,
+              841941,
+              840861,
+              847872
+            ],
+            [
+              9,
+              1,
+              10,
+              840861,
+              841941,
+              840861,
+              847872
+            ],
+            [
+              10,
+              0,
+              10,
+              840861,
+              841941,
+              840861,
+              847872
+            ]
+          ]
+        }
+      },
+      "currentRoute": "materialized",
+      "oracleRoute": "materialized"
+    },
+    {
+      "id": "4m-256k-64r-clustered",
+      "fileBytes": 4194304,
+      "changedBytes": 262144,
+      "rangeCount": 64,
+      "distribution": "clustered",
+      "dirtySpanBytes": 524288,
+      "dirtySpanRatio": 0.125,
+      "touchedPages": 126,
+      "touchedPageRatio": 0.123,
+      "routes": {
+        "incremental": {
+          "applyMs": 18,
+          "publishMs": 6,
+          "totalMs": 24,
+          "sqlitePayloadBytes": 1099679,
+          "peakBranchBytes": 516096,
+          "retainedGrowthBytes": 583583,
+          "databaseGrowthBytes": 585728,
+          "samples": [
+            [
+              18,
+              10,
+              28,
+              1099679,
+              516096,
+              583583,
+              585728
+            ],
+            [
+              42,
+              7,
+              49,
+              1099679,
+              516096,
+              583583,
+              585728
+            ],
+            [
+              16,
+              6,
+              22,
+              1099679,
+              516096,
+              583583,
+              585728
+            ],
+            [
+              18,
+              6,
+              24,
+              1099679,
+              516096,
+              583583,
+              585728
+            ],
+            [
+              18,
+              6,
+              24,
+              1099679,
+              516096,
+              583583,
+              585728
+            ]
+          ]
+        },
+        "materialized": {
+          "applyMs": 9,
+          "publishMs": 0,
+          "totalMs": 9,
+          "sqlitePayloadBytes": 583583,
+          "peakBranchBytes": 584591,
+          "retainedGrowthBytes": 583583,
+          "databaseGrowthBytes": 585728,
+          "samples": [
+            [
+              8,
+              1,
+              9,
+              583583,
+              584591,
+              583583,
+              585728
+            ],
+            [
+              9,
+              0,
+              9,
+              583583,
+              584591,
+              583583,
+              585728
+            ],
+            [
+              9,
+              0,
+              9,
+              583583,
+              584591,
+              583583,
+              585728
+            ],
+            [
+              10,
+              0,
+              10,
+              583583,
+              584591,
+              583583,
+              585728
+            ],
+            [
+              8,
+              0,
+              8,
+              583583,
+              584591,
+              583583,
+              585728
+            ]
+          ]
+        }
+      },
+      "currentRoute": "materialized",
+      "oracleRoute": "materialized"
+    },
+    {
+      "id": "4m-256k-64r-spread",
+      "fileBytes": 4194304,
+      "changedBytes": 262144,
+      "rangeCount": 64,
+      "distribution": "spread",
+      "dirtySpanBytes": 4194304,
+      "dirtySpanRatio": 1,
+      "touchedPages": 124,
+      "touchedPageRatio": 0.121,
+      "routes": {
+        "incremental": {
+          "applyMs": 18,
+          "publishMs": 22,
+          "totalMs": 40,
+          "sqlitePayloadBytes": 4702208,
+          "peakBranchBytes": 507904,
+          "retainedGrowthBytes": 4194304,
+          "databaseGrowthBytes": 4231168,
+          "samples": [
+            [
+              17,
+              19,
+              36,
+              4702208,
+              507904,
+              4194304,
+              4231168
+            ],
+            [
+              18,
+              19,
+              37,
+              4702208,
+              507904,
+              4194304,
+              4231168
+            ],
+            [
+              19,
+              23,
+              42,
+              4702208,
+              507904,
+              4194304,
+              4231168
+            ],
+            [
+              16,
+              24,
+              40,
+              4702208,
+              507904,
+              4194304,
+              4231168
+            ],
+            [
+              18,
+              22,
+              40,
+              4702208,
+              507904,
+              4194304,
+              4231168
+            ]
+          ]
+        },
+        "materialized": {
+          "applyMs": 16,
+          "publishMs": 0,
+          "totalMs": 16,
+          "sqlitePayloadBytes": 4194304,
+          "peakBranchBytes": 4195276,
+          "retainedGrowthBytes": 4194304,
+          "databaseGrowthBytes": 4231168,
+          "samples": [
+            [
+              16,
+              1,
+              17,
+              4194304,
+              4195276,
+              4194304,
+              4231168
+            ],
+            [
+              16,
+              0,
+              16,
+              4194304,
+              4195276,
+              4194304,
+              4231168
+            ],
+            [
+              15,
+              0,
+              15,
+              4194304,
+              4195276,
+              4194304,
+              4231168
+            ],
+            [
+              17,
+              0,
+              17,
+              4194304,
+              4195276,
+              4194304,
+              4231168
+            ],
+            [
+              16,
+              0,
+              16,
+              4194304,
+              4195276,
+              4194304,
+              4231168
+            ]
+          ]
+        }
+      },
+      "currentRoute": "materialized",
+      "oracleRoute": "materialized"
+    },
+    {
+      "id": "4m-256k-256r-clustered",
+      "fileBytes": 4194304,
+      "changedBytes": 262144,
+      "rangeCount": 256,
+      "distribution": "clustered",
+      "dirtySpanBytes": 524288,
+      "dirtySpanRatio": 0.125,
+      "touchedPages": 128,
+      "touchedPageRatio": 0.125,
+      "routes": {
+        "incremental": {
+          "applyMs": 28,
+          "publishMs": 6,
+          "totalMs": 33,
+          "sqlitePayloadBytes": 1632159,
+          "peakBranchBytes": 524288,
+          "retainedGrowthBytes": 583583,
+          "databaseGrowthBytes": 585728,
+          "samples": [
+            [
+              28,
+              5,
+              33,
+              1632159,
+              524288,
+              583583,
+              585728
+            ],
+            [
+              25,
+              6,
+              31,
+              1632159,
+              524288,
+              583583,
+              585728
+            ],
+            [
+              25,
+              6,
+              31,
+              1632159,
+              524288,
+              583583,
+              585728
+            ],
+            [
+              28,
+              6,
+              34,
+              1632159,
+              524288,
+              583583,
+              585728
+            ],
+            [
+              30,
+              6,
+              36,
+              1632159,
+              524288,
+              583583,
+              585728
+            ]
+          ]
+        },
+        "materialized": {
+          "applyMs": 8,
+          "publishMs": 0,
+          "totalMs": 8,
+          "sqlitePayloadBytes": 583583,
+          "peakBranchBytes": 584591,
+          "retainedGrowthBytes": 583583,
+          "databaseGrowthBytes": 585728,
+          "samples": [
+            [
+              7,
+              0,
+              7,
+              583583,
+              584591,
+              583583,
+              585728
+            ],
+            [
+              8,
+              0,
+              8,
+              583583,
+              584591,
+              583583,
+              585728
+            ],
+            [
+              8,
+              0,
+              8,
+              583583,
+              584591,
+              583583,
+              585728
+            ],
+            [
+              8,
+              0,
+              8,
+              583583,
+              584591,
+              583583,
+              585728
+            ],
+            [
+              7,
+              1,
+              8,
+              583583,
+              584591,
+              583583,
+              585728
+            ]
+          ]
+        }
+      },
+      "currentRoute": "materialized",
+      "oracleRoute": "materialized"
+    },
+    {
+      "id": "4m-256k-256r-spread",
+      "fileBytes": 4194304,
+      "changedBytes": 262144,
+      "rangeCount": 256,
+      "distribution": "spread",
+      "dirtySpanBytes": 4194304,
+      "dirtySpanRatio": 1,
+      "touchedPages": 304,
+      "touchedPageRatio": 0.297,
+      "routes": {
+        "incremental": {
+          "applyMs": 47,
+          "publishMs": 22,
+          "totalMs": 69,
+          "sqlitePayloadBytes": 5439488,
+          "peakBranchBytes": 1245184,
+          "retainedGrowthBytes": 4194304,
+          "databaseGrowthBytes": 4235264,
+          "samples": [
+            [
+              45,
+              20,
+              65,
+              5439488,
+              1245184,
+              4194304,
+              4235264
+            ],
+            [
+              47,
+              22,
+              69,
+              5439488,
+              1245184,
+              4194304,
+              4235264
+            ],
+            [
+              47,
+              21,
+              68,
+              5439488,
+              1245184,
+              4194304,
+              4235264
+            ],
+            [
+              45,
+              24,
+              69,
+              5439488,
+              1245184,
+              4194304,
+              4235264
+            ],
+            [
+              48,
+              30,
+              78,
+              5439488,
+              1245184,
+              4194304,
+              4235264
+            ]
+          ]
+        },
+        "materialized": {
+          "applyMs": 16,
+          "publishMs": 0,
+          "totalMs": 17,
+          "sqlitePayloadBytes": 4194304,
+          "peakBranchBytes": 4195384,
+          "retainedGrowthBytes": 4194304,
+          "databaseGrowthBytes": 4235264,
+          "samples": [
+            [
+              16,
+              1,
+              17,
+              4194304,
+              4195384,
+              4194304,
+              4235264
+            ],
+            [
+              16,
+              1,
+              17,
+              4194304,
+              4195384,
+              4194304,
+              4235264
+            ],
+            [
+              16,
+              0,
+              16,
+              4194304,
+              4195384,
+              4194304,
+              4235264
+            ],
+            [
+              23,
+              0,
+              23,
+              4194304,
+              4195384,
+              4194304,
+              4235264
+            ],
+            [
+              16,
+              0,
+              16,
+              4194304,
+              4195384,
+              4194304,
+              4235264
+            ]
+          ]
+        }
+      },
+      "currentRoute": "materialized",
+      "oracleRoute": "materialized"
+    },
+    {
+      "id": "16m-4k-1r-midpoint",
+      "fileBytes": 16777216,
+      "changedBytes": 4096,
+      "rangeCount": 1,
+      "distribution": "midpoint",
+      "dirtySpanBytes": 4096,
+      "dirtySpanRatio": 0,
+      "touchedPages": 2,
+      "touchedPageRatio": 0,
+      "routes": {
+        "incremental": {
+          "applyMs": 1,
+          "publishMs": 3,
+          "totalMs": 4,
+          "sqlitePayloadBytes": 203063,
+          "peakBranchBytes": 8192,
+          "retainedGrowthBytes": 194871,
+          "databaseGrowthBytes": 196608,
+          "samples": [
+            [
+              1,
+              3,
+              4,
+              203063,
+              8192,
+              194871,
+              196608
+            ],
+            [
+              1,
+              4,
+              5,
+              203063,
+              8192,
+              194871,
+              196608
+            ],
+            [
+              0,
+              4,
+              4,
+              203063,
+              8192,
+              194871,
+              196608
+            ],
+            [
+              1,
+              3,
+              4,
+              203063,
+              8192,
+              194871,
+              196608
+            ],
+            [
+              1,
+              3,
+              4,
+              203063,
+              8192,
+              194871,
+              196608
+            ]
+          ]
+        },
+        "materialized": {
+          "applyMs": 29,
+          "publishMs": 0,
+          "totalMs": 29,
+          "sqlitePayloadBytes": 194871,
+          "peakBranchBytes": 199119,
+          "retainedGrowthBytes": 194871,
+          "databaseGrowthBytes": 196608,
+          "samples": [
+            [
+              29,
+              1,
+              30,
+              194871,
+              199119,
+              194871,
+              196608
+            ],
+            [
+              29,
+              1,
+              30,
+              194871,
+              199119,
+              194871,
+              196608
+            ],
+            [
+              27,
+              0,
+              27,
+              194871,
+              199119,
+              194871,
+              196608
+            ],
+            [
+              28,
+              0,
+              28,
+              194871,
+              199119,
+              194871,
+              196608
+            ],
+            [
+              29,
+              0,
+              29,
+              194871,
+              199119,
+              194871,
+              196608
+            ]
+          ]
+        }
+      },
+      "currentRoute": "incremental",
+      "oracleRoute": "incremental"
+    },
+    {
+      "id": "16m-4k-64r-clustered",
+      "fileBytes": 16777216,
+      "changedBytes": 4096,
+      "rangeCount": 64,
+      "distribution": "clustered",
+      "dirtySpanBytes": 2097152,
+      "dirtySpanRatio": 0.125,
+      "touchedPages": 64,
+      "touchedPageRatio": 0.016,
+      "routes": {
+        "incremental": {
+          "applyMs": 14,
+          "publishMs": 16,
+          "totalMs": 30,
+          "sqlitePayloadBytes": 2475963,
+          "peakBranchBytes": 262144,
+          "retainedGrowthBytes": 2213819,
+          "databaseGrowthBytes": 2232320,
+          "samples": [
+            [
+              16,
+              16,
+              32,
+              2475963,
+              262144,
+              2213819,
+              2232320
+            ],
+            [
+              14,
+              16,
+              30,
+              2475963,
+              262144,
+              2213819,
+              2232320
+            ],
+            [
+              14,
+              14,
+              28,
+              2475963,
+              262144,
+              2213819,
+              2232320
+            ],
+            [
+              14,
+              18,
+              32,
+              2475963,
+              262144,
+              2213819,
+              2232320
+            ],
+            [
+              14,
+              15,
+              29,
+              2475963,
+              262144,
+              2213819,
+              2232320
+            ]
+          ]
+        },
+        "materialized": {
+          "applyMs": 36,
+          "publishMs": 0,
+          "totalMs": 36,
+          "sqlitePayloadBytes": 2213819,
+          "peakBranchBytes": 2218067,
+          "retainedGrowthBytes": 2213819,
+          "databaseGrowthBytes": 2232320,
+          "samples": [
+            [
+              36,
+              0,
+              36,
+              2213819,
+              2218067,
+              2213819,
+              2232320
+            ],
+            [
+              36,
+              0,
+              36,
+              2213819,
+              2218067,
+              2213819,
+              2232320
+            ],
+            [
+              35,
+              0,
+              35,
+              2213819,
+              2218067,
+              2213819,
+              2232320
+            ],
+            [
+              36,
+              0,
+              36,
+              2213819,
+              2218067,
+              2213819,
+              2232320
+            ],
+            [
+              36,
+              0,
+              36,
+              2213819,
+              2218067,
+              2213819,
+              2232320
+            ]
+          ]
+        }
+      },
+      "currentRoute": "incremental",
+      "oracleRoute": "incremental"
+    },
+    {
+      "id": "16m-4k-64r-spread",
+      "fileBytes": 16777216,
+      "changedBytes": 4096,
+      "rangeCount": 64,
+      "distribution": "spread",
+      "dirtySpanBytes": 16777216,
+      "dirtySpanRatio": 1,
+      "touchedPages": 64,
+      "touchedPageRatio": 0.016,
+      "routes": {
+        "incremental": {
+          "applyMs": 15,
+          "publishMs": 61,
+          "totalMs": 77,
+          "sqlitePayloadBytes": 10691721,
+          "peakBranchBytes": 262144,
+          "retainedGrowthBytes": 10429577,
+          "databaseGrowthBytes": 10493952,
+          "samples": [
+            [
+              16,
+              61,
+              77,
+              10691721,
+              262144,
+              10429577,
+              10493952
+            ],
+            [
+              14,
+              64,
+              78,
+              10691721,
+              262144,
+              10429577,
+              10493952
+            ],
+            [
+              16,
+              61,
+              77,
+              10691721,
+              262144,
+              10429577,
+              10493952
+            ],
+            [
+              15,
+              63,
+              78,
+              10691721,
+              262144,
+              10429577,
+              10493952
+            ],
+            [
+              15,
+              61,
+              76,
+              10691721,
+              262144,
+              10429577,
+              10493952
+            ]
+          ]
+        },
+        "materialized": {
+          "applyMs": 53,
+          "publishMs": 0,
+          "totalMs": 53,
+          "sqlitePayloadBytes": 10429577,
+          "peakBranchBytes": 10433825,
+          "retainedGrowthBytes": 10429577,
+          "databaseGrowthBytes": 10493952,
+          "samples": [
+            [
+              53,
+              0,
+              53,
+              10429577,
+              10433825,
+              10429577,
+              10493952
+            ],
+            [
+              77,
+              0,
+              77,
+              10429577,
+              10433825,
+              10429577,
+              10493952
+            ],
+            [
+              53,
+              1,
+              54,
+              10429577,
+              10433825,
+              10429577,
+              10493952
+            ],
+            [
+              51,
+              0,
+              51,
+              10429577,
+              10433825,
+              10429577,
+              10493952
+            ],
+            [
+              51,
+              1,
+              52,
+              10429577,
+              10433825,
+              10429577,
+              10493952
+            ]
+          ]
+        }
+      },
+      "currentRoute": "incremental",
+      "oracleRoute": "materialized"
+    },
+    {
+      "id": "16m-4k-256r-clustered",
+      "fileBytes": 16777216,
+      "changedBytes": 4096,
+      "rangeCount": 256,
+      "distribution": "clustered",
+      "dirtySpanBytes": 2097152,
+      "dirtySpanRatio": 0.125,
+      "touchedPages": 256,
+      "touchedPageRatio": 0.063,
+      "routes": {
+        "incremental": {
+          "applyMs": 57,
+          "publishMs": 17,
+          "totalMs": 74,
+          "sqlitePayloadBytes": 3262395,
+          "peakBranchBytes": 1048576,
+          "retainedGrowthBytes": 2213819,
+          "databaseGrowthBytes": 2232320,
+          "samples": [
+            [
+              57,
+              17,
+              74,
+              3262395,
+              1048576,
+              2213819,
+              2232320
+            ],
+            [
+              57,
+              17,
+              74,
+              3262395,
+              1048576,
+              2213819,
+              2232320
+            ],
+            [
+              56,
+              16,
+              72,
+              3262395,
+              1048576,
+              2213819,
+              2232320
+            ],
+            [
+              59,
+              18,
+              77,
+              3262395,
+              1048576,
+              2213819,
+              2232320
+            ],
+            [
+              56,
+              20,
+              76,
+              3262395,
+              1048576,
+              2213819,
+              2232320
+            ]
+          ]
+        },
+        "materialized": {
+          "applyMs": 36,
+          "publishMs": 0,
+          "totalMs": 37,
+          "sqlitePayloadBytes": 2213819,
+          "peakBranchBytes": 2218067,
+          "retainedGrowthBytes": 2213819,
+          "databaseGrowthBytes": 2232320,
+          "samples": [
+            [
+              36,
+              0,
+              36,
+              2213819,
+              2218067,
+              2213819,
+              2232320
+            ],
+            [
+              35,
+              0,
+              35,
+              2213819,
+              2218067,
+              2213819,
+              2232320
+            ],
+            [
+              42,
+              0,
+              42,
+              2213819,
+              2218067,
+              2213819,
+              2232320
+            ],
+            [
+              36,
+              1,
+              37,
+              2213819,
+              2218067,
+              2213819,
+              2232320
+            ],
+            [
+              37,
+              0,
+              37,
+              2213819,
+              2218067,
+              2213819,
+              2232320
+            ]
+          ]
+        }
+      },
+      "currentRoute": "incremental",
+      "oracleRoute": "materialized"
+    },
+    {
+      "id": "16m-4k-256r-spread",
+      "fileBytes": 16777216,
+      "changedBytes": 4096,
+      "rangeCount": 256,
+      "distribution": "spread",
+      "dirtySpanBytes": 16777216,
+      "dirtySpanRatio": 1,
+      "touchedPages": 256,
+      "touchedPageRatio": 0.063,
+      "routes": {
+        "incremental": {
+          "applyMs": 57,
+          "publishMs": 81,
+          "totalMs": 138,
+          "sqlitePayloadBytes": 17746175,
+          "peakBranchBytes": 1048576,
+          "retainedGrowthBytes": 16697599,
+          "databaseGrowthBytes": 16834560,
+          "samples": [
+            [
+              57,
+              81,
+              138,
+              17746175,
+              1048576,
+              16697599,
+              16834560
+            ],
+            [
+              60,
+              81,
+              141,
+              17746175,
+              1048576,
+              16697599,
+              16834560
+            ],
+            [
+              58,
+              92,
+              150,
+              17746175,
+              1048576,
+              16697599,
+              16834560
+            ],
+            [
+              57,
+              80,
+              137,
+              17746175,
+              1048576,
+              16697599,
+              16834560
+            ],
+            [
+              57,
+              76,
+              133,
+              17746175,
+              1048576,
+              16697599,
+              16834560
+            ]
+          ]
+        },
+        "materialized": {
+          "applyMs": 71,
+          "publishMs": 0,
+          "totalMs": 71,
+          "sqlitePayloadBytes": 16697599,
+          "peakBranchBytes": 16701847,
+          "retainedGrowthBytes": 16697599,
+          "databaseGrowthBytes": 16834560,
+          "samples": [
+            [
+              69,
+              1,
+              70,
+              16697599,
+              16701847,
+              16697599,
+              16834560
+            ],
+            [
+              71,
+              0,
+              71,
+              16697599,
+              16701847,
+              16697599,
+              16834560
+            ],
+            [
+              72,
+              0,
+              72,
+              16697599,
+              16701847,
+              16697599,
+              16834560
+            ],
+            [
+              71,
+              0,
+              71,
+              16697599,
+              16701847,
+              16697599,
+              16834560
+            ],
+            [
+              66,
+              0,
+              66,
+              16697599,
+              16701847,
+              16697599,
+              16834560
+            ]
+          ]
+        }
+      },
+      "currentRoute": "incremental",
+      "oracleRoute": "materialized"
+    },
+    {
+      "id": "16m-64k-1r-midpoint",
+      "fileBytes": 16777216,
+      "changedBytes": 65536,
+      "rangeCount": 1,
+      "distribution": "midpoint",
+      "dirtySpanBytes": 65536,
+      "dirtySpanRatio": 0.004,
+      "touchedPages": 16,
+      "touchedPageRatio": 0.004,
+      "routes": {
+        "incremental": {
+          "applyMs": 3,
+          "publishMs": 3,
+          "totalMs": 7,
+          "sqlitePayloadBytes": 260407,
+          "peakBranchBytes": 65536,
+          "retainedGrowthBytes": 194871,
+          "databaseGrowthBytes": 196608,
+          "samples": [
+            [
+              3,
+              4,
+              7,
+              260407,
+              65536,
+              194871,
+              196608
+            ],
+            [
+              3,
+              3,
+              6,
+              260407,
+              65536,
+              194871,
+              196608
+            ],
+            [
+              3,
+              4,
+              7,
+              260407,
+              65536,
+              194871,
+              196608
+            ],
+            [
+              4,
+              3,
+              7,
+              260407,
+              65536,
+              194871,
+              196608
+            ],
+            [
+              3,
+              3,
+              6,
+              260407,
+              65536,
+              194871,
+              196608
+            ]
+          ]
+        },
+        "materialized": {
+          "applyMs": 29,
+          "publishMs": 0,
+          "totalMs": 29,
+          "sqlitePayloadBytes": 194871,
+          "peakBranchBytes": 199119,
+          "retainedGrowthBytes": 194871,
+          "databaseGrowthBytes": 196608,
+          "samples": [
+            [
+              29,
+              0,
+              29,
+              194871,
+              199119,
+              194871,
+              196608
+            ],
+            [
+              29,
+              1,
+              30,
+              194871,
+              199119,
+              194871,
+              196608
+            ],
+            [
+              29,
+              0,
+              29,
+              194871,
+              199119,
+              194871,
+              196608
+            ],
+            [
+              28,
+              0,
+              28,
+              194871,
+              199119,
+              194871,
+              196608
+            ],
+            [
+              29,
+              0,
+              29,
+              194871,
+              199119,
+              194871,
+              196608
+            ]
+          ]
+        }
+      },
+      "currentRoute": "incremental",
+      "oracleRoute": "incremental"
+    },
+    {
+      "id": "16m-64k-64r-clustered",
+      "fileBytes": 16777216,
+      "changedBytes": 65536,
+      "rangeCount": 64,
+      "distribution": "clustered",
+      "dirtySpanBytes": 2097152,
+      "dirtySpanRatio": 0.125,
+      "touchedPages": 78,
+      "touchedPageRatio": 0.019,
+      "routes": {
+        "incremental": {
+          "applyMs": 17,
+          "publishMs": 18,
+          "totalMs": 35,
+          "sqlitePayloadBytes": 2533307,
+          "peakBranchBytes": 319488,
+          "retainedGrowthBytes": 2213819,
+          "databaseGrowthBytes": 2232320,
+          "samples": [
+            [
+              17,
+              15,
+              32,
+              2533307,
+              319488,
+              2213819,
+              2232320
+            ],
+            [
+              17,
+              19,
+              36,
+              2533307,
+              319488,
+              2213819,
+              2232320
+            ],
+            [
+              18,
+              17,
+              35,
+              2533307,
+              319488,
+              2213819,
+              2232320
+            ],
+            [
+              17,
+              18,
+              35,
+              2533307,
+              319488,
+              2213819,
+              2232320
+            ],
+            [
+              17,
+              18,
+              35,
+              2533307,
+              319488,
+              2213819,
+              2232320
+            ]
+          ]
+        },
+        "materialized": {
+          "applyMs": 38,
+          "publishMs": 0,
+          "totalMs": 38,
+          "sqlitePayloadBytes": 2213819,
+          "peakBranchBytes": 2218067,
+          "retainedGrowthBytes": 2213819,
+          "databaseGrowthBytes": 2232320,
+          "samples": [
+            [
+              38,
+              0,
+              38,
+              2213819,
+              2218067,
+              2213819,
+              2232320
+            ],
+            [
+              110,
+              0,
+              110,
+              2213819,
+              2218067,
+              2213819,
+              2232320
+            ],
+            [
+              36,
+              0,
+              36,
+              2213819,
+              2218067,
+              2213819,
+              2232320
+            ],
+            [
+              49,
+              1,
+              50,
+              2213819,
+              2218067,
+              2213819,
+              2232320
+            ],
+            [
+              37,
+              1,
+              38,
+              2213819,
+              2218067,
+              2213819,
+              2232320
+            ]
+          ]
+        }
+      },
+      "currentRoute": "incremental",
+      "oracleRoute": "incremental"
+    },
+    {
+      "id": "16m-64k-64r-spread",
+      "fileBytes": 16777216,
+      "changedBytes": 65536,
+      "rangeCount": 64,
+      "distribution": "spread",
+      "dirtySpanBytes": 16777216,
+      "dirtySpanRatio": 1,
+      "touchedPages": 64,
+      "touchedPageRatio": 0.016,
+      "routes": {
+        "incremental": {
+          "applyMs": 15,
+          "publishMs": 64,
+          "totalMs": 79,
+          "sqlitePayloadBytes": 10691721,
+          "peakBranchBytes": 262144,
+          "retainedGrowthBytes": 10429577,
+          "databaseGrowthBytes": 10493952,
+          "samples": [
+            [
+              14,
+              64,
+              78,
+              10691721,
+              262144,
+              10429577,
+              10493952
+            ],
+            [
+              15,
+              64,
+              79,
+              10691721,
+              262144,
+              10429577,
+              10493952
+            ],
+            [
+              16,
+              65,
+              81,
+              10691721,
+              262144,
+              10429577,
+              10493952
+            ],
+            [
+              15,
+              68,
+              83,
+              10691721,
+              262144,
+              10429577,
+              10493952
+            ],
+            [
+              14,
+              63,
+              77,
+              10691721,
+              262144,
+              10429577,
+              10493952
+            ]
+          ]
+        },
+        "materialized": {
+          "applyMs": 56,
+          "publishMs": 0,
+          "totalMs": 56,
+          "sqlitePayloadBytes": 10429577,
+          "peakBranchBytes": 10433825,
+          "retainedGrowthBytes": 10429577,
+          "databaseGrowthBytes": 10493952,
+          "samples": [
+            [
+              57,
+              1,
+              58,
+              10429577,
+              10433825,
+              10429577,
+              10493952
+            ],
+            [
+              56,
+              0,
+              56,
+              10429577,
+              10433825,
+              10429577,
+              10493952
+            ],
+            [
+              56,
+              1,
+              57,
+              10429577,
+              10433825,
+              10429577,
+              10493952
+            ],
+            [
+              54,
+              0,
+              54,
+              10429577,
+              10433825,
+              10429577,
+              10493952
+            ],
+            [
+              53,
+              0,
+              53,
+              10429577,
+              10433825,
+              10429577,
+              10493952
+            ]
+          ]
+        }
+      },
+      "currentRoute": "incremental",
+      "oracleRoute": "materialized"
+    },
+    {
+      "id": "16m-64k-256r-clustered",
+      "fileBytes": 16777216,
+      "changedBytes": 65536,
+      "rangeCount": 256,
+      "distribution": "clustered",
+      "dirtySpanBytes": 2097152,
+      "dirtySpanRatio": 0.125,
+      "touchedPages": 264,
+      "touchedPageRatio": 0.064,
+      "routes": {
+        "incremental": {
+          "applyMs": 59,
+          "publishMs": 18,
+          "totalMs": 77,
+          "sqlitePayloadBytes": 3295163,
+          "peakBranchBytes": 1081344,
+          "retainedGrowthBytes": 2213819,
+          "databaseGrowthBytes": 2232320,
+          "samples": [
+            [
+              58,
+              18,
+              76,
+              3295163,
+              1081344,
+              2213819,
+              2232320
+            ],
+            [
+              57,
+              17,
+              74,
+              3295163,
+              1081344,
+              2213819,
+              2232320
+            ],
+            [
+              62,
+              37,
+              99,
+              3295163,
+              1081344,
+              2213819,
+              2232320
+            ],
+            [
+              59,
+              18,
+              77,
+              3295163,
+              1081344,
+              2213819,
+              2232320
+            ],
+            [
+              77,
+              18,
+              95,
+              3295163,
+              1081344,
+              2213819,
+              2232320
+            ]
+          ]
+        },
+        "materialized": {
+          "applyMs": 37,
+          "publishMs": 0,
+          "totalMs": 37,
+          "sqlitePayloadBytes": 2213819,
+          "peakBranchBytes": 2218103,
+          "retainedGrowthBytes": 2213819,
+          "databaseGrowthBytes": 2232320,
+          "samples": [
+            [
+              36,
+              0,
+              36,
+              2213819,
+              2218103,
+              2213819,
+              2232320
+            ],
+            [
+              38,
+              1,
+              39,
+              2213819,
+              2218103,
+              2213819,
+              2232320
+            ],
+            [
+              38,
+              1,
+              39,
+              2213819,
+              2218103,
+              2213819,
+              2232320
+            ],
+            [
+              37,
+              0,
+              37,
+              2213819,
+              2218103,
+              2213819,
+              2232320
+            ],
+            [
+              36,
+              0,
+              36,
+              2213819,
+              2218103,
+              2213819,
+              2232320
+            ]
+          ]
+        }
+      },
+      "currentRoute": "incremental",
+      "oracleRoute": "materialized"
+    },
+    {
+      "id": "16m-64k-256r-spread",
+      "fileBytes": 16777216,
+      "changedBytes": 65536,
+      "rangeCount": 256,
+      "distribution": "spread",
+      "dirtySpanBytes": 16777216,
+      "dirtySpanRatio": 1,
+      "touchedPages": 256,
+      "touchedPageRatio": 0.063,
+      "routes": {
+        "incremental": {
+          "applyMs": 60,
+          "publishMs": 81,
+          "totalMs": 142,
+          "sqlitePayloadBytes": 17746175,
+          "peakBranchBytes": 1048576,
+          "retainedGrowthBytes": 16697599,
+          "databaseGrowthBytes": 16834560,
+          "samples": [
+            [
+              58,
+              78,
+              136,
+              17746175,
+              1048576,
+              16697599,
+              16834560
+            ],
+            [
+              61,
+              81,
+              142,
+              17746175,
+              1048576,
+              16697599,
+              16834560
+            ],
+            [
+              60,
+              75,
+              135,
+              17746175,
+              1048576,
+              16697599,
+              16834560
+            ],
+            [
+              59,
+              90,
+              149,
+              17746175,
+              1048576,
+              16697599,
+              16834560
+            ],
+            [
+              63,
+              82,
+              145,
+              17746175,
+              1048576,
+              16697599,
+              16834560
+            ]
+          ]
+        },
+        "materialized": {
+          "applyMs": 85,
+          "publishMs": 0,
+          "totalMs": 85,
+          "sqlitePayloadBytes": 16697599,
+          "peakBranchBytes": 16701883,
+          "retainedGrowthBytes": 16697599,
+          "databaseGrowthBytes": 16834560,
+          "samples": [
+            [
+              93,
+              0,
+              93,
+              16697599,
+              16701883,
+              16697599,
+              16834560
+            ],
+            [
+              92,
+              0,
+              92,
+              16697599,
+              16701883,
+              16697599,
+              16834560
+            ],
+            [
+              85,
+              0,
+              85,
+              16697599,
+              16701883,
+              16697599,
+              16834560
+            ],
+            [
+              74,
+              0,
+              74,
+              16697599,
+              16701883,
+              16697599,
+              16834560
+            ],
+            [
+              70,
+              1,
+              71,
+              16697599,
+              16701883,
+              16697599,
+              16834560
+            ]
+          ]
+        }
+      },
+      "currentRoute": "incremental",
+      "oracleRoute": "materialized"
+    },
+    {
+      "id": "16m-256k-1r-midpoint",
+      "fileBytes": 16777216,
+      "changedBytes": 262144,
+      "rangeCount": 1,
+      "distribution": "midpoint",
+      "dirtySpanBytes": 262144,
+      "dirtySpanRatio": 0.016,
+      "touchedPages": 64,
+      "touchedPageRatio": 0.016,
+      "routes": {
+        "incremental": {
+          "applyMs": 1,
+          "publishMs": 40,
+          "totalMs": 41,
+          "sqlitePayloadBytes": 707596,
+          "peakBranchBytes": 262144,
+          "retainedGrowthBytes": 445452,
+          "databaseGrowthBytes": 450560,
+          "samples": [
+            [
+              1,
+              37,
+              38,
+              707596,
+              262144,
+              445452,
+              450560
+            ],
+            [
+              2,
+              41,
+              43,
+              707596,
+              262144,
+              445452,
+              450560
+            ],
+            [
+              1,
+              39,
+              40,
+              707596,
+              262144,
+              445452,
+              450560
+            ],
+            [
+              2,
+              42,
+              44,
+              707596,
+              262144,
+              445452,
+              450560
+            ],
+            [
+              1,
+              40,
+              41,
+              707596,
+              262144,
+              445452,
+              450560
+            ]
+          ]
+        },
+        "materialized": {
+          "applyMs": 30,
+          "publishMs": 0,
+          "totalMs": 30,
+          "sqlitePayloadBytes": 445452,
+          "peakBranchBytes": 449700,
+          "retainedGrowthBytes": 445452,
+          "databaseGrowthBytes": 450560,
+          "samples": [
+            [
+              39,
+              0,
+              39,
+              445452,
+              449700,
+              445452,
+              450560
+            ],
+            [
+              29,
+              0,
+              29,
+              445452,
+              449700,
+              445452,
+              450560
+            ],
+            [
+              29,
+              1,
+              30,
+              445452,
+              449700,
+              445452,
+              450560
+            ],
+            [
+              30,
+              0,
+              30,
+              445452,
+              449700,
+              445452,
+              450560
+            ],
+            [
+              30,
+              1,
+              31,
+              445452,
+              449700,
+              445452,
+              450560
+            ]
+          ]
+        }
+      },
+      "currentRoute": "materialized",
+      "oracleRoute": "materialized"
+    },
+    {
+      "id": "16m-256k-64r-clustered",
+      "fileBytes": 16777216,
+      "changedBytes": 262144,
+      "rangeCount": 64,
+      "distribution": "clustered",
+      "dirtySpanBytes": 2097152,
+      "dirtySpanRatio": 0.125,
+      "touchedPages": 120,
+      "touchedPageRatio": 0.029,
+      "routes": {
+        "incremental": {
+          "applyMs": 26,
+          "publishMs": 17,
+          "totalMs": 43,
+          "sqlitePayloadBytes": 2705339,
+          "peakBranchBytes": 491520,
+          "retainedGrowthBytes": 2213819,
+          "databaseGrowthBytes": 2232320,
+          "samples": [
+            [
+              26,
+              17,
+              43,
+              2705339,
+              491520,
+              2213819,
+              2232320
+            ],
+            [
+              27,
+              17,
+              44,
+              2705339,
+              491520,
+              2213819,
+              2232320
+            ],
+            [
+              26,
+              18,
+              44,
+              2705339,
+              491520,
+              2213819,
+              2232320
+            ],
+            [
+              26,
+              16,
+              42,
+              2705339,
+              491520,
+              2213819,
+              2232320
+            ],
+            [
+              27,
+              15,
+              42,
+              2705339,
+              491520,
+              2213819,
+              2232320
+            ]
+          ]
+        },
+        "materialized": {
+          "applyMs": 37,
+          "publishMs": 0,
+          "totalMs": 37,
+          "sqlitePayloadBytes": 2213819,
+          "peakBranchBytes": 2218067,
+          "retainedGrowthBytes": 2213819,
+          "databaseGrowthBytes": 2232320,
+          "samples": [
+            [
+              37,
+              0,
+              37,
+              2213819,
+              2218067,
+              2213819,
+              2232320
+            ],
+            [
+              34,
+              0,
+              34,
+              2213819,
+              2218067,
+              2213819,
+              2232320
+            ],
+            [
+              38,
+              0,
+              38,
+              2213819,
+              2218067,
+              2213819,
+              2232320
+            ],
+            [
+              37,
+              0,
+              37,
+              2213819,
+              2218067,
+              2213819,
+              2232320
+            ],
+            [
+              37,
+              0,
+              37,
+              2213819,
+              2218067,
+              2213819,
+              2232320
+            ]
+          ]
+        }
+      },
+      "currentRoute": "materialized",
+      "oracleRoute": "materialized"
+    },
+    {
+      "id": "16m-256k-64r-spread",
+      "fileBytes": 16777216,
+      "changedBytes": 262144,
+      "rangeCount": 64,
+      "distribution": "spread",
+      "dirtySpanBytes": 16777216,
+      "dirtySpanRatio": 1,
+      "touchedPages": 64,
+      "touchedPageRatio": 0.016,
+      "routes": {
+        "incremental": {
+          "applyMs": 15,
+          "publishMs": 67,
+          "totalMs": 81,
+          "sqlitePayloadBytes": 10750774,
+          "peakBranchBytes": 262144,
+          "retainedGrowthBytes": 10488630,
+          "databaseGrowthBytes": 10555392,
+          "samples": [
+            [
+              15,
+              64,
+              79,
+              10750774,
+              262144,
+              10488630,
+              10555392
+            ],
+            [
+              15,
+              64,
+              79,
+              10750774,
+              262144,
+              10488630,
+              10555392
+            ],
+            [
+              14,
+              67,
+              81,
+              10750774,
+              262144,
+              10488630,
+              10555392
+            ],
+            [
+              14,
+              69,
+              83,
+              10750774,
+              262144,
+              10488630,
+              10555392
+            ],
+            [
+              15,
+              68,
+              83,
+              10750774,
+              262144,
+              10488630,
+              10555392
+            ]
+          ]
+        },
+        "materialized": {
+          "applyMs": 59,
+          "publishMs": 1,
+          "totalMs": 59,
+          "sqlitePayloadBytes": 10488630,
+          "peakBranchBytes": 10492878,
+          "retainedGrowthBytes": 10488630,
+          "databaseGrowthBytes": 10555392,
+          "samples": [
+            [
+              59,
+              0,
+              59,
+              10488630,
+              10492878,
+              10488630,
+              10555392
+            ],
+            [
+              68,
+              1,
+              69,
+              10488630,
+              10492878,
+              10488630,
+              10555392
+            ],
+            [
+              55,
+              1,
+              56,
+              10488630,
+              10492878,
+              10488630,
+              10555392
+            ],
+            [
+              76,
+              1,
+              77,
+              10488630,
+              10492878,
+              10488630,
+              10555392
+            ],
+            [
+              56,
+              0,
+              56,
+              10488630,
+              10492878,
+              10488630,
+              10555392
+            ]
+          ]
+        }
+      },
+      "currentRoute": "materialized",
+      "oracleRoute": "materialized"
+    },
+    {
+      "id": "16m-256k-256r-clustered",
+      "fileBytes": 16777216,
+      "changedBytes": 262144,
+      "rangeCount": 256,
+      "distribution": "clustered",
+      "dirtySpanBytes": 2097152,
+      "dirtySpanRatio": 0.125,
+      "touchedPages": 292,
+      "touchedPageRatio": 0.071,
+      "routes": {
+        "incremental": {
+          "applyMs": 64,
+          "publishMs": 17,
+          "totalMs": 80,
+          "sqlitePayloadBytes": 3409851,
+          "peakBranchBytes": 1196032,
+          "retainedGrowthBytes": 2213819,
+          "databaseGrowthBytes": 2232320,
+          "samples": [
+            [
+              64,
+              16,
+              80,
+              3409851,
+              1196032,
+              2213819,
+              2232320
+            ],
+            [
+              62,
+              17,
+              79,
+              3409851,
+              1196032,
+              2213819,
+              2232320
+            ],
+            [
+              62,
+              18,
+              80,
+              3409851,
+              1196032,
+              2213819,
+              2232320
+            ],
+            [
+              64,
+              17,
+              81,
+              3409851,
+              1196032,
+              2213819,
+              2232320
+            ],
+            [
+              64,
+              16,
+              80,
+              3409851,
+              1196032,
+              2213819,
+              2232320
+            ]
+          ]
+        },
+        "materialized": {
+          "applyMs": 36,
+          "publishMs": 0,
+          "totalMs": 36,
+          "sqlitePayloadBytes": 2213819,
+          "peakBranchBytes": 2218103,
+          "retainedGrowthBytes": 2213819,
+          "databaseGrowthBytes": 2232320,
+          "samples": [
+            [
+              36,
+              0,
+              36,
+              2213819,
+              2218103,
+              2213819,
+              2232320
+            ],
+            [
+              36,
+              0,
+              36,
+              2213819,
+              2218103,
+              2213819,
+              2232320
+            ],
+            [
+              38,
+              1,
+              39,
+              2213819,
+              2218103,
+              2213819,
+              2232320
+            ],
+            [
+              39,
+              0,
+              39,
+              2213819,
+              2218103,
+              2213819,
+              2232320
+            ],
+            [
+              35,
+              1,
+              36,
+              2213819,
+              2218103,
+              2213819,
+              2232320
+            ]
+          ]
+        }
+      },
+      "currentRoute": "materialized",
+      "oracleRoute": "materialized"
+    },
+    {
+      "id": "16m-256k-256r-spread",
+      "fileBytes": 16777216,
+      "changedBytes": 262144,
+      "rangeCount": 256,
+      "distribution": "spread",
+      "dirtySpanBytes": 16777216,
+      "dirtySpanRatio": 1,
+      "touchedPages": 316,
+      "touchedPageRatio": 0.077,
+      "routes": {
+        "incremental": {
+          "applyMs": 72,
+          "publishMs": 81,
+          "totalMs": 154,
+          "sqlitePayloadBytes": 17991935,
+          "peakBranchBytes": 1294336,
+          "retainedGrowthBytes": 16697599,
+          "databaseGrowthBytes": 16834560,
+          "samples": [
+            [
+              72,
+              81,
+              153,
+              17991935,
+              1294336,
+              16697599,
+              16834560
+            ],
+            [
+              75,
+              105,
+              180,
+              17991935,
+              1294336,
+              16697599,
+              16834560
+            ],
+            [
+              70,
+              84,
+              154,
+              17991935,
+              1294336,
+              16697599,
+              16834560
+            ],
+            [
+              72,
+              81,
+              153,
+              17991935,
+              1294336,
+              16697599,
+              16834560
+            ],
+            [
+              88,
+              80,
+              168,
+              17991935,
+              1294336,
+              16697599,
+              16834560
+            ]
+          ]
+        },
+        "materialized": {
+          "applyMs": 70,
+          "publishMs": 1,
+          "totalMs": 70,
+          "sqlitePayloadBytes": 16697599,
+          "peakBranchBytes": 16701883,
+          "retainedGrowthBytes": 16697599,
+          "databaseGrowthBytes": 16834560,
+          "samples": [
+            [
+              67,
+              0,
+              67,
+              16697599,
+              16701883,
+              16697599,
+              16834560
+            ],
+            [
+              65,
+              1,
+              66,
+              16697599,
+              16701883,
+              16697599,
+              16834560
+            ],
+            [
+              92,
+              1,
+              93,
+              16697599,
+              16701883,
+              16697599,
+              16834560
+            ],
+            [
+              70,
+              0,
+              70,
+              16697599,
+              16701883,
+              16697599,
+              16834560
+            ],
+            [
+              75,
+              1,
+              76,
+              16697599,
+              16701883,
+              16697599,
+              16834560
+            ]
+          ]
+        }
+      },
+      "currentRoute": "materialized",
+      "oracleRoute": "materialized"
+    }
+  ]
+}

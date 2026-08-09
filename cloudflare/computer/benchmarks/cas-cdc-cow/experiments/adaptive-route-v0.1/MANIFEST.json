@@ -1,0 +1,167 @@
+{
+  "bundle": {
+    "name": "adaptive-route-v0.1",
+    "scope": "engine-layer synthetic evidence bundle",
+    "base_revision": "d63eec0a10c327fa52c52e83897cf6e43490df68",
+    "policy": "evidence-only; no default route change; no policy helper; no full Computer/FUSE or production claim"
+  },
+  "inventory": [
+    {
+      "path": "experiments/adaptive-route-v0.1/README.md",
+      "purpose": "human-readable evidence summary",
+      "sha256": "61a39145ce9847a676b9560ce4018a9da888909cc0dc7ceda81612a714742f1c",
+      "bytes": 4088
+    },
+    {
+      "path": "experiments/adaptive-route-v0.1/MANIFEST.json",
+      "purpose": "bundle inventory and provenance"
+    },
+    {
+      "path": "src/bench/adaptive-route.bench.ts",
+      "purpose": "historical benchmark source preserved from the supplied package",
+      "sha256": "7bd57b4455eef8b11329155bcfc5abe61e6b3977a36121adec5ff8dd3249ef9e",
+      "bytes": 14310
+    },
+    {
+      "path": "scripts/run-adaptive-route.mjs",
+      "purpose": "historical benchmark runner preserved from the supplied package",
+      "sha256": "29c40b32dd365cd2a530c2235c8a16fc8c8ee7e703ecaccbb990f7fcaed0f321",
+      "bytes": 2134
+    },
+    {
+      "path": "scripts/verify-adaptive-route.mjs",
+      "purpose": "standalone verifier for both preserved raw runs",
+      "sha256": "ab3c3995d4c73c1adc5b82c9a3ad83c8bd53ae95f08c97d9d3bc0cd3b43e45f5",
+      "bytes": 18269
+    },
+    {
+      "path": "results/adaptive-route-supplied-7829e079.json",
+      "purpose": "byte-preserved supplied raw v1 result",
+      "sha256": "7829e079a6b9c5012ddc2759e40bd7101ab9ba9a561101197003b8d1458ff233",
+      "bytes": 124185
+    },
+    {
+      "path": "results/adaptive-route-clean-room-077bef18.json",
+      "purpose": "byte-preserved clean-room raw v1 result",
+      "sha256": "077bef181631c6ce16d25684297100b26a4416eaa1e8844afcd94866830dff65",
+      "bytes": 124229
+    }
+  ],
+  "recorded": {
+    "raw_schema_version": 1,
+    "benchmark_layer": "engine",
+    "experiment": "adaptive-c3-route-v0.1",
+    "repository_revision": "d63eec0a10c327fa52c52e83897cf6e43490df68",
+    "configuration": {
+      "repetitions": 5,
+      "current_rule": {
+        "max_changed_bytes": 65536,
+        "max_ranges": 256
+      },
+      "calibration_file_bytes": 4194304,
+      "held_out_file_bytes": [1048576, 16777216],
+      "sample_columns": [
+        "applyMs",
+        "publishMs",
+        "totalMs",
+        "sqlitePayloadBytes",
+        "peakBranchBytes",
+        "retainedGrowthBytes",
+        "databaseGrowthBytes"
+      ]
+    },
+    "runs": [
+      {
+        "name": "supplied",
+        "path": "results/adaptive-route-supplied-7829e079.json",
+        "held_out_ms": {
+          "current": 1025,
+          "adaptive": 539,
+          "oracle": 524
+        },
+        "speedup": 1.902,
+        "aggregate_gate": {
+          "maxChangedBytes": 65536,
+          "maxRanges": 1,
+          "maxDirtySpanRatio": 0.125
+        },
+        "hypothesis_passes": {
+          "H1_opportunity": true,
+          "H2_usefulGate": true,
+          "H3_lowerRegret": true,
+          "H4_correctness": true
+        }
+      },
+      {
+        "name": "clean-room",
+        "path": "results/adaptive-route-clean-room-077bef18.json",
+        "held_out_ms": {
+          "current": 1078,
+          "adaptive": 711,
+          "oracle": 698
+        },
+        "speedup": 1.516,
+        "aggregate_gate": {
+          "maxChangedBytes": 65536,
+          "maxRanges": 1,
+          "maxDirtySpanRatio": 0.125
+        },
+        "hypothesis_passes": {
+          "H1_opportunity": true,
+          "H2_usefulGate": true,
+          "H3_lowerRegret": true,
+          "H4_correctness": true
+        }
+      }
+    ],
+    "clean_room_environment_receipt": {
+      "source": "separately retained clean-room ENVIRONMENT.json receipt",
+      "included_in_bundle": false,
+      "sha256": "4020ea930698b8a675ce74fe1bf6fac4eab4a41f284850fe3c62b3af201c0d9f",
+      "bytes": 2571,
+      "scope": "separate run receipt; not embedded in raw v1 result",
+      "platform": {
+        "cpu": "Apple M1 Ultra",
+        "os": "macOS",
+        "productVersion": "14.4.1",
+        "buildVersion": "23E224",
+        "kernel": "Darwin 23.4.0",
+        "arch": "arm64"
+      },
+      "toolchain": {
+        "nodeVersion": "v26.5.0"
+      }
+    }
+  },
+  "source_inferred": {
+    "scenario_count": 45,
+    "calibration_scenarios": 15,
+    "held_out_scenarios": 30,
+    "formal_measurements": 450,
+    "warm_up_correctness_executions": 2,
+    "total_correctness_executions": 452,
+    "candidate_gate_count": 64,
+    "candidate_gate_values": {
+      "maxChangedBytes": [0, 4096, 65536, 262144],
+      "maxRanges": [0, 1, 64, 256],
+      "maxDirtySpanRatio": [0, 0.125, 0.5, 1]
+    },
+    "tie_break": [
+      "lower calibration cost",
+      "lower maxChangedBytes",
+      "lower maxRanges",
+      "lower maxDirtySpanRatio"
+    ],
+    "route_order": "alternates by repeat",
+    "durable_object_scope": "new unique Durable Object per measurement via the historical harness"
+  },
+  "unknown": {
+    "supplied_environment": true,
+    "supplied_timestamp": true,
+    "per_sample_provenance": true,
+    "warm_up_records": true,
+    "schema_v2_fields": true,
+    "full_computer_fuse_result": true,
+    "production_safety": true
+  }
+}
