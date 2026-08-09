@@ -80,6 +80,7 @@ SQLite.
 - **Part II — Cloudflare Computer: How to Cut AI Agent Sandboxing Costs by 80%** — [English](chapters/PART-II.md) · [简体中文](chapters/PART-II.zh-CN.md)
 - **Part II X Article editorial edition** — [English](chapters/PART-II-X-ARTICLE.md) · [简体中文](chapters/PART-II-X-ARTICLE.zh-CN.md)
 - **Part III — Reengineering Cloudflare Computer: 98.4% Less Branch Storage, 3.18× Faster Edits, and Safe Multi-Agent Parallelism** — [English](chapters/PART-III.md) · [简体中文](chapters/PART-III.zh-CN.md)
+- **Part III X Article editorial edition** — [简体中文](chapters/PART-III-X-ARTICLE.zh-CN.md)
 - [C3 prototype and benchmarks](benchmarks/cas-cdc-cow/)
 - [Dual-mode website builder tutorial](examples/dual-mode-website-builder/)
 - [Durable Object storage benchmarks](benchmarks/storage/)
