@@ -44,7 +44,7 @@ attaching disposable execution environments to that durable state.
 
 - **Part I — Introducing Cloudflare Durable Objects** — [English](cloudflare/computer/chapters/PART-I.md) · [简体中文](cloudflare/computer/chapters/PART-I.zh-CN.md)
 - **Part II — Cloudflare Computer: How to Cut AI Agent Sandboxing Costs by 80%** — [English](cloudflare/computer/chapters/PART-II.md) · [简体中文](cloudflare/computer/chapters/PART-II.zh-CN.md) · X Article: [English](cloudflare/computer/chapters/PART-II-X-ARTICLE.md) · [简体中文](cloudflare/computer/chapters/PART-II-X-ARTICLE.zh-CN.md) · [Runnable example](cloudflare/computer/examples/dual-mode-website-builder/)
-- **Part III — Reengineering Cloudflare Computer: 98.4% Less Branch Storage, 3.18× Faster Edits, and Safe Multi-Agent Parallelism** — [English](cloudflare/computer/chapters/PART-III.md) · [简体中文](cloudflare/computer/chapters/PART-III.zh-CN.md) · [C3 prototype and benchmarks](cloudflare/computer/benchmarks/cas-cdc-cow/)
+- **Part III — Reengineering Cloudflare Computer: 98.4% Less Branch Storage, 3.18× Faster Edits, and Safe Multi-Agent Parallelism** — [English](cloudflare/computer/chapters/PART-III.md) · [简体中文](cloudflare/computer/chapters/PART-III.zh-CN.md) · [中文 X Article](cloudflare/computer/chapters/PART-III-X-ARTICLE.zh-CN.md) · [C3 prototype and benchmarks](cloudflare/computer/benchmarks/cas-cdc-cow/)
 - **Companion storage benchmarks** — [Computer baseline method and findings](cloudflare/computer/benchmarks/storage/BENCHMARK.md) · [Latest baseline result](cloudflare/computer/benchmarks/storage/results/medium-summary.md)
 
 [Explore the book →](cloudflare/computer/README.md)
