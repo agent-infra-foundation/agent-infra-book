@@ -1,0 +1,19 @@
+{
+  "name": "@agent-infra-book/computer-e2e-c3",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@cloudflare/computer": "file:../../vendor/c3/cloudflare-computer-0.1.0-alpha.1.tgz",
+    "@cloudflare/computer-rpc": "file:../../vendor/c3/cloudflare-computer-rpc-0.0.0-full.tgz",
+    "@cloudflare/computerd": "file:../../vendor/c3/cloudflare-computerd-0.1.0-alpha.1.tgz",
+    "@cloudflare/dofs": "file:../../vendor/c3/cloudflare-dofs-0.0.0-full.tgz"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "4.20260702.1",
+    "@types/node": "25.9.1",
+    "typescript": "6.0.3",
+    "wrangler": "4.107.1"
+  }
+}
+

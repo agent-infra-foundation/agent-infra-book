@@ -1,5 +1,9 @@
 # Cloudflare Computer: How to Cut AI Agent Sandboxing Costs by 80%
 
+Part I ended at Chapter 4 with a durable filesystem and measured execution
+costs. Part II continues at **Chapter 5** and decides where agent work should
+run.
+
 An agent needs its workspace for the whole task. It does not need a complete
 Linux machine for every step.
 
@@ -54,7 +58,7 @@ This article keeps three forms of evidence separate:
 
 ---
 
-## Chapter 1 — The 10% Container Strategy
+## Chapter 5 — The 10% Container Strategy
 
 > <u>**Economic boundary:**</u>
 > **Computer can reduce container time; it cannot guarantee a fixed percentage
@@ -168,7 +172,7 @@ and [Cloudflare Containers pricing](https://developers.cloudflare.com/containers
 
 ---
 
-## Chapter 2 — Build One Website in Two Modes
+## Chapter 6 — Build One Website in Two Modes
 
 > <u>**Runnable proof:**</u>
 > **The isolate authors and inspects the site. Linux starts only for `npm
@@ -429,7 +433,7 @@ Cloudflare Computer's [`examples/think`](https://github.com/cloudflare/computer/
 
 ---
 
-## Chapter 3 — Follow One Command Across the Durability Boundary
+## Chapter 7 — Follow One Command Across the Durability Boundary
 
 > <u>**Durability boundary:**</u>
 > **A successful process exit is not enough. The post-command pull must also
@@ -537,7 +541,7 @@ and [`runtime.exec()` implementation](https://github.com/cloudflare/computer/blo
 
 ---
 
-## Chapter 4 — Calculate the 80% Reduction
+## Chapter 8 — Calculate the 80% Reduction
 
 > <u>**Modeled result:**</u>
 > **A 10% container duty cycle costs $7.53 instead of $36.83 in this scenario.

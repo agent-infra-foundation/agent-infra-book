@@ -16,8 +16,18 @@ tables, and code.
 
 | Asset | Role | Message | Evidence status |
 | --- | --- | --- | --- |
-| [One Workspace, two modes](part-ii/one-workspace-two-modes.png) | Chapter 1 mental model | One authoritative durable Workspace supports lightweight isolate work and on-demand native Linux work. | Illustrative only; the exact physical-copy and synchronization model is documented in the article |
-| [Build a website in two modes](part-ii/build-website-two-modes.png) | Chapter 2 tutorial map | Author and inspect in isolates, build in a container, then verify from the durable Workspace. | Illustrative only; exact backend calls come from the runnable example |
+| [One Workspace, two modes](part-ii/one-workspace-two-modes.png) | Chapter 5 mental model | One authoritative durable Workspace supports lightweight isolate work and on-demand native Linux work. | Illustrative only; the exact physical-copy and synchronization model is documented in the article |
+| [Build a website in two modes](part-ii/build-website-two-modes.png) | Chapter 6 tutorial map | Author and inspect in isolates, build in a container, then verify from the durable Workspace. | Illustrative only; exact backend calls come from the runnable example |
+
+## Part III Illustrations
+
+| Asset | Role | Message | Evidence status |
+| --- | --- | --- | --- |
+| [C3 overview](part-iii/c3-overview.png) | Opening mental model | CAS, CDC, and COW form one SQLite-backed storage prototype. | Illustrative only |
+| [Shared base and COW branches](part-iii/shared-base-cow-branches.png) | Chapter 10 branch model | Agents share immutable base content and retain only private COW changes. | Illustrative only; measured branch storage is reported in the article |
+| [Fixed chunks versus CDC](part-iii/fixed-vs-cdc.png) | Chapter 11 edit model | CDC can resynchronize after an offset-shifting edit instead of invalidating every later boundary. | Illustrative only; algorithm details remain in pseudocode |
+| [Multi-agent publication gate](part-iii/multi-agent-publication-gate.png) | Chapter 12 coordination model | Independent work converges through one transactional publication authority. | Illustrative only; conflict semantics are documented in the article |
+| [Two FUSE workspaces](part-iii/two-fuse-workspaces.png) | Chapter 13 E2E model | Two isolated execution workspaces synchronize with one authoritative SQLite store. | Illustrative only; exact E2E results remain in the benchmark tables |
 
 ## Planned Figure Inventory
 
@@ -33,9 +43,9 @@ tables, and code.
 | 2.2 | Part II | Build One Website in Two Modes | Present the isolate → isolate → container → isolate tutorial flow |
 | 2.3 | Part II | When Container Output Becomes Durable | Separate FUSE visibility, process exit, pull, and SQLite commit |
 | 2.4 | Part II | The 10% Container Cost Model | Compare the always-active and 10%-duty-cycle estimates with exact values |
-| 3.1 | Part III | One Workspace, Three Computers | Compare isolate JavaScript, `just-bash`, and container execution over one durable Workspace |
-| 3.2 | Part III | The Execution Ladder | Choose native capability, JavaScript, `just-bash`, or Linux by required authority |
-| 3.3 | Part III | Capability and Credential Boundary | Keep credentials and unrestricted external authority outside disposable isolate code |
+| 3.1 | Part III | One Shared Base, Many Private Branches | Show CAS references and 4 KiB COW pages without implying full-workspace copies |
+| 3.2 | Part III | Keep Small Changes Local | Compare fixed boundaries with CDC resynchronization after a front insertion |
+| 3.3 | Part III | Fifty Agents, One Durable Main | Show disjoint publication, same-file conflict, and the single transactional authority |
 
 ## Visual System
 

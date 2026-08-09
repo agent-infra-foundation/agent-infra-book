@@ -1,0 +1,427 @@
+{
+  "generatedAt": "2026-08-09T04:49:01.592Z",
+  "profile": "volume",
+  "sourceCommit": "76d9e75c5688713b656bce85540d9e0071cece8b",
+  "pipeline": "Workspace DO SQLite -> push -> computerd -> FUSE -> command -> pull -> Workspace DO SQLite -> verify",
+  "workload": {
+    "fileBytes": 33554432,
+    "checkpoints": 16,
+    "prependBytes": 10
+  },
+  "speed": {
+    "create": {
+      "baselineMs": 1632,
+      "c3Ms": 2169
+    },
+    "checkpointEdits": {
+      "baselineMs": 5405,
+      "c3Ms": 1611,
+      "speedup": 3.355058969584109
+    },
+    "frontInsert": {
+      "baselineMs": 1696,
+      "c3Ms": 428,
+      "speedup": 3.9626168224299065
+    },
+    "read": {
+      "baselineMs": 207,
+      "c3Ms": 151,
+      "speedup": 1.3708609271523178
+    }
+  },
+  "storage": {
+    "checkpointEdits": {
+      "baseline": {
+        "databaseBytes": 8499200,
+        "uniqueBlobBytes": 8388608,
+        "orphanedBlobBytes": 8388608,
+        "manifestBytes": 92544
+      },
+      "c3": {
+        "databaseBytes": 3502080,
+        "uniqueBlobBytes": 3352968,
+        "orphanedBlobBytes": 3352968,
+        "manifestBytes": 121552
+      },
+      "blobReductionPercent": 60.02950668334961
+    },
+    "frontInsert": {
+      "baseline": {
+        "databaseBytes": 33619968,
+        "uniqueBlobBytes": 33554442,
+        "orphanedBlobBytes": 33554432,
+        "manifestBytes": 5870
+      },
+      "c3": {
+        "databaseBytes": 208896,
+        "uniqueBlobBytes": 197472,
+        "orphanedBlobBytes": 197462,
+        "manifestBytes": 7597
+      },
+      "blobReductionPercent": 99.41148775473602
+    },
+    "final": {
+      "baseline": {
+        "databaseBytes": 75829248,
+        "logicalBytes": 33555851,
+        "fileCount": 4,
+        "chunkReferences": 68,
+        "uniqueBlobCount": 148,
+        "uniqueBlobBytes": 75498891,
+        "reachableBlobBytes": 33555851,
+        "orphanedBlobBytes": 41943040,
+        "manifestCount": 21,
+        "manifestBytes": 104531
+      },
+      "c3": {
+        "databaseBytes": 37629952,
+        "logicalBytes": 33555851,
+        "fileCount": 4,
+        "chunkReferences": 214,
+        "uniqueBlobCount": 231,
+        "uniqueBlobBytes": 37106281,
+        "reachableBlobBytes": 33555851,
+        "orphanedBlobBytes": 3550430,
+        "manifestCount": 22,
+        "manifestBytes": 136858
+      },
+      "databaseReductionPercent": 50.37541187273808
+    }
+  },
+  "raw": {
+    "baseline": {
+      "generatedAt": "2026-08-09T04:43:36.1155056+00:00",
+      "sourceCommit": "76d9e75c5688713b656bce85540d9e0071cece8b",
+      "variant": "baseline",
+      "profile": "volume",
+      "batchId": "volume-20260809043931",
+      "pairId": "volume-20260809043931-10",
+      "trial": 10,
+      "benchmarkSeed": 20260809,
+      "orderIndex": 1,
+      "objectName": "baseline-volume-f492f54244b3",
+      "mount": {
+        "backend": {
+          "kind": "fuse"
+        },
+        "mountPoint": "/tmp/cloudflare-computer-c3-baseline-f492f54244b3/workspace",
+        "port": 63179
+      },
+      "measurement": {
+        "variant": "baseline",
+        "profile": "volume",
+        "fileBytes": 33554432,
+        "checkpoints": 16,
+        "pipeline": "Workspace DO SQLite -> push -> computerd -> FUSE -> command -> pull -> Workspace DO SQLite -> verify",
+        "timing": {
+          "createMs": 1632,
+          "checkpointEditsMs": 5405,
+          "meanCheckpointEditMs": 337.813,
+          "frontInsertMs": 1696,
+          "readMs": 207
+        },
+        "storage": {
+          "empty": {
+            "databaseBytes": 110592,
+            "logicalBytes": 1409,
+            "fileCount": 3,
+            "chunkReferences": 3,
+            "uniqueBlobCount": 3,
+            "uniqueBlobBytes": 1409,
+            "reachableBlobBytes": 1409,
+            "orphanedBlobBytes": 0,
+            "manifestCount": 3,
+            "manifestBytes": 333
+          },
+          "afterCreate": {
+            "databaseBytes": 33710080,
+            "logicalBytes": 33555841,
+            "fileCount": 4,
+            "chunkReferences": 67,
+            "uniqueBlobCount": 67,
+            "uniqueBlobBytes": 33555841,
+            "reachableBlobBytes": 33555841,
+            "orphanedBlobBytes": 0,
+            "manifestCount": 4,
+            "manifestBytes": 6117
+          },
+          "afterEdits": {
+            "databaseBytes": 42209280,
+            "logicalBytes": 33555841,
+            "fileCount": 4,
+            "chunkReferences": 67,
+            "uniqueBlobCount": 83,
+            "uniqueBlobBytes": 41944449,
+            "reachableBlobBytes": 33555841,
+            "orphanedBlobBytes": 8388608,
+            "manifestCount": 20,
+            "manifestBytes": 98661
+          },
+          "afterFrontInsert": {
+            "databaseBytes": 75829248,
+            "logicalBytes": 33555851,
+            "fileCount": 4,
+            "chunkReferences": 68,
+            "uniqueBlobCount": 148,
+            "uniqueBlobBytes": 75498891,
+            "reachableBlobBytes": 33555851,
+            "orphanedBlobBytes": 41943040,
+            "manifestCount": 21,
+            "manifestBytes": 104531
+          }
+        },
+        "verification": {
+          "size": 33554442,
+          "prefix": "PREPEND010"
+        },
+        "operations": {
+          "create": {
+            "command": "node '/tmp/cloudflare-computer-c3-baseline-f492f54244b3/workspace/generate.cjs' '/tmp/cloudflare-computer-c3-baseline-f492f54244b3/workspace/payload.bin' 33554432",
+            "durationMs": 1632
+          },
+          "edits": [
+            {
+              "command": "node '/tmp/cloudflare-computer-c3-baseline-f492f54244b3/workspace/edit.cjs' '/tmp/cloudflare-computer-c3-baseline-f492f54244b3/workspace/payload.bin' 3636423 'E000000001'",
+              "durationMs": 343
+            },
+            {
+              "command": "node '/tmp/cloudflare-computer-c3-baseline-f492f54244b3/workspace/edit.cjs' '/tmp/cloudflare-computer-c3-baseline-f492f54244b3/workspace/payload.bin' 7272846 'E000000002'",
+              "durationMs": 324
+            },
+            {
+              "command": "node '/tmp/cloudflare-computer-c3-baseline-f492f54244b3/workspace/edit.cjs' '/tmp/cloudflare-computer-c3-baseline-f492f54244b3/workspace/payload.bin' 10909269 'E000000003'",
+              "durationMs": 320
+            },
+            {
+              "command": "node '/tmp/cloudflare-computer-c3-baseline-f492f54244b3/workspace/edit.cjs' '/tmp/cloudflare-computer-c3-baseline-f492f54244b3/workspace/payload.bin' 14545692 'E000000004'",
+              "durationMs": 601
+            },
+            {
+              "command": "node '/tmp/cloudflare-computer-c3-baseline-f492f54244b3/workspace/edit.cjs' '/tmp/cloudflare-computer-c3-baseline-f492f54244b3/workspace/payload.bin' 18182115 'E000000005'",
+              "durationMs": 312
+            },
+            {
+              "command": "node '/tmp/cloudflare-computer-c3-baseline-f492f54244b3/workspace/edit.cjs' '/tmp/cloudflare-computer-c3-baseline-f492f54244b3/workspace/payload.bin' 21818538 'E000000006'",
+              "durationMs": 321
+            },
+            {
+              "command": "node '/tmp/cloudflare-computer-c3-baseline-f492f54244b3/workspace/edit.cjs' '/tmp/cloudflare-computer-c3-baseline-f492f54244b3/workspace/payload.bin' 25454961 'E000000007'",
+              "durationMs": 324
+            },
+            {
+              "command": "node '/tmp/cloudflare-computer-c3-baseline-f492f54244b3/workspace/edit.cjs' '/tmp/cloudflare-computer-c3-baseline-f492f54244b3/workspace/payload.bin' 29091384 'E000000008'",
+              "durationMs": 324
+            },
+            {
+              "command": "node '/tmp/cloudflare-computer-c3-baseline-f492f54244b3/workspace/edit.cjs' '/tmp/cloudflare-computer-c3-baseline-f492f54244b3/workspace/payload.bin' 32727807 'E000000009'",
+              "durationMs": 312
+            },
+            {
+              "command": "node '/tmp/cloudflare-computer-c3-baseline-f492f54244b3/workspace/edit.cjs' '/tmp/cloudflare-computer-c3-baseline-f492f54244b3/workspace/payload.bin' 2809808 'E000000010'",
+              "durationMs": 309
+            },
+            {
+              "command": "node '/tmp/cloudflare-computer-c3-baseline-f492f54244b3/workspace/edit.cjs' '/tmp/cloudflare-computer-c3-baseline-f492f54244b3/workspace/payload.bin' 6446231 'E000000011'",
+              "durationMs": 309
+            },
+            {
+              "command": "node '/tmp/cloudflare-computer-c3-baseline-f492f54244b3/workspace/edit.cjs' '/tmp/cloudflare-computer-c3-baseline-f492f54244b3/workspace/payload.bin' 10082654 'E000000012'",
+              "durationMs": 317
+            },
+            {
+              "command": "node '/tmp/cloudflare-computer-c3-baseline-f492f54244b3/workspace/edit.cjs' '/tmp/cloudflare-computer-c3-baseline-f492f54244b3/workspace/payload.bin' 13719077 'E000000013'",
+              "durationMs": 319
+            },
+            {
+              "command": "node '/tmp/cloudflare-computer-c3-baseline-f492f54244b3/workspace/edit.cjs' '/tmp/cloudflare-computer-c3-baseline-f492f54244b3/workspace/payload.bin' 17355500 'E000000014'",
+              "durationMs": 330
+            },
+            {
+              "command": "node '/tmp/cloudflare-computer-c3-baseline-f492f54244b3/workspace/edit.cjs' '/tmp/cloudflare-computer-c3-baseline-f492f54244b3/workspace/payload.bin' 20991923 'E000000015'",
+              "durationMs": 320
+            },
+            {
+              "command": "node '/tmp/cloudflare-computer-c3-baseline-f492f54244b3/workspace/edit.cjs' '/tmp/cloudflare-computer-c3-baseline-f492f54244b3/workspace/payload.bin' 24628346 'E000000016'",
+              "durationMs": 320
+            }
+          ],
+          "frontInsert": {
+            "command": "node '/tmp/cloudflare-computer-c3-baseline-f492f54244b3/workspace/prepend.cjs' '/tmp/cloudflare-computer-c3-baseline-f492f54244b3/workspace/payload.bin' 'PREPEND010'",
+            "durationMs": 1696
+          },
+          "read": {
+            "command": "sha256sum '/tmp/cloudflare-computer-c3-baseline-f492f54244b3/workspace/payload.bin'",
+            "durationMs": 207
+          }
+        }
+      }
+    },
+    "c3": {
+      "generatedAt": "2026-08-09T04:43:21.4850422+00:00",
+      "sourceCommit": "76d9e75c5688713b656bce85540d9e0071cece8b",
+      "variant": "c3",
+      "profile": "volume",
+      "batchId": "volume-20260809043931",
+      "pairId": "volume-20260809043931-10",
+      "trial": 10,
+      "benchmarkSeed": 20260809,
+      "orderIndex": 0,
+      "objectName": "c3-volume-531d00070ff6",
+      "mount": {
+        "backend": {
+          "kind": "fuse"
+        },
+        "mountPoint": "/tmp/cloudflare-computer-c3-c3-531d00070ff6/workspace",
+        "port": 57921
+      },
+      "measurement": {
+        "variant": "c3",
+        "profile": "volume",
+        "fileBytes": 33554432,
+        "checkpoints": 16,
+        "pipeline": "Workspace DO SQLite -> push -> computerd -> FUSE -> command -> pull -> Workspace DO SQLite -> verify",
+        "timing": {
+          "createMs": 2169,
+          "checkpointEditsMs": 1611,
+          "meanCheckpointEditMs": 100.688,
+          "frontInsertMs": 428,
+          "readMs": 151
+        },
+        "storage": {
+          "empty": {
+            "databaseBytes": 110592,
+            "logicalBytes": 1409,
+            "fileCount": 3,
+            "chunkReferences": 3,
+            "uniqueBlobCount": 3,
+            "uniqueBlobBytes": 1409,
+            "reachableBlobBytes": 1409,
+            "orphanedBlobBytes": 0,
+            "manifestCount": 3,
+            "manifestBytes": 111
+          },
+          "afterCreate": {
+            "databaseBytes": 33918976,
+            "logicalBytes": 33555841,
+            "fileCount": 4,
+            "chunkReferences": 214,
+            "uniqueBlobCount": 214,
+            "uniqueBlobBytes": 33555841,
+            "reachableBlobBytes": 33555841,
+            "orphanedBlobBytes": 0,
+            "manifestCount": 5,
+            "manifestBytes": 7709
+          },
+          "afterEdits": {
+            "databaseBytes": 37421056,
+            "logicalBytes": 33555841,
+            "fileCount": 4,
+            "chunkReferences": 214,
+            "uniqueBlobCount": 230,
+            "uniqueBlobBytes": 36908809,
+            "reachableBlobBytes": 33555841,
+            "orphanedBlobBytes": 3352968,
+            "manifestCount": 21,
+            "manifestBytes": 129261
+          },
+          "afterFrontInsert": {
+            "databaseBytes": 37629952,
+            "logicalBytes": 33555851,
+            "fileCount": 4,
+            "chunkReferences": 214,
+            "uniqueBlobCount": 231,
+            "uniqueBlobBytes": 37106281,
+            "reachableBlobBytes": 33555851,
+            "orphanedBlobBytes": 3550430,
+            "manifestCount": 22,
+            "manifestBytes": 136858
+          }
+        },
+        "verification": {
+          "size": 33554442,
+          "prefix": "PREPEND010"
+        },
+        "operations": {
+          "create": {
+            "command": "node '/tmp/cloudflare-computer-c3-c3-531d00070ff6/workspace/generate.cjs' '/tmp/cloudflare-computer-c3-c3-531d00070ff6/workspace/payload.bin' 33554432",
+            "durationMs": 2169
+          },
+          "edits": [
+            {
+              "command": "node '/tmp/cloudflare-computer-c3-c3-531d00070ff6/workspace/edit.cjs' '/tmp/cloudflare-computer-c3-c3-531d00070ff6/workspace/payload.bin' 3636423 'E000000001'",
+              "durationMs": 116
+            },
+            {
+              "command": "node '/tmp/cloudflare-computer-c3-c3-531d00070ff6/workspace/edit.cjs' '/tmp/cloudflare-computer-c3-c3-531d00070ff6/workspace/payload.bin' 7272846 'E000000002'",
+              "durationMs": 107
+            },
+            {
+              "command": "node '/tmp/cloudflare-computer-c3-c3-531d00070ff6/workspace/edit.cjs' '/tmp/cloudflare-computer-c3-c3-531d00070ff6/workspace/payload.bin' 10909269 'E000000003'",
+              "durationMs": 101
+            },
+            {
+              "command": "node '/tmp/cloudflare-computer-c3-c3-531d00070ff6/workspace/edit.cjs' '/tmp/cloudflare-computer-c3-c3-531d00070ff6/workspace/payload.bin' 14545692 'E000000004'",
+              "durationMs": 97
+            },
+            {
+              "command": "node '/tmp/cloudflare-computer-c3-c3-531d00070ff6/workspace/edit.cjs' '/tmp/cloudflare-computer-c3-c3-531d00070ff6/workspace/payload.bin' 18182115 'E000000005'",
+              "durationMs": 100
+            },
+            {
+              "command": "node '/tmp/cloudflare-computer-c3-c3-531d00070ff6/workspace/edit.cjs' '/tmp/cloudflare-computer-c3-c3-531d00070ff6/workspace/payload.bin' 21818538 'E000000006'",
+              "durationMs": 96
+            },
+            {
+              "command": "node '/tmp/cloudflare-computer-c3-c3-531d00070ff6/workspace/edit.cjs' '/tmp/cloudflare-computer-c3-c3-531d00070ff6/workspace/payload.bin' 25454961 'E000000007'",
+              "durationMs": 100
+            },
+            {
+              "command": "node '/tmp/cloudflare-computer-c3-c3-531d00070ff6/workspace/edit.cjs' '/tmp/cloudflare-computer-c3-c3-531d00070ff6/workspace/payload.bin' 29091384 'E000000008'",
+              "durationMs": 100
+            },
+            {
+              "command": "node '/tmp/cloudflare-computer-c3-c3-531d00070ff6/workspace/edit.cjs' '/tmp/cloudflare-computer-c3-c3-531d00070ff6/workspace/payload.bin' 32727807 'E000000009'",
+              "durationMs": 96
+            },
+            {
+              "command": "node '/tmp/cloudflare-computer-c3-c3-531d00070ff6/workspace/edit.cjs' '/tmp/cloudflare-computer-c3-c3-531d00070ff6/workspace/payload.bin' 2809808 'E000000010'",
+              "durationMs": 104
+            },
+            {
+              "command": "node '/tmp/cloudflare-computer-c3-c3-531d00070ff6/workspace/edit.cjs' '/tmp/cloudflare-computer-c3-c3-531d00070ff6/workspace/payload.bin' 6446231 'E000000011'",
+              "durationMs": 102
+            },
+            {
+              "command": "node '/tmp/cloudflare-computer-c3-c3-531d00070ff6/workspace/edit.cjs' '/tmp/cloudflare-computer-c3-c3-531d00070ff6/workspace/payload.bin' 10082654 'E000000012'",
+              "durationMs": 125
+            },
+            {
+              "command": "node '/tmp/cloudflare-computer-c3-c3-531d00070ff6/workspace/edit.cjs' '/tmp/cloudflare-computer-c3-c3-531d00070ff6/workspace/payload.bin' 13719077 'E000000013'",
+              "durationMs": 94
+            },
+            {
+              "command": "node '/tmp/cloudflare-computer-c3-c3-531d00070ff6/workspace/edit.cjs' '/tmp/cloudflare-computer-c3-c3-531d00070ff6/workspace/payload.bin' 17355500 'E000000014'",
+              "durationMs": 88
+            },
+            {
+              "command": "node '/tmp/cloudflare-computer-c3-c3-531d00070ff6/workspace/edit.cjs' '/tmp/cloudflare-computer-c3-c3-531d00070ff6/workspace/payload.bin' 20991923 'E000000015'",
+              "durationMs": 90
+            },
+            {
+              "command": "node '/tmp/cloudflare-computer-c3-c3-531d00070ff6/workspace/edit.cjs' '/tmp/cloudflare-computer-c3-c3-531d00070ff6/workspace/payload.bin' 24628346 'E000000016'",
+              "durationMs": 95
+            }
+          ],
+          "frontInsert": {
+            "command": "node '/tmp/cloudflare-computer-c3-c3-531d00070ff6/workspace/prepend.cjs' '/tmp/cloudflare-computer-c3-c3-531d00070ff6/workspace/payload.bin' 'PREPEND010'",
+            "durationMs": 428
+          },
+          "read": {
+            "command": "sha256sum '/tmp/cloudflare-computer-c3-c3-531d00070ff6/workspace/payload.bin'",
+            "durationMs": 151
+          }
+        }
+      }
+    }
+  }
+}

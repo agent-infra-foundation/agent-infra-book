@@ -1,0 +1,242 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-08-09T05:05:43.001Z",
+  "batchId": "branches-20260809043752",
+  "profile": "branches",
+  "benchmarkLayer": "full Computer E2E (custom branch RPC adapter)",
+  "pairCount": 10,
+  "randomizationSeed": 20260809,
+  "quartileMethod": "linear interpolation at (n - 1) * q",
+  "metrics": {
+    "pushMs": {
+      "baseline": {
+        "median": 192.5,
+        "q1": 192,
+        "q3": 196.75,
+        "min": 183,
+        "max": 207
+      },
+      "c3": {
+        "median": 187.5,
+        "q1": 184,
+        "q3": 188.75,
+        "min": 180,
+        "max": 197
+      }
+    },
+    "shellMs": {
+      "baseline": {
+        "median": 30,
+        "q1": 29.25,
+        "q3": 31,
+        "min": 29,
+        "max": 32
+      },
+      "c3": {
+        "median": 35,
+        "q1": 34,
+        "q3": 36,
+        "min": 33,
+        "max": 38
+      }
+    },
+    "pullMs": {
+      "baseline": {
+        "median": 95,
+        "q1": 89.75,
+        "q3": 97.75,
+        "min": 88,
+        "max": 106
+      },
+      "c3": {
+        "median": 81.5,
+        "q1": 79.25,
+        "q3": 87.75,
+        "min": 76,
+        "max": 90
+      }
+    },
+    "publishMs": {
+      "baseline": {
+        "median": 1,
+        "q1": 0,
+        "q3": 1,
+        "min": 0,
+        "max": 1
+      },
+      "c3": {
+        "median": 6,
+        "q1": 6,
+        "q3": 6,
+        "min": 5,
+        "max": 6
+      }
+    },
+    "totalMs": {
+      "baseline": {
+        "median": 323,
+        "q1": 317.25,
+        "q3": 327.5,
+        "min": 306,
+        "max": 336
+      },
+      "c3": {
+        "median": 316.5,
+        "q1": 310.25,
+        "q3": 319.75,
+        "min": 298,
+        "max": 320
+      }
+    },
+    "privateCowPagePayloadBytes": {
+      "baseline": {
+        "median": 0,
+        "q1": 0,
+        "q3": 0,
+        "min": 0,
+        "max": 0
+      },
+      "c3": {
+        "median": 8192,
+        "q1": 8192,
+        "q3": 8192,
+        "min": 8192,
+        "max": 8192
+      }
+    },
+    "branchExclusivePayloadBytes": {
+      "baseline": {
+        "median": 1049254,
+        "q1": 1049254,
+        "q3": 1049254,
+        "min": 1049254,
+        "max": 1049254
+      },
+      "c3": {
+        "median": 8374,
+        "q1": 8374,
+        "q3": 8374,
+        "min": 8374,
+        "max": 8374
+      }
+    },
+    "branchDatabaseGrowthBytes": {
+      "baseline": {
+        "median": 1056768,
+        "q1": 1056768,
+        "q3": 1056768,
+        "min": 1056768,
+        "max": 1056768
+      },
+      "c3": {
+        "median": 8192,
+        "q1": 8192,
+        "q3": 8192,
+        "min": 8192,
+        "max": 8192
+      }
+    }
+  },
+  "pairs": [
+    {
+      "pairId": "branches-20260809043752-01",
+      "trial": 1,
+      "executionOrder": [
+        "baseline",
+        "c3"
+      ],
+      "baselineObject": "baseline-branches-41a165ad3a16",
+      "c3Object": "c3-branches-17f9cc65efa3"
+    },
+    {
+      "pairId": "branches-20260809043752-02",
+      "trial": 2,
+      "executionOrder": [
+        "baseline",
+        "c3"
+      ],
+      "baselineObject": "baseline-branches-51f23c19d729",
+      "c3Object": "c3-branches-c38b1f49b5bd"
+    },
+    {
+      "pairId": "branches-20260809043752-03",
+      "trial": 3,
+      "executionOrder": [
+        "c3",
+        "baseline"
+      ],
+      "baselineObject": "baseline-branches-e3863838ae75",
+      "c3Object": "c3-branches-c63e6f36aab5"
+    },
+    {
+      "pairId": "branches-20260809043752-04",
+      "trial": 4,
+      "executionOrder": [
+        "baseline",
+        "c3"
+      ],
+      "baselineObject": "baseline-branches-44b40ffa6bf8",
+      "c3Object": "c3-branches-9197db05d37a"
+    },
+    {
+      "pairId": "branches-20260809043752-05",
+      "trial": 5,
+      "executionOrder": [
+        "c3",
+        "baseline"
+      ],
+      "baselineObject": "baseline-branches-2540aa13f112",
+      "c3Object": "c3-branches-9b1d84246f47"
+    },
+    {
+      "pairId": "branches-20260809043752-06",
+      "trial": 6,
+      "executionOrder": [
+        "baseline",
+        "c3"
+      ],
+      "baselineObject": "baseline-branches-7cf53e4b15be",
+      "c3Object": "c3-branches-1a928f5b6457"
+    },
+    {
+      "pairId": "branches-20260809043752-07",
+      "trial": 7,
+      "executionOrder": [
+        "baseline",
+        "c3"
+      ],
+      "baselineObject": "baseline-branches-364e88857fb4",
+      "c3Object": "c3-branches-58a65f9dfc94"
+    },
+    {
+      "pairId": "branches-20260809043752-08",
+      "trial": 8,
+      "executionOrder": [
+        "baseline",
+        "c3"
+      ],
+      "baselineObject": "baseline-branches-b36998dcdd71",
+      "c3Object": "c3-branches-398bcd2084bd"
+    },
+    {
+      "pairId": "branches-20260809043752-09",
+      "trial": 9,
+      "executionOrder": [
+        "baseline",
+        "c3"
+      ],
+      "baselineObject": "baseline-branches-81bc86d08bd0",
+      "c3Object": "c3-branches-a1ac8f3800d8"
+    },
+    {
+      "pairId": "branches-20260809043752-10",
+      "trial": 10,
+      "executionOrder": [
+        "c3",
+        "baseline"
+      ],
+      "baselineObject": "baseline-branches-7cfb7f411bf4",
+      "c3Object": "c3-branches-18da2bfb5edb"
+    }
+  ]
+}
