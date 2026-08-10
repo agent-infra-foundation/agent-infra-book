@@ -55,8 +55,8 @@
     {
       "path": "src/engines/cas-cdc-cow.ts",
       "purpose": "opt-in coalesced and adaptive page publication, scan budgets, and metrics; default behavior unchanged",
-      "sha256": "6cc242c90b225cf913d091dcd717aba3cbb096691ce577c8c23dbe1f3aea39b2",
-      "bytes": 75628
+      "sha256": "259e87727c2c491f61f8fa7e73e49c9bea948d180ee3b3dfd99d6c20484ba70d",
+      "bytes": 87908
     },
     {
       "path": "src/tests/experimental-multi-window.test.ts",
@@ -91,8 +91,8 @@
     {
       "path": "experiments/C3_ADAPTIVE_CDC_ROUTER_V04.md",
       "purpose": "frozen design",
-      "sha256": "3a3bacaf93ef5216786701748cc8d2a1504d1763f95e718a712c351e08fecb31",
-      "bytes": 5322
+      "sha256": "89390ee56326c845b921197b5ad69d1038a046024e5bc213fe7b06b9b3189102",
+      "bytes": 5312
     },
     {
       "path": "experiments/C3_ADAPTIVE_CDC_ROUTER_V04_RESULTS.md",

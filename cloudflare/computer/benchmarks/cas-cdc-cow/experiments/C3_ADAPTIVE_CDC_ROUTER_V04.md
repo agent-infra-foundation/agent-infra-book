@@ -10,7 +10,7 @@ Can a deterministic page-layout planner keep the useful part of multi-window
 CDC while preventing the 16/64-range window explosion observed in v0.3?
 
 This is an engineering experiment about the author's CAS + CDC + COW design.
-It does not test a three-dimensional or Kakeya claim and does not change the
+It does not test a three-dimensional claim and does not change the
 production/default route. Publication is a separate review step.
 
 ## Frozen planner

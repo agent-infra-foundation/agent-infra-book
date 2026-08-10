@@ -1,0 +1,161 @@
+{
+  "schemaVersion": 1,
+  "experiment": "c3-no-cache-sparse-transfer-and-range-recipe-recovery",
+  "date": "2026-08-10",
+  "author": "Wang Runyuan",
+  "repositoryBaseRevision": "e745e1da8a6ee3e97fa794ce36a5d504d74bdeb3",
+  "recoveryNotice": "fresh rerun after the unpushed local workspace was pruned; not the lost original bytes",
+  "formalExecutions": {
+    "sparseTransfer": 288,
+    "rangeRecipe": 270,
+    "total": 558
+  },
+  "hypotheses": {
+    "sparseTransfer": {
+      "H1_correctness": true,
+      "H2_readOnly": true,
+      "H3_noCompleteMaterialization": true,
+      "H4_boundedIdentityWork": true,
+      "H5_largeFileWorkingSet": true,
+      "H6_honestColdPayload": true,
+      "H7_structuralReuse": true,
+      "H8_replicatedLocalDirection": true
+    },
+    "rangeRecipe": {
+      "H1_correctness": true,
+      "H2_readOnly": true,
+      "H3_noCompleteMaterialization": true,
+      "H4_sparsePayload": true,
+      "H5_quarterPayload": true,
+      "H6_fullAccessOverhead": true,
+      "H7_boundedIdentityWork": true,
+      "H8_boundedWorkingSet": true,
+      "H9_rangeSpecificity": true,
+      "H10_actualCasRangeReads": true,
+      "H11_replicatedSparseLocalDirection": true
+    }
+  },
+  "rawSha256": {
+    "results/c3-sparse-transfer-recovery-formal-run-1.json": "fbe703ca0f212a521cd112d7d1c7bab88422936b8520eb423248928a5581bfe9",
+    "results/c3-sparse-transfer-recovery-formal-run-2.json": "1eb49e9fa1c48f3f01b0917b68fefdf21e4c5876f7e2b9aa5f79d2dbd35efd46",
+    "results/c3-range-recipe-recovery-formal-run-1.json": "6f3104beae91687911832d9c458a265183b031b138a3d5008a8db85f250520d4",
+    "results/c3-range-recipe-recovery-formal-run-2.json": "c379b07726f0c50749da76b33bbd4c91f590b207df520425941f8715e854b0fa"
+  },
+  "inventory": [
+    {
+      "path": "package.json",
+      "bytes": 1798,
+      "sha256": "d58ec9b88e625db863e799976f13a3f59a1696a62f78704d38837f900f646a17"
+    },
+    {
+      "path": "src/engines/cas-cdc-cow.ts",
+      "bytes": 87908,
+      "sha256": "259e87727c2c491f61f8fa7e73e49c9bea948d180ee3b3dfd99d6c20484ba70d"
+    },
+    {
+      "path": "src/tests/sparse-transfer.test.ts",
+      "bytes": 4524,
+      "sha256": "e46b6d907fadc663bffcd3afac14c5c879a5c206662899dc01acb603d0f93d4e"
+    },
+    {
+      "path": "src/bench/sparse-transfer.bench.ts",
+      "bytes": 9000,
+      "sha256": "aa563f8f4b98a6c70b5fd783551d1898066db2bc959ded26389278b421a24002"
+    },
+    {
+      "path": "src/bench/range-recipe.bench.ts",
+      "bytes": 11162,
+      "sha256": "e7cfa60c4440f69d916847618d5eac999c5b0753e382fca3b9c3f612287517a3"
+    },
+    {
+      "path": "scripts/run-sparse-transfer.mjs",
+      "bytes": 2446,
+      "sha256": "1a8428e082937a14744db51971bd2368ab451c5389f3cb4ee2f7eaca596b4f93"
+    },
+    {
+      "path": "scripts/run-range-recipe.mjs",
+      "bytes": 2425,
+      "sha256": "ffeda6f901b871ab8856a4158bd44646f43610dcfb14f07a68de9aeb77692ef8"
+    },
+    {
+      "path": "scripts/analyze-sparse-transfer-evidence.mjs",
+      "bytes": 23529,
+      "sha256": "9383c47fa931b8ae763e63185bdc6a8ccb44ba8dc2a373ab6022b5f17c177e2c"
+    },
+    {
+      "path": "scripts/verify-sparse-transfer-evidence.mjs",
+      "bytes": 4020,
+      "sha256": "deccbd4236032e59a69eac03d8c70e0ec8e289cb9655264f4be3924621e961f3"
+    },
+    {
+      "path": "experiments/C3_NO_CACHE_SPARSE_TRANSFER_V05_RECOVERY.md",
+      "bytes": 5272,
+      "sha256": "fca95ce535a3d6da55a0a72575754be6fce883cfda385430955b0c0d78e09d82"
+    },
+    {
+      "path": "experiments/C3_RANGE_RECIPE_V06R_RECOVERY.md",
+      "bytes": 4629,
+      "sha256": "e5ed2c7632e86064202b27b3ac4e1af58ac4c64a4319c8eaa03066c54063503f"
+    },
+    {
+      "path": "experiments/C3_NO_CACHE_SPARSE_TRANSFER_V05_RECOVERY_RESULTS.md",
+      "bytes": 2418,
+      "sha256": "31a4ccf58d92ebf8421c5c5318988f98ad6929a194a67494de44e1b4fdbb70c1"
+    },
+    {
+      "path": "experiments/C3_NO_CACHE_SPARSE_TRANSFER_V05_RECOVERY_RESULTS_CN.md",
+      "bytes": 2081,
+      "sha256": "67fdea94ab7068842b2579baf208f4700cc2c943a291bcf00a827e91917f68b9"
+    },
+    {
+      "path": "experiments/C3_RANGE_RECIPE_V06R_RECOVERY_RESULTS.md",
+      "bytes": 2826,
+      "sha256": "48998d39e6abcd0d76c2ac591ec8ce985f71c4adf919637f4cb497ae839e1a6e"
+    },
+    {
+      "path": "experiments/C3_RANGE_RECIPE_V06R_RECOVERY_RESULTS_CN.md",
+      "bytes": 2552,
+      "sha256": "6a5e9c87ec7098a2316d1dc85c1d7537995dde1c6c9366df3200044f9fc9f387"
+    },
+    {
+      "path": "results/c3-sparse-transfer-recovery-formal-run-1.json",
+      "bytes": 88519,
+      "sha256": "fbe703ca0f212a521cd112d7d1c7bab88422936b8520eb423248928a5581bfe9"
+    },
+    {
+      "path": "results/c3-sparse-transfer-recovery-formal-run-2.json",
+      "bytes": 88521,
+      "sha256": "1eb49e9fa1c48f3f01b0917b68fefdf21e4c5876f7e2b9aa5f79d2dbd35efd46"
+    },
+    {
+      "path": "results/c3-range-recipe-recovery-formal-run-1.json",
+      "bytes": 90726,
+      "sha256": "6f3104beae91687911832d9c458a265183b031b138a3d5008a8db85f250520d4"
+    },
+    {
+      "path": "results/c3-range-recipe-recovery-formal-run-2.json",
+      "bytes": 90736,
+      "sha256": "c379b07726f0c50749da76b33bbd4c91f590b207df520425941f8715e854b0fa"
+    },
+    {
+      "path": "results/c3-sparse-transfer-recovery-analysis.json",
+      "bytes": 3770,
+      "sha256": "57d02481412fab96ff7dca3aa1b1c1c87f54e7ed893d4407d78ce9cfd3d023ec"
+    },
+    {
+      "path": "results/c3-range-recipe-recovery-analysis.json",
+      "bytes": 4818,
+      "sha256": "0fe7ee24eef2b7635283ca22bb08cf0b9806272cd0c4f38d568b84ae9ca4245f"
+    },
+    {
+      "path": "results/c3-sparse-transfer-recovery-records.csv",
+      "bytes": 36685,
+      "sha256": "348239789613dc17adb9cb4cba8a9a9c0167d6cbadcbb0da6965a96e1f71fa07"
+    },
+    {
+      "path": "results/c3-range-recipe-recovery-records.csv",
+      "bytes": 34599,
+      "sha256": "32d36def2fbb3585fe66d64141a0b622965196034a0f2f16687e5171e26e4c88"
+    }
+  ]
+}

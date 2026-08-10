@@ -1,0 +1,2630 @@
+{
+  "schemaVersion": 1,
+  "experiment": "c3-no-cache-range-recipe-v0.6R-recovery-rerun",
+  "date": "2026-08-10",
+  "author": "Wang Runyuan",
+  "repositoryBaseRevision": "e745e1da8a6ee3e97fa794ce36a5d504d74bdeb3",
+  "recoveryNotice": "fresh rerun after the unpushed local workspace was pruned; not the lost original bytes",
+  "scope": "read-only engine-layer prototype; consumer-requested ranges; no persistent receiver cache",
+  "configuration": {
+    "scenarios": 15,
+    "routes": [
+      "full-materialization",
+      "full-recipe-stream",
+      "range-recipe"
+    ],
+    "repetitions": 3,
+    "formalExecutions": 135,
+    "warmupExecutions": 3,
+    "workloads": [
+      {
+        "id": "1m-clustered-1-page",
+        "fileBytes": 1048576,
+        "dirtyPages": 1,
+        "distribution": "clustered"
+      },
+      {
+        "id": "4m-spread-4-pages",
+        "fileBytes": 4194304,
+        "dirtyPages": 4,
+        "distribution": "spread"
+      },
+      {
+        "id": "16m-spread-16-pages",
+        "fileBytes": 16777216,
+        "dirtyPages": 16,
+        "distribution": "spread"
+      }
+    ],
+    "accessShapes": [
+      "first-4k",
+      "dirty-neighborhood-8k",
+      "three-spread-4k",
+      "quarter-sequential",
+      "full-sequential"
+    ],
+    "sparseAccessShapes": [
+      "first-4k",
+      "dirty-neighborhood-8k",
+      "three-spread-4k"
+    ],
+    "routeOrder": "three-repeat cyclic rotation; each route occupies every order position",
+    "receiverCache": "none"
+  },
+  "correctness": {
+    "formalPassed": 135,
+    "storageUnchanged": 135
+  },
+  "results": [
+    {
+      "id": "1m-clustered-1-page",
+      "fileBytes": 1048576,
+      "dirtyPages": 1,
+      "distribution": "clustered",
+      "accessShape": "first-4k",
+      "routes": {
+        "full-materialization": {
+          "localMs": 8,
+          "requestedBytes": 4096,
+          "payloadBytes": 1048576,
+          "recipeMetadataBytes": 0,
+          "planningHashedBytes": 1048576,
+          "peakAlgorithmicPayloadBytes": 1048576,
+          "completeFileMaterializations": 1,
+          "objectRangeReadCount": 0,
+          "literalReadCount": 0,
+          "correctness": true,
+          "storageUnchanged": true,
+          "samples": [
+            {
+              "localMs": 18,
+              "requestedBytes": 4096,
+              "payloadBytes": 1048576,
+              "recipeMetadataBytes": 0,
+              "planningHashedBytes": 1048576,
+              "peakAlgorithmicPayloadBytes": 1048576,
+              "completeFileMaterializations": 1,
+              "objectRangeReadCount": 0,
+              "literalReadCount": 0,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 7,
+              "requestedBytes": 4096,
+              "payloadBytes": 1048576,
+              "recipeMetadataBytes": 0,
+              "planningHashedBytes": 1048576,
+              "peakAlgorithmicPayloadBytes": 1048576,
+              "completeFileMaterializations": 1,
+              "objectRangeReadCount": 0,
+              "literalReadCount": 0,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 8,
+              "requestedBytes": 4096,
+              "payloadBytes": 1048576,
+              "recipeMetadataBytes": 0,
+              "planningHashedBytes": 1048576,
+              "peakAlgorithmicPayloadBytes": 1048576,
+              "completeFileMaterializations": 1,
+              "objectRangeReadCount": 0,
+              "literalReadCount": 0,
+              "correctness": true,
+              "storageUnchanged": true
+            }
+          ]
+        },
+        "full-recipe-stream": {
+          "localMs": 8,
+          "requestedBytes": 4096,
+          "payloadBytes": 1049948,
+          "recipeMetadataBytes": 1372,
+          "planningHashedBytes": 4096,
+          "peakAlgorithmicPayloadBytes": 220482,
+          "completeFileMaterializations": 0,
+          "objectRangeReadCount": 8,
+          "literalReadCount": 1,
+          "correctness": true,
+          "storageUnchanged": true,
+          "samples": [
+            {
+              "localMs": 8,
+              "requestedBytes": 4096,
+              "payloadBytes": 1049948,
+              "recipeMetadataBytes": 1372,
+              "planningHashedBytes": 4096,
+              "peakAlgorithmicPayloadBytes": 220482,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 8,
+              "literalReadCount": 1,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 8,
+              "requestedBytes": 4096,
+              "payloadBytes": 1049948,
+              "recipeMetadataBytes": 1372,
+              "planningHashedBytes": 4096,
+              "peakAlgorithmicPayloadBytes": 220482,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 8,
+              "literalReadCount": 1,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 9,
+              "requestedBytes": 4096,
+              "payloadBytes": 1049948,
+              "recipeMetadataBytes": 1372,
+              "planningHashedBytes": 4096,
+              "peakAlgorithmicPayloadBytes": 220482,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 8,
+              "literalReadCount": 1,
+              "correctness": true,
+              "storageUnchanged": true
+            }
+          ]
+        },
+        "range-recipe": {
+          "localMs": 1,
+          "requestedBytes": 4096,
+          "payloadBytes": 5468,
+          "recipeMetadataBytes": 1372,
+          "planningHashedBytes": 4096,
+          "peakAlgorithmicPayloadBytes": 5468,
+          "completeFileMaterializations": 0,
+          "objectRangeReadCount": 1,
+          "literalReadCount": 0,
+          "correctness": true,
+          "storageUnchanged": true,
+          "samples": [
+            {
+              "localMs": 0,
+              "requestedBytes": 4096,
+              "payloadBytes": 5468,
+              "recipeMetadataBytes": 1372,
+              "planningHashedBytes": 4096,
+              "peakAlgorithmicPayloadBytes": 5468,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 1,
+              "literalReadCount": 0,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 1,
+              "requestedBytes": 4096,
+              "payloadBytes": 5468,
+              "recipeMetadataBytes": 1372,
+              "planningHashedBytes": 4096,
+              "peakAlgorithmicPayloadBytes": 5468,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 1,
+              "literalReadCount": 0,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 1,
+              "requestedBytes": 4096,
+              "payloadBytes": 5468,
+              "recipeMetadataBytes": 1372,
+              "planningHashedBytes": 4096,
+              "peakAlgorithmicPayloadBytes": 5468,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 1,
+              "literalReadCount": 0,
+              "correctness": true,
+              "storageUnchanged": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "1m-clustered-1-page",
+      "fileBytes": 1048576,
+      "dirtyPages": 1,
+      "distribution": "clustered",
+      "accessShape": "dirty-neighborhood-8k",
+      "routes": {
+        "full-materialization": {
+          "localMs": 2,
+          "requestedBytes": 8192,
+          "payloadBytes": 1048576,
+          "recipeMetadataBytes": 0,
+          "planningHashedBytes": 1048576,
+          "peakAlgorithmicPayloadBytes": 1048576,
+          "completeFileMaterializations": 1,
+          "objectRangeReadCount": 0,
+          "literalReadCount": 0,
+          "correctness": true,
+          "storageUnchanged": true,
+          "samples": [
+            {
+              "localMs": 7,
+              "requestedBytes": 8192,
+              "payloadBytes": 1048576,
+              "recipeMetadataBytes": 0,
+              "planningHashedBytes": 1048576,
+              "peakAlgorithmicPayloadBytes": 1048576,
+              "completeFileMaterializations": 1,
+              "objectRangeReadCount": 0,
+              "literalReadCount": 0,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 1,
+              "requestedBytes": 8192,
+              "payloadBytes": 1048576,
+              "recipeMetadataBytes": 0,
+              "planningHashedBytes": 1048576,
+              "peakAlgorithmicPayloadBytes": 1048576,
+              "completeFileMaterializations": 1,
+              "objectRangeReadCount": 0,
+              "literalReadCount": 0,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 2,
+              "requestedBytes": 8192,
+              "payloadBytes": 1048576,
+              "recipeMetadataBytes": 0,
+              "planningHashedBytes": 1048576,
+              "peakAlgorithmicPayloadBytes": 1048576,
+              "completeFileMaterializations": 1,
+              "objectRangeReadCount": 0,
+              "literalReadCount": 0,
+              "correctness": true,
+              "storageUnchanged": true
+            }
+          ]
+        },
+        "full-recipe-stream": {
+          "localMs": 3,
+          "requestedBytes": 8192,
+          "payloadBytes": 1049948,
+          "recipeMetadataBytes": 1372,
+          "planningHashedBytes": 4096,
+          "peakAlgorithmicPayloadBytes": 220482,
+          "completeFileMaterializations": 0,
+          "objectRangeReadCount": 8,
+          "literalReadCount": 1,
+          "correctness": true,
+          "storageUnchanged": true,
+          "samples": [
+            {
+              "localMs": 8,
+              "requestedBytes": 8192,
+              "payloadBytes": 1049948,
+              "recipeMetadataBytes": 1372,
+              "planningHashedBytes": 4096,
+              "peakAlgorithmicPayloadBytes": 220482,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 8,
+              "literalReadCount": 1,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 2,
+              "requestedBytes": 8192,
+              "payloadBytes": 1049948,
+              "recipeMetadataBytes": 1372,
+              "planningHashedBytes": 4096,
+              "peakAlgorithmicPayloadBytes": 220482,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 8,
+              "literalReadCount": 1,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 3,
+              "requestedBytes": 8192,
+              "payloadBytes": 1049948,
+              "recipeMetadataBytes": 1372,
+              "planningHashedBytes": 4096,
+              "peakAlgorithmicPayloadBytes": 220482,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 8,
+              "literalReadCount": 1,
+              "correctness": true,
+              "storageUnchanged": true
+            }
+          ]
+        },
+        "range-recipe": {
+          "localMs": 1,
+          "requestedBytes": 8192,
+          "payloadBytes": 9564,
+          "recipeMetadataBytes": 1372,
+          "planningHashedBytes": 4096,
+          "peakAlgorithmicPayloadBytes": 5468,
+          "completeFileMaterializations": 0,
+          "objectRangeReadCount": 1,
+          "literalReadCount": 1,
+          "correctness": true,
+          "storageUnchanged": true,
+          "samples": [
+            {
+              "localMs": 1,
+              "requestedBytes": 8192,
+              "payloadBytes": 9564,
+              "recipeMetadataBytes": 1372,
+              "planningHashedBytes": 4096,
+              "peakAlgorithmicPayloadBytes": 5468,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 1,
+              "literalReadCount": 1,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 1,
+              "requestedBytes": 8192,
+              "payloadBytes": 9564,
+              "recipeMetadataBytes": 1372,
+              "planningHashedBytes": 4096,
+              "peakAlgorithmicPayloadBytes": 5468,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 1,
+              "literalReadCount": 1,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 0,
+              "requestedBytes": 8192,
+              "payloadBytes": 9564,
+              "recipeMetadataBytes": 1372,
+              "planningHashedBytes": 4096,
+              "peakAlgorithmicPayloadBytes": 5468,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 1,
+              "literalReadCount": 1,
+              "correctness": true,
+              "storageUnchanged": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "1m-clustered-1-page",
+      "fileBytes": 1048576,
+      "dirtyPages": 1,
+      "distribution": "clustered",
+      "accessShape": "three-spread-4k",
+      "routes": {
+        "full-materialization": {
+          "localMs": 7,
+          "requestedBytes": 12288,
+          "payloadBytes": 1048576,
+          "recipeMetadataBytes": 0,
+          "planningHashedBytes": 1048576,
+          "peakAlgorithmicPayloadBytes": 1048576,
+          "completeFileMaterializations": 1,
+          "objectRangeReadCount": 0,
+          "literalReadCount": 0,
+          "correctness": true,
+          "storageUnchanged": true,
+          "samples": [
+            {
+              "localMs": 17,
+              "requestedBytes": 12288,
+              "payloadBytes": 1048576,
+              "recipeMetadataBytes": 0,
+              "planningHashedBytes": 1048576,
+              "peakAlgorithmicPayloadBytes": 1048576,
+              "completeFileMaterializations": 1,
+              "objectRangeReadCount": 0,
+              "literalReadCount": 0,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 3,
+              "requestedBytes": 12288,
+              "payloadBytes": 1048576,
+              "recipeMetadataBytes": 0,
+              "planningHashedBytes": 1048576,
+              "peakAlgorithmicPayloadBytes": 1048576,
+              "completeFileMaterializations": 1,
+              "objectRangeReadCount": 0,
+              "literalReadCount": 0,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 7,
+              "requestedBytes": 12288,
+              "payloadBytes": 1048576,
+              "recipeMetadataBytes": 0,
+              "planningHashedBytes": 1048576,
+              "peakAlgorithmicPayloadBytes": 1048576,
+              "completeFileMaterializations": 1,
+              "objectRangeReadCount": 0,
+              "literalReadCount": 0,
+              "correctness": true,
+              "storageUnchanged": true
+            }
+          ]
+        },
+        "full-recipe-stream": {
+          "localMs": 2,
+          "requestedBytes": 12288,
+          "payloadBytes": 1049948,
+          "recipeMetadataBytes": 1372,
+          "planningHashedBytes": 4096,
+          "peakAlgorithmicPayloadBytes": 220482,
+          "completeFileMaterializations": 0,
+          "objectRangeReadCount": 8,
+          "literalReadCount": 1,
+          "correctness": true,
+          "storageUnchanged": true,
+          "samples": [
+            {
+              "localMs": 2,
+              "requestedBytes": 12288,
+              "payloadBytes": 1049948,
+              "recipeMetadataBytes": 1372,
+              "planningHashedBytes": 4096,
+              "peakAlgorithmicPayloadBytes": 220482,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 8,
+              "literalReadCount": 1,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 1,
+              "requestedBytes": 12288,
+              "payloadBytes": 1049948,
+              "recipeMetadataBytes": 1372,
+              "planningHashedBytes": 4096,
+              "peakAlgorithmicPayloadBytes": 220482,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 8,
+              "literalReadCount": 1,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 7,
+              "requestedBytes": 12288,
+              "payloadBytes": 1049948,
+              "recipeMetadataBytes": 1372,
+              "planningHashedBytes": 4096,
+              "peakAlgorithmicPayloadBytes": 220482,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 8,
+              "literalReadCount": 1,
+              "correctness": true,
+              "storageUnchanged": true
+            }
+          ]
+        },
+        "range-recipe": {
+          "localMs": 0,
+          "requestedBytes": 12288,
+          "payloadBytes": 13660,
+          "recipeMetadataBytes": 1372,
+          "planningHashedBytes": 4096,
+          "peakAlgorithmicPayloadBytes": 5468,
+          "completeFileMaterializations": 0,
+          "objectRangeReadCount": 3,
+          "literalReadCount": 0,
+          "correctness": true,
+          "storageUnchanged": true,
+          "samples": [
+            {
+              "localMs": 0,
+              "requestedBytes": 12288,
+              "payloadBytes": 13660,
+              "recipeMetadataBytes": 1372,
+              "planningHashedBytes": 4096,
+              "peakAlgorithmicPayloadBytes": 5468,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 3,
+              "literalReadCount": 0,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 0,
+              "requestedBytes": 12288,
+              "payloadBytes": 13660,
+              "recipeMetadataBytes": 1372,
+              "planningHashedBytes": 4096,
+              "peakAlgorithmicPayloadBytes": 5468,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 3,
+              "literalReadCount": 0,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 0,
+              "requestedBytes": 12288,
+              "payloadBytes": 13660,
+              "recipeMetadataBytes": 1372,
+              "planningHashedBytes": 4096,
+              "peakAlgorithmicPayloadBytes": 5468,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 3,
+              "literalReadCount": 0,
+              "correctness": true,
+              "storageUnchanged": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "1m-clustered-1-page",
+      "fileBytes": 1048576,
+      "dirtyPages": 1,
+      "distribution": "clustered",
+      "accessShape": "quarter-sequential",
+      "routes": {
+        "full-materialization": {
+          "localMs": 2,
+          "requestedBytes": 262144,
+          "payloadBytes": 1048576,
+          "recipeMetadataBytes": 0,
+          "planningHashedBytes": 1048576,
+          "peakAlgorithmicPayloadBytes": 1048576,
+          "completeFileMaterializations": 1,
+          "objectRangeReadCount": 0,
+          "literalReadCount": 0,
+          "correctness": true,
+          "storageUnchanged": true,
+          "samples": [
+            {
+              "localMs": 7,
+              "requestedBytes": 262144,
+              "payloadBytes": 1048576,
+              "recipeMetadataBytes": 0,
+              "planningHashedBytes": 1048576,
+              "peakAlgorithmicPayloadBytes": 1048576,
+              "completeFileMaterializations": 1,
+              "objectRangeReadCount": 0,
+              "literalReadCount": 0,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 1,
+              "requestedBytes": 262144,
+              "payloadBytes": 1048576,
+              "recipeMetadataBytes": 0,
+              "planningHashedBytes": 1048576,
+              "peakAlgorithmicPayloadBytes": 1048576,
+              "completeFileMaterializations": 1,
+              "objectRangeReadCount": 0,
+              "literalReadCount": 0,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 2,
+              "requestedBytes": 262144,
+              "payloadBytes": 1048576,
+              "recipeMetadataBytes": 0,
+              "planningHashedBytes": 1048576,
+              "peakAlgorithmicPayloadBytes": 1048576,
+              "completeFileMaterializations": 1,
+              "objectRangeReadCount": 0,
+              "literalReadCount": 0,
+              "correctness": true,
+              "storageUnchanged": true
+            }
+          ]
+        },
+        "full-recipe-stream": {
+          "localMs": 2,
+          "requestedBytes": 262144,
+          "payloadBytes": 1049948,
+          "recipeMetadataBytes": 1372,
+          "planningHashedBytes": 4096,
+          "peakAlgorithmicPayloadBytes": 220482,
+          "completeFileMaterializations": 0,
+          "objectRangeReadCount": 8,
+          "literalReadCount": 1,
+          "correctness": true,
+          "storageUnchanged": true,
+          "samples": [
+            {
+              "localMs": 9,
+              "requestedBytes": 262144,
+              "payloadBytes": 1049948,
+              "recipeMetadataBytes": 1372,
+              "planningHashedBytes": 4096,
+              "peakAlgorithmicPayloadBytes": 220482,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 8,
+              "literalReadCount": 1,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 1,
+              "requestedBytes": 262144,
+              "payloadBytes": 1049948,
+              "recipeMetadataBytes": 1372,
+              "planningHashedBytes": 4096,
+              "peakAlgorithmicPayloadBytes": 220482,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 8,
+              "literalReadCount": 1,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 2,
+              "requestedBytes": 262144,
+              "payloadBytes": 1049948,
+              "recipeMetadataBytes": 1372,
+              "planningHashedBytes": 4096,
+              "peakAlgorithmicPayloadBytes": 220482,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 8,
+              "literalReadCount": 1,
+              "correctness": true,
+              "storageUnchanged": true
+            }
+          ]
+        },
+        "range-recipe": {
+          "localMs": 1,
+          "requestedBytes": 262144,
+          "payloadBytes": 263516,
+          "recipeMetadataBytes": 1372,
+          "planningHashedBytes": 4096,
+          "peakAlgorithmicPayloadBytes": 101457,
+          "completeFileMaterializations": 0,
+          "objectRangeReadCount": 3,
+          "literalReadCount": 1,
+          "correctness": true,
+          "storageUnchanged": true,
+          "samples": [
+            {
+              "localMs": 1,
+              "requestedBytes": 262144,
+              "payloadBytes": 263516,
+              "recipeMetadataBytes": 1372,
+              "planningHashedBytes": 4096,
+              "peakAlgorithmicPayloadBytes": 101457,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 3,
+              "literalReadCount": 1,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 1,
+              "requestedBytes": 262144,
+              "payloadBytes": 263516,
+              "recipeMetadataBytes": 1372,
+              "planningHashedBytes": 4096,
+              "peakAlgorithmicPayloadBytes": 101457,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 3,
+              "literalReadCount": 1,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 0,
+              "requestedBytes": 262144,
+              "payloadBytes": 263516,
+              "recipeMetadataBytes": 1372,
+              "planningHashedBytes": 4096,
+              "peakAlgorithmicPayloadBytes": 101457,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 3,
+              "literalReadCount": 1,
+              "correctness": true,
+              "storageUnchanged": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "1m-clustered-1-page",
+      "fileBytes": 1048576,
+      "dirtyPages": 1,
+      "distribution": "clustered",
+      "accessShape": "full-sequential",
+      "routes": {
+        "full-materialization": {
+          "localMs": 9,
+          "requestedBytes": 1048576,
+          "payloadBytes": 1048576,
+          "recipeMetadataBytes": 0,
+          "planningHashedBytes": 1048576,
+          "peakAlgorithmicPayloadBytes": 1048576,
+          "completeFileMaterializations": 1,
+          "objectRangeReadCount": 0,
+          "literalReadCount": 0,
+          "correctness": true,
+          "storageUnchanged": true,
+          "samples": [
+            {
+              "localMs": 2,
+              "requestedBytes": 1048576,
+              "payloadBytes": 1048576,
+              "recipeMetadataBytes": 0,
+              "planningHashedBytes": 1048576,
+              "peakAlgorithmicPayloadBytes": 1048576,
+              "completeFileMaterializations": 1,
+              "objectRangeReadCount": 0,
+              "literalReadCount": 0,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 9,
+              "requestedBytes": 1048576,
+              "payloadBytes": 1048576,
+              "recipeMetadataBytes": 0,
+              "planningHashedBytes": 1048576,
+              "peakAlgorithmicPayloadBytes": 1048576,
+              "completeFileMaterializations": 1,
+              "objectRangeReadCount": 0,
+              "literalReadCount": 0,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 9,
+              "requestedBytes": 1048576,
+              "payloadBytes": 1048576,
+              "recipeMetadataBytes": 0,
+              "planningHashedBytes": 1048576,
+              "peakAlgorithmicPayloadBytes": 1048576,
+              "completeFileMaterializations": 1,
+              "objectRangeReadCount": 0,
+              "literalReadCount": 0,
+              "correctness": true,
+              "storageUnchanged": true
+            }
+          ]
+        },
+        "full-recipe-stream": {
+          "localMs": 2,
+          "requestedBytes": 1048576,
+          "payloadBytes": 1049948,
+          "recipeMetadataBytes": 1372,
+          "planningHashedBytes": 4096,
+          "peakAlgorithmicPayloadBytes": 220482,
+          "completeFileMaterializations": 0,
+          "objectRangeReadCount": 8,
+          "literalReadCount": 1,
+          "correctness": true,
+          "storageUnchanged": true,
+          "samples": [
+            {
+              "localMs": 2,
+              "requestedBytes": 1048576,
+              "payloadBytes": 1049948,
+              "recipeMetadataBytes": 1372,
+              "planningHashedBytes": 4096,
+              "peakAlgorithmicPayloadBytes": 220482,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 8,
+              "literalReadCount": 1,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 9,
+              "requestedBytes": 1048576,
+              "payloadBytes": 1049948,
+              "recipeMetadataBytes": 1372,
+              "planningHashedBytes": 4096,
+              "peakAlgorithmicPayloadBytes": 220482,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 8,
+              "literalReadCount": 1,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 1,
+              "requestedBytes": 1048576,
+              "payloadBytes": 1049948,
+              "recipeMetadataBytes": 1372,
+              "planningHashedBytes": 4096,
+              "peakAlgorithmicPayloadBytes": 220482,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 8,
+              "literalReadCount": 1,
+              "correctness": true,
+              "storageUnchanged": true
+            }
+          ]
+        },
+        "range-recipe": {
+          "localMs": 3,
+          "requestedBytes": 1048576,
+          "payloadBytes": 1049948,
+          "recipeMetadataBytes": 1372,
+          "planningHashedBytes": 4096,
+          "peakAlgorithmicPayloadBytes": 220482,
+          "completeFileMaterializations": 0,
+          "objectRangeReadCount": 8,
+          "literalReadCount": 1,
+          "correctness": true,
+          "storageUnchanged": true,
+          "samples": [
+            {
+              "localMs": 3,
+              "requestedBytes": 1048576,
+              "payloadBytes": 1049948,
+              "recipeMetadataBytes": 1372,
+              "planningHashedBytes": 4096,
+              "peakAlgorithmicPayloadBytes": 220482,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 8,
+              "literalReadCount": 1,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 7,
+              "requestedBytes": 1048576,
+              "payloadBytes": 1049948,
+              "recipeMetadataBytes": 1372,
+              "planningHashedBytes": 4096,
+              "peakAlgorithmicPayloadBytes": 220482,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 8,
+              "literalReadCount": 1,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 1,
+              "requestedBytes": 1048576,
+              "payloadBytes": 1049948,
+              "recipeMetadataBytes": 1372,
+              "planningHashedBytes": 4096,
+              "peakAlgorithmicPayloadBytes": 220482,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 8,
+              "literalReadCount": 1,
+              "correctness": true,
+              "storageUnchanged": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "4m-spread-4-pages",
+      "fileBytes": 4194304,
+      "dirtyPages": 4,
+      "distribution": "spread",
+      "accessShape": "first-4k",
+      "routes": {
+        "full-materialization": {
+          "localMs": 4,
+          "requestedBytes": 4096,
+          "payloadBytes": 4194304,
+          "recipeMetadataBytes": 0,
+          "planningHashedBytes": 4194304,
+          "peakAlgorithmicPayloadBytes": 4194304,
+          "completeFileMaterializations": 1,
+          "objectRangeReadCount": 0,
+          "literalReadCount": 0,
+          "correctness": true,
+          "storageUnchanged": true,
+          "samples": [
+            {
+              "localMs": 15,
+              "requestedBytes": 4096,
+              "payloadBytes": 4194304,
+              "recipeMetadataBytes": 0,
+              "planningHashedBytes": 4194304,
+              "peakAlgorithmicPayloadBytes": 4194304,
+              "completeFileMaterializations": 1,
+              "objectRangeReadCount": 0,
+              "literalReadCount": 0,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 3,
+              "requestedBytes": 4096,
+              "payloadBytes": 4194304,
+              "recipeMetadataBytes": 0,
+              "planningHashedBytes": 4194304,
+              "peakAlgorithmicPayloadBytes": 4194304,
+              "completeFileMaterializations": 1,
+              "objectRangeReadCount": 0,
+              "literalReadCount": 0,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 4,
+              "requestedBytes": 4096,
+              "payloadBytes": 4194304,
+              "recipeMetadataBytes": 0,
+              "planningHashedBytes": 4194304,
+              "peakAlgorithmicPayloadBytes": 4194304,
+              "completeFileMaterializations": 1,
+              "objectRangeReadCount": 0,
+              "literalReadCount": 0,
+              "correctness": true,
+              "storageUnchanged": true
+            }
+          ]
+        },
+        "full-recipe-stream": {
+          "localMs": 6,
+          "requestedBytes": 4096,
+          "payloadBytes": 4199112,
+          "recipeMetadataBytes": 4808,
+          "planningHashedBytes": 16384,
+          "peakAlgorithmicPayloadBytes": 376884,
+          "completeFileMaterializations": 0,
+          "objectRangeReadCount": 30,
+          "literalReadCount": 4,
+          "correctness": true,
+          "storageUnchanged": true,
+          "samples": [
+            {
+              "localMs": 6,
+              "requestedBytes": 4096,
+              "payloadBytes": 4199112,
+              "recipeMetadataBytes": 4808,
+              "planningHashedBytes": 16384,
+              "peakAlgorithmicPayloadBytes": 376884,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 30,
+              "literalReadCount": 4,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 4,
+              "requestedBytes": 4096,
+              "payloadBytes": 4199112,
+              "recipeMetadataBytes": 4808,
+              "planningHashedBytes": 16384,
+              "peakAlgorithmicPayloadBytes": 376884,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 30,
+              "literalReadCount": 4,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 26,
+              "requestedBytes": 4096,
+              "payloadBytes": 4199112,
+              "recipeMetadataBytes": 4808,
+              "planningHashedBytes": 16384,
+              "peakAlgorithmicPayloadBytes": 376884,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 30,
+              "literalReadCount": 4,
+              "correctness": true,
+              "storageUnchanged": true
+            }
+          ]
+        },
+        "range-recipe": {
+          "localMs": 0,
+          "requestedBytes": 4096,
+          "payloadBytes": 8904,
+          "recipeMetadataBytes": 4808,
+          "planningHashedBytes": 16384,
+          "peakAlgorithmicPayloadBytes": 21192,
+          "completeFileMaterializations": 0,
+          "objectRangeReadCount": 0,
+          "literalReadCount": 1,
+          "correctness": true,
+          "storageUnchanged": true,
+          "samples": [
+            {
+              "localMs": 0,
+              "requestedBytes": 4096,
+              "payloadBytes": 8904,
+              "recipeMetadataBytes": 4808,
+              "planningHashedBytes": 16384,
+              "peakAlgorithmicPayloadBytes": 21192,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 0,
+              "literalReadCount": 1,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 0,
+              "requestedBytes": 4096,
+              "payloadBytes": 8904,
+              "recipeMetadataBytes": 4808,
+              "planningHashedBytes": 16384,
+              "peakAlgorithmicPayloadBytes": 21192,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 0,
+              "literalReadCount": 1,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 0,
+              "requestedBytes": 4096,
+              "payloadBytes": 8904,
+              "recipeMetadataBytes": 4808,
+              "planningHashedBytes": 16384,
+              "peakAlgorithmicPayloadBytes": 21192,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 0,
+              "literalReadCount": 1,
+              "correctness": true,
+              "storageUnchanged": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "4m-spread-4-pages",
+      "fileBytes": 4194304,
+      "dirtyPages": 4,
+      "distribution": "spread",
+      "accessShape": "dirty-neighborhood-8k",
+      "routes": {
+        "full-materialization": {
+          "localMs": 3,
+          "requestedBytes": 8192,
+          "payloadBytes": 4194304,
+          "recipeMetadataBytes": 0,
+          "planningHashedBytes": 4194304,
+          "peakAlgorithmicPayloadBytes": 4194304,
+          "completeFileMaterializations": 1,
+          "objectRangeReadCount": 0,
+          "literalReadCount": 0,
+          "correctness": true,
+          "storageUnchanged": true,
+          "samples": [
+            {
+              "localMs": 15,
+              "requestedBytes": 8192,
+              "payloadBytes": 4194304,
+              "recipeMetadataBytes": 0,
+              "planningHashedBytes": 4194304,
+              "peakAlgorithmicPayloadBytes": 4194304,
+              "completeFileMaterializations": 1,
+              "objectRangeReadCount": 0,
+              "literalReadCount": 0,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 3,
+              "requestedBytes": 8192,
+              "payloadBytes": 4194304,
+              "recipeMetadataBytes": 0,
+              "planningHashedBytes": 4194304,
+              "peakAlgorithmicPayloadBytes": 4194304,
+              "completeFileMaterializations": 1,
+              "objectRangeReadCount": 0,
+              "literalReadCount": 0,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 2,
+              "requestedBytes": 8192,
+              "payloadBytes": 4194304,
+              "recipeMetadataBytes": 0,
+              "planningHashedBytes": 4194304,
+              "peakAlgorithmicPayloadBytes": 4194304,
+              "completeFileMaterializations": 1,
+              "objectRangeReadCount": 0,
+              "literalReadCount": 0,
+              "correctness": true,
+              "storageUnchanged": true
+            }
+          ]
+        },
+        "full-recipe-stream": {
+          "localMs": 5,
+          "requestedBytes": 8192,
+          "payloadBytes": 4199112,
+          "recipeMetadataBytes": 4808,
+          "planningHashedBytes": 16384,
+          "peakAlgorithmicPayloadBytes": 376884,
+          "completeFileMaterializations": 0,
+          "objectRangeReadCount": 30,
+          "literalReadCount": 4,
+          "correctness": true,
+          "storageUnchanged": true,
+          "samples": [
+            {
+              "localMs": 34,
+              "requestedBytes": 8192,
+              "payloadBytes": 4199112,
+              "recipeMetadataBytes": 4808,
+              "planningHashedBytes": 16384,
+              "peakAlgorithmicPayloadBytes": 376884,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 30,
+              "literalReadCount": 4,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 5,
+              "requestedBytes": 8192,
+              "payloadBytes": 4199112,
+              "recipeMetadataBytes": 4808,
+              "planningHashedBytes": 16384,
+              "peakAlgorithmicPayloadBytes": 376884,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 30,
+              "literalReadCount": 4,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 5,
+              "requestedBytes": 8192,
+              "payloadBytes": 4199112,
+              "recipeMetadataBytes": 4808,
+              "planningHashedBytes": 16384,
+              "peakAlgorithmicPayloadBytes": 376884,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 30,
+              "literalReadCount": 4,
+              "correctness": true,
+              "storageUnchanged": true
+            }
+          ]
+        },
+        "range-recipe": {
+          "localMs": 1,
+          "requestedBytes": 8192,
+          "payloadBytes": 13000,
+          "recipeMetadataBytes": 4808,
+          "planningHashedBytes": 16384,
+          "peakAlgorithmicPayloadBytes": 21192,
+          "completeFileMaterializations": 0,
+          "objectRangeReadCount": 1,
+          "literalReadCount": 1,
+          "correctness": true,
+          "storageUnchanged": true,
+          "samples": [
+            {
+              "localMs": 0,
+              "requestedBytes": 8192,
+              "payloadBytes": 13000,
+              "recipeMetadataBytes": 4808,
+              "planningHashedBytes": 16384,
+              "peakAlgorithmicPayloadBytes": 21192,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 1,
+              "literalReadCount": 1,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 1,
+              "requestedBytes": 8192,
+              "payloadBytes": 13000,
+              "recipeMetadataBytes": 4808,
+              "planningHashedBytes": 16384,
+              "peakAlgorithmicPayloadBytes": 21192,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 1,
+              "literalReadCount": 1,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 1,
+              "requestedBytes": 8192,
+              "payloadBytes": 13000,
+              "recipeMetadataBytes": 4808,
+              "planningHashedBytes": 16384,
+              "peakAlgorithmicPayloadBytes": 21192,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 1,
+              "literalReadCount": 1,
+              "correctness": true,
+              "storageUnchanged": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "4m-spread-4-pages",
+      "fileBytes": 4194304,
+      "dirtyPages": 4,
+      "distribution": "spread",
+      "accessShape": "three-spread-4k",
+      "routes": {
+        "full-materialization": {
+          "localMs": 3,
+          "requestedBytes": 12288,
+          "payloadBytes": 4194304,
+          "recipeMetadataBytes": 0,
+          "planningHashedBytes": 4194304,
+          "peakAlgorithmicPayloadBytes": 4194304,
+          "completeFileMaterializations": 1,
+          "objectRangeReadCount": 0,
+          "literalReadCount": 0,
+          "correctness": true,
+          "storageUnchanged": true,
+          "samples": [
+            {
+              "localMs": 3,
+              "requestedBytes": 12288,
+              "payloadBytes": 4194304,
+              "recipeMetadataBytes": 0,
+              "planningHashedBytes": 4194304,
+              "peakAlgorithmicPayloadBytes": 4194304,
+              "completeFileMaterializations": 1,
+              "objectRangeReadCount": 0,
+              "literalReadCount": 0,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 29,
+              "requestedBytes": 12288,
+              "payloadBytes": 4194304,
+              "recipeMetadataBytes": 0,
+              "planningHashedBytes": 4194304,
+              "peakAlgorithmicPayloadBytes": 4194304,
+              "completeFileMaterializations": 1,
+              "objectRangeReadCount": 0,
+              "literalReadCount": 0,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 3,
+              "requestedBytes": 12288,
+              "payloadBytes": 4194304,
+              "recipeMetadataBytes": 0,
+              "planningHashedBytes": 4194304,
+              "peakAlgorithmicPayloadBytes": 4194304,
+              "completeFileMaterializations": 1,
+              "objectRangeReadCount": 0,
+              "literalReadCount": 0,
+              "correctness": true,
+              "storageUnchanged": true
+            }
+          ]
+        },
+        "full-recipe-stream": {
+          "localMs": 5,
+          "requestedBytes": 12288,
+          "payloadBytes": 4199112,
+          "recipeMetadataBytes": 4808,
+          "planningHashedBytes": 16384,
+          "peakAlgorithmicPayloadBytes": 376884,
+          "completeFileMaterializations": 0,
+          "objectRangeReadCount": 30,
+          "literalReadCount": 4,
+          "correctness": true,
+          "storageUnchanged": true,
+          "samples": [
+            {
+              "localMs": 5,
+              "requestedBytes": 12288,
+              "payloadBytes": 4199112,
+              "recipeMetadataBytes": 4808,
+              "planningHashedBytes": 16384,
+              "peakAlgorithmicPayloadBytes": 376884,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 30,
+              "literalReadCount": 4,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 17,
+              "requestedBytes": 12288,
+              "payloadBytes": 4199112,
+              "recipeMetadataBytes": 4808,
+              "planningHashedBytes": 16384,
+              "peakAlgorithmicPayloadBytes": 376884,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 30,
+              "literalReadCount": 4,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 4,
+              "requestedBytes": 12288,
+              "payloadBytes": 4199112,
+              "recipeMetadataBytes": 4808,
+              "planningHashedBytes": 16384,
+              "peakAlgorithmicPayloadBytes": 376884,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 30,
+              "literalReadCount": 4,
+              "correctness": true,
+              "storageUnchanged": true
+            }
+          ]
+        },
+        "range-recipe": {
+          "localMs": 1,
+          "requestedBytes": 12288,
+          "payloadBytes": 17096,
+          "recipeMetadataBytes": 4808,
+          "planningHashedBytes": 16384,
+          "peakAlgorithmicPayloadBytes": 21192,
+          "completeFileMaterializations": 0,
+          "objectRangeReadCount": 3,
+          "literalReadCount": 0,
+          "correctness": true,
+          "storageUnchanged": true,
+          "samples": [
+            {
+              "localMs": 2,
+              "requestedBytes": 12288,
+              "payloadBytes": 17096,
+              "recipeMetadataBytes": 4808,
+              "planningHashedBytes": 16384,
+              "peakAlgorithmicPayloadBytes": 21192,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 3,
+              "literalReadCount": 0,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 1,
+              "requestedBytes": 12288,
+              "payloadBytes": 17096,
+              "recipeMetadataBytes": 4808,
+              "planningHashedBytes": 16384,
+              "peakAlgorithmicPayloadBytes": 21192,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 3,
+              "literalReadCount": 0,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 0,
+              "requestedBytes": 12288,
+              "payloadBytes": 17096,
+              "recipeMetadataBytes": 4808,
+              "planningHashedBytes": 16384,
+              "peakAlgorithmicPayloadBytes": 21192,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 3,
+              "literalReadCount": 0,
+              "correctness": true,
+              "storageUnchanged": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "4m-spread-4-pages",
+      "fileBytes": 4194304,
+      "dirtyPages": 4,
+      "distribution": "spread",
+      "accessShape": "quarter-sequential",
+      "routes": {
+        "full-materialization": {
+          "localMs": 18,
+          "requestedBytes": 1048576,
+          "payloadBytes": 4194304,
+          "recipeMetadataBytes": 0,
+          "planningHashedBytes": 4194304,
+          "peakAlgorithmicPayloadBytes": 4194304,
+          "completeFileMaterializations": 1,
+          "objectRangeReadCount": 0,
+          "literalReadCount": 0,
+          "correctness": true,
+          "storageUnchanged": true,
+          "samples": [
+            {
+              "localMs": 4,
+              "requestedBytes": 1048576,
+              "payloadBytes": 4194304,
+              "recipeMetadataBytes": 0,
+              "planningHashedBytes": 4194304,
+              "peakAlgorithmicPayloadBytes": 4194304,
+              "completeFileMaterializations": 1,
+              "objectRangeReadCount": 0,
+              "literalReadCount": 0,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 18,
+              "requestedBytes": 1048576,
+              "payloadBytes": 4194304,
+              "recipeMetadataBytes": 0,
+              "planningHashedBytes": 4194304,
+              "peakAlgorithmicPayloadBytes": 4194304,
+              "completeFileMaterializations": 1,
+              "objectRangeReadCount": 0,
+              "literalReadCount": 0,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 24,
+              "requestedBytes": 1048576,
+              "payloadBytes": 4194304,
+              "recipeMetadataBytes": 0,
+              "planningHashedBytes": 4194304,
+              "peakAlgorithmicPayloadBytes": 4194304,
+              "completeFileMaterializations": 1,
+              "objectRangeReadCount": 0,
+              "literalReadCount": 0,
+              "correctness": true,
+              "storageUnchanged": true
+            }
+          ]
+        },
+        "full-recipe-stream": {
+          "localMs": 4,
+          "requestedBytes": 1048576,
+          "payloadBytes": 4199112,
+          "recipeMetadataBytes": 4808,
+          "planningHashedBytes": 16384,
+          "peakAlgorithmicPayloadBytes": 376884,
+          "completeFileMaterializations": 0,
+          "objectRangeReadCount": 30,
+          "literalReadCount": 4,
+          "correctness": true,
+          "storageUnchanged": true,
+          "samples": [
+            {
+              "localMs": 4,
+              "requestedBytes": 1048576,
+              "payloadBytes": 4199112,
+              "recipeMetadataBytes": 4808,
+              "planningHashedBytes": 16384,
+              "peakAlgorithmicPayloadBytes": 376884,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 30,
+              "literalReadCount": 4,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 6,
+              "requestedBytes": 1048576,
+              "payloadBytes": 4199112,
+              "recipeMetadataBytes": 4808,
+              "planningHashedBytes": 16384,
+              "peakAlgorithmicPayloadBytes": 376884,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 30,
+              "literalReadCount": 4,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 4,
+              "requestedBytes": 1048576,
+              "payloadBytes": 4199112,
+              "recipeMetadataBytes": 4808,
+              "planningHashedBytes": 16384,
+              "peakAlgorithmicPayloadBytes": 376884,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 30,
+              "literalReadCount": 4,
+              "correctness": true,
+              "storageUnchanged": true
+            }
+          ]
+        },
+        "range-recipe": {
+          "localMs": 2,
+          "requestedBytes": 1048576,
+          "payloadBytes": 1053384,
+          "recipeMetadataBytes": 4808,
+          "planningHashedBytes": 16384,
+          "peakAlgorithmicPayloadBytes": 243378,
+          "completeFileMaterializations": 0,
+          "objectRangeReadCount": 8,
+          "literalReadCount": 1,
+          "correctness": true,
+          "storageUnchanged": true,
+          "samples": [
+            {
+              "localMs": 8,
+              "requestedBytes": 1048576,
+              "payloadBytes": 1053384,
+              "recipeMetadataBytes": 4808,
+              "planningHashedBytes": 16384,
+              "peakAlgorithmicPayloadBytes": 243378,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 8,
+              "literalReadCount": 1,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 1,
+              "requestedBytes": 1048576,
+              "payloadBytes": 1053384,
+              "recipeMetadataBytes": 4808,
+              "planningHashedBytes": 16384,
+              "peakAlgorithmicPayloadBytes": 243378,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 8,
+              "literalReadCount": 1,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 2,
+              "requestedBytes": 1048576,
+              "payloadBytes": 1053384,
+              "recipeMetadataBytes": 4808,
+              "planningHashedBytes": 16384,
+              "peakAlgorithmicPayloadBytes": 243378,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 8,
+              "literalReadCount": 1,
+              "correctness": true,
+              "storageUnchanged": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "4m-spread-4-pages",
+      "fileBytes": 4194304,
+      "dirtyPages": 4,
+      "distribution": "spread",
+      "accessShape": "full-sequential",
+      "routes": {
+        "full-materialization": {
+          "localMs": 6,
+          "requestedBytes": 4194304,
+          "payloadBytes": 4194304,
+          "recipeMetadataBytes": 0,
+          "planningHashedBytes": 4194304,
+          "peakAlgorithmicPayloadBytes": 4194304,
+          "completeFileMaterializations": 1,
+          "objectRangeReadCount": 0,
+          "literalReadCount": 0,
+          "correctness": true,
+          "storageUnchanged": true,
+          "samples": [
+            {
+              "localMs": 27,
+              "requestedBytes": 4194304,
+              "payloadBytes": 4194304,
+              "recipeMetadataBytes": 0,
+              "planningHashedBytes": 4194304,
+              "peakAlgorithmicPayloadBytes": 4194304,
+              "completeFileMaterializations": 1,
+              "objectRangeReadCount": 0,
+              "literalReadCount": 0,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 6,
+              "requestedBytes": 4194304,
+              "payloadBytes": 4194304,
+              "recipeMetadataBytes": 0,
+              "planningHashedBytes": 4194304,
+              "peakAlgorithmicPayloadBytes": 4194304,
+              "completeFileMaterializations": 1,
+              "objectRangeReadCount": 0,
+              "literalReadCount": 0,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 4,
+              "requestedBytes": 4194304,
+              "payloadBytes": 4194304,
+              "recipeMetadataBytes": 0,
+              "planningHashedBytes": 4194304,
+              "peakAlgorithmicPayloadBytes": 4194304,
+              "completeFileMaterializations": 1,
+              "objectRangeReadCount": 0,
+              "literalReadCount": 0,
+              "correctness": true,
+              "storageUnchanged": true
+            }
+          ]
+        },
+        "full-recipe-stream": {
+          "localMs": 15,
+          "requestedBytes": 4194304,
+          "payloadBytes": 4199112,
+          "recipeMetadataBytes": 4808,
+          "planningHashedBytes": 16384,
+          "peakAlgorithmicPayloadBytes": 376884,
+          "completeFileMaterializations": 0,
+          "objectRangeReadCount": 30,
+          "literalReadCount": 4,
+          "correctness": true,
+          "storageUnchanged": true,
+          "samples": [
+            {
+              "localMs": 15,
+              "requestedBytes": 4194304,
+              "payloadBytes": 4199112,
+              "recipeMetadataBytes": 4808,
+              "planningHashedBytes": 16384,
+              "peakAlgorithmicPayloadBytes": 376884,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 30,
+              "literalReadCount": 4,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 8,
+              "requestedBytes": 4194304,
+              "payloadBytes": 4199112,
+              "recipeMetadataBytes": 4808,
+              "planningHashedBytes": 16384,
+              "peakAlgorithmicPayloadBytes": 376884,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 30,
+              "literalReadCount": 4,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 17,
+              "requestedBytes": 4194304,
+              "payloadBytes": 4199112,
+              "recipeMetadataBytes": 4808,
+              "planningHashedBytes": 16384,
+              "peakAlgorithmicPayloadBytes": 376884,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 30,
+              "literalReadCount": 4,
+              "correctness": true,
+              "storageUnchanged": true
+            }
+          ]
+        },
+        "range-recipe": {
+          "localMs": 5,
+          "requestedBytes": 4194304,
+          "payloadBytes": 4199112,
+          "recipeMetadataBytes": 4808,
+          "planningHashedBytes": 16384,
+          "peakAlgorithmicPayloadBytes": 376884,
+          "completeFileMaterializations": 0,
+          "objectRangeReadCount": 30,
+          "literalReadCount": 4,
+          "correctness": true,
+          "storageUnchanged": true,
+          "samples": [
+            {
+              "localMs": 18,
+              "requestedBytes": 4194304,
+              "payloadBytes": 4199112,
+              "recipeMetadataBytes": 4808,
+              "planningHashedBytes": 16384,
+              "peakAlgorithmicPayloadBytes": 376884,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 30,
+              "literalReadCount": 4,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 5,
+              "requestedBytes": 4194304,
+              "payloadBytes": 4199112,
+              "recipeMetadataBytes": 4808,
+              "planningHashedBytes": 16384,
+              "peakAlgorithmicPayloadBytes": 376884,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 30,
+              "literalReadCount": 4,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 4,
+              "requestedBytes": 4194304,
+              "payloadBytes": 4199112,
+              "recipeMetadataBytes": 4808,
+              "planningHashedBytes": 16384,
+              "peakAlgorithmicPayloadBytes": 376884,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 30,
+              "literalReadCount": 4,
+              "correctness": true,
+              "storageUnchanged": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "16m-spread-16-pages",
+      "fileBytes": 16777216,
+      "dirtyPages": 16,
+      "distribution": "spread",
+      "accessShape": "first-4k",
+      "routes": {
+        "full-materialization": {
+          "localMs": 26,
+          "requestedBytes": 4096,
+          "payloadBytes": 16777216,
+          "recipeMetadataBytes": 0,
+          "planningHashedBytes": 16777216,
+          "peakAlgorithmicPayloadBytes": 16777216,
+          "completeFileMaterializations": 1,
+          "objectRangeReadCount": 0,
+          "literalReadCount": 0,
+          "correctness": true,
+          "storageUnchanged": true,
+          "samples": [
+            {
+              "localMs": 58,
+              "requestedBytes": 4096,
+              "payloadBytes": 16777216,
+              "recipeMetadataBytes": 0,
+              "planningHashedBytes": 16777216,
+              "peakAlgorithmicPayloadBytes": 16777216,
+              "completeFileMaterializations": 1,
+              "objectRangeReadCount": 0,
+              "literalReadCount": 0,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 17,
+              "requestedBytes": 4096,
+              "payloadBytes": 16777216,
+              "recipeMetadataBytes": 0,
+              "planningHashedBytes": 16777216,
+              "peakAlgorithmicPayloadBytes": 16777216,
+              "completeFileMaterializations": 1,
+              "objectRangeReadCount": 0,
+              "literalReadCount": 0,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 26,
+              "requestedBytes": 4096,
+              "payloadBytes": 16777216,
+              "recipeMetadataBytes": 0,
+              "planningHashedBytes": 16777216,
+              "peakAlgorithmicPayloadBytes": 16777216,
+              "completeFileMaterializations": 1,
+              "objectRangeReadCount": 0,
+              "literalReadCount": 0,
+              "correctness": true,
+              "storageUnchanged": true
+            }
+          ]
+        },
+        "full-recipe-stream": {
+          "localMs": 13,
+          "requestedBytes": 4096,
+          "payloadBytes": 16796807,
+          "recipeMetadataBytes": 19591,
+          "planningHashedBytes": 65536,
+          "peakAlgorithmicPayloadBytes": 383085,
+          "completeFileMaterializations": 0,
+          "objectRangeReadCount": 124,
+          "literalReadCount": 17,
+          "correctness": true,
+          "storageUnchanged": true,
+          "samples": [
+            {
+              "localMs": 13,
+              "requestedBytes": 4096,
+              "payloadBytes": 16796807,
+              "recipeMetadataBytes": 19591,
+              "planningHashedBytes": 65536,
+              "peakAlgorithmicPayloadBytes": 383085,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 124,
+              "literalReadCount": 17,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 13,
+              "requestedBytes": 4096,
+              "payloadBytes": 16796807,
+              "recipeMetadataBytes": 19591,
+              "planningHashedBytes": 65536,
+              "peakAlgorithmicPayloadBytes": 383085,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 124,
+              "literalReadCount": 17,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 13,
+              "requestedBytes": 4096,
+              "payloadBytes": 16796807,
+              "recipeMetadataBytes": 19591,
+              "planningHashedBytes": 65536,
+              "peakAlgorithmicPayloadBytes": 383085,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 124,
+              "literalReadCount": 17,
+              "correctness": true,
+              "storageUnchanged": true
+            }
+          ]
+        },
+        "range-recipe": {
+          "localMs": 1,
+          "requestedBytes": 4096,
+          "payloadBytes": 23687,
+          "recipeMetadataBytes": 19591,
+          "planningHashedBytes": 65536,
+          "peakAlgorithmicPayloadBytes": 85127,
+          "completeFileMaterializations": 0,
+          "objectRangeReadCount": 0,
+          "literalReadCount": 1,
+          "correctness": true,
+          "storageUnchanged": true,
+          "samples": [
+            {
+              "localMs": 1,
+              "requestedBytes": 4096,
+              "payloadBytes": 23687,
+              "recipeMetadataBytes": 19591,
+              "planningHashedBytes": 65536,
+              "peakAlgorithmicPayloadBytes": 85127,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 0,
+              "literalReadCount": 1,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 0,
+              "requestedBytes": 4096,
+              "payloadBytes": 23687,
+              "recipeMetadataBytes": 19591,
+              "planningHashedBytes": 65536,
+              "peakAlgorithmicPayloadBytes": 85127,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 0,
+              "literalReadCount": 1,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 1,
+              "requestedBytes": 4096,
+              "payloadBytes": 23687,
+              "recipeMetadataBytes": 19591,
+              "planningHashedBytes": 65536,
+              "peakAlgorithmicPayloadBytes": 85127,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 0,
+              "literalReadCount": 1,
+              "correctness": true,
+              "storageUnchanged": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "16m-spread-16-pages",
+      "fileBytes": 16777216,
+      "dirtyPages": 16,
+      "distribution": "spread",
+      "accessShape": "dirty-neighborhood-8k",
+      "routes": {
+        "full-materialization": {
+          "localMs": 61,
+          "requestedBytes": 8192,
+          "payloadBytes": 16777216,
+          "recipeMetadataBytes": 0,
+          "planningHashedBytes": 16777216,
+          "peakAlgorithmicPayloadBytes": 16777216,
+          "completeFileMaterializations": 1,
+          "objectRangeReadCount": 0,
+          "literalReadCount": 0,
+          "correctness": true,
+          "storageUnchanged": true,
+          "samples": [
+            {
+              "localMs": 78,
+              "requestedBytes": 8192,
+              "payloadBytes": 16777216,
+              "recipeMetadataBytes": 0,
+              "planningHashedBytes": 16777216,
+              "peakAlgorithmicPayloadBytes": 16777216,
+              "completeFileMaterializations": 1,
+              "objectRangeReadCount": 0,
+              "literalReadCount": 0,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 16,
+              "requestedBytes": 8192,
+              "payloadBytes": 16777216,
+              "recipeMetadataBytes": 0,
+              "planningHashedBytes": 16777216,
+              "peakAlgorithmicPayloadBytes": 16777216,
+              "completeFileMaterializations": 1,
+              "objectRangeReadCount": 0,
+              "literalReadCount": 0,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 61,
+              "requestedBytes": 8192,
+              "payloadBytes": 16777216,
+              "recipeMetadataBytes": 0,
+              "planningHashedBytes": 16777216,
+              "peakAlgorithmicPayloadBytes": 16777216,
+              "completeFileMaterializations": 1,
+              "objectRangeReadCount": 0,
+              "literalReadCount": 0,
+              "correctness": true,
+              "storageUnchanged": true
+            }
+          ]
+        },
+        "full-recipe-stream": {
+          "localMs": 14,
+          "requestedBytes": 8192,
+          "payloadBytes": 16796807,
+          "recipeMetadataBytes": 19591,
+          "planningHashedBytes": 65536,
+          "peakAlgorithmicPayloadBytes": 383085,
+          "completeFileMaterializations": 0,
+          "objectRangeReadCount": 124,
+          "literalReadCount": 17,
+          "correctness": true,
+          "storageUnchanged": true,
+          "samples": [
+            {
+              "localMs": 13,
+              "requestedBytes": 8192,
+              "payloadBytes": 16796807,
+              "recipeMetadataBytes": 19591,
+              "planningHashedBytes": 65536,
+              "peakAlgorithmicPayloadBytes": 383085,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 124,
+              "literalReadCount": 17,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 14,
+              "requestedBytes": 8192,
+              "payloadBytes": 16796807,
+              "recipeMetadataBytes": 19591,
+              "planningHashedBytes": 65536,
+              "peakAlgorithmicPayloadBytes": 383085,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 124,
+              "literalReadCount": 17,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 15,
+              "requestedBytes": 8192,
+              "payloadBytes": 16796807,
+              "recipeMetadataBytes": 19591,
+              "planningHashedBytes": 65536,
+              "peakAlgorithmicPayloadBytes": 383085,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 124,
+              "literalReadCount": 17,
+              "correctness": true,
+              "storageUnchanged": true
+            }
+          ]
+        },
+        "range-recipe": {
+          "localMs": 1,
+          "requestedBytes": 8192,
+          "payloadBytes": 27783,
+          "recipeMetadataBytes": 19591,
+          "planningHashedBytes": 65536,
+          "peakAlgorithmicPayloadBytes": 85127,
+          "completeFileMaterializations": 0,
+          "objectRangeReadCount": 1,
+          "literalReadCount": 1,
+          "correctness": true,
+          "storageUnchanged": true,
+          "samples": [
+            {
+              "localMs": 1,
+              "requestedBytes": 8192,
+              "payloadBytes": 27783,
+              "recipeMetadataBytes": 19591,
+              "planningHashedBytes": 65536,
+              "peakAlgorithmicPayloadBytes": 85127,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 1,
+              "literalReadCount": 1,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 0,
+              "requestedBytes": 8192,
+              "payloadBytes": 27783,
+              "recipeMetadataBytes": 19591,
+              "planningHashedBytes": 65536,
+              "peakAlgorithmicPayloadBytes": 85127,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 1,
+              "literalReadCount": 1,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 1,
+              "requestedBytes": 8192,
+              "payloadBytes": 27783,
+              "recipeMetadataBytes": 19591,
+              "planningHashedBytes": 65536,
+              "peakAlgorithmicPayloadBytes": 85127,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 1,
+              "literalReadCount": 1,
+              "correctness": true,
+              "storageUnchanged": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "16m-spread-16-pages",
+      "fileBytes": 16777216,
+      "dirtyPages": 16,
+      "distribution": "spread",
+      "accessShape": "three-spread-4k",
+      "routes": {
+        "full-materialization": {
+          "localMs": 14,
+          "requestedBytes": 12288,
+          "payloadBytes": 16777216,
+          "recipeMetadataBytes": 0,
+          "planningHashedBytes": 16777216,
+          "peakAlgorithmicPayloadBytes": 16777216,
+          "completeFileMaterializations": 1,
+          "objectRangeReadCount": 0,
+          "literalReadCount": 0,
+          "correctness": true,
+          "storageUnchanged": true,
+          "samples": [
+            {
+              "localMs": 14,
+              "requestedBytes": 12288,
+              "payloadBytes": 16777216,
+              "recipeMetadataBytes": 0,
+              "planningHashedBytes": 16777216,
+              "peakAlgorithmicPayloadBytes": 16777216,
+              "completeFileMaterializations": 1,
+              "objectRangeReadCount": 0,
+              "literalReadCount": 0,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 96,
+              "requestedBytes": 12288,
+              "payloadBytes": 16777216,
+              "recipeMetadataBytes": 0,
+              "planningHashedBytes": 16777216,
+              "peakAlgorithmicPayloadBytes": 16777216,
+              "completeFileMaterializations": 1,
+              "objectRangeReadCount": 0,
+              "literalReadCount": 0,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 14,
+              "requestedBytes": 12288,
+              "payloadBytes": 16777216,
+              "recipeMetadataBytes": 0,
+              "planningHashedBytes": 16777216,
+              "peakAlgorithmicPayloadBytes": 16777216,
+              "completeFileMaterializations": 1,
+              "objectRangeReadCount": 0,
+              "literalReadCount": 0,
+              "correctness": true,
+              "storageUnchanged": true
+            }
+          ]
+        },
+        "full-recipe-stream": {
+          "localMs": 14,
+          "requestedBytes": 12288,
+          "payloadBytes": 16796807,
+          "recipeMetadataBytes": 19591,
+          "planningHashedBytes": 65536,
+          "peakAlgorithmicPayloadBytes": 383085,
+          "completeFileMaterializations": 0,
+          "objectRangeReadCount": 124,
+          "literalReadCount": 17,
+          "correctness": true,
+          "storageUnchanged": true,
+          "samples": [
+            {
+              "localMs": 14,
+              "requestedBytes": 12288,
+              "payloadBytes": 16796807,
+              "recipeMetadataBytes": 19591,
+              "planningHashedBytes": 65536,
+              "peakAlgorithmicPayloadBytes": 383085,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 124,
+              "literalReadCount": 17,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 14,
+              "requestedBytes": 12288,
+              "payloadBytes": 16796807,
+              "recipeMetadataBytes": 19591,
+              "planningHashedBytes": 65536,
+              "peakAlgorithmicPayloadBytes": 383085,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 124,
+              "literalReadCount": 17,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 15,
+              "requestedBytes": 12288,
+              "payloadBytes": 16796807,
+              "recipeMetadataBytes": 19591,
+              "planningHashedBytes": 65536,
+              "peakAlgorithmicPayloadBytes": 383085,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 124,
+              "literalReadCount": 17,
+              "correctness": true,
+              "storageUnchanged": true
+            }
+          ]
+        },
+        "range-recipe": {
+          "localMs": 1,
+          "requestedBytes": 12288,
+          "payloadBytes": 31879,
+          "recipeMetadataBytes": 19591,
+          "planningHashedBytes": 65536,
+          "peakAlgorithmicPayloadBytes": 85127,
+          "completeFileMaterializations": 0,
+          "objectRangeReadCount": 3,
+          "literalReadCount": 0,
+          "correctness": true,
+          "storageUnchanged": true,
+          "samples": [
+            {
+              "localMs": 1,
+              "requestedBytes": 12288,
+              "payloadBytes": 31879,
+              "recipeMetadataBytes": 19591,
+              "planningHashedBytes": 65536,
+              "peakAlgorithmicPayloadBytes": 85127,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 3,
+              "literalReadCount": 0,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 0,
+              "requestedBytes": 12288,
+              "payloadBytes": 31879,
+              "recipeMetadataBytes": 19591,
+              "planningHashedBytes": 65536,
+              "peakAlgorithmicPayloadBytes": 85127,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 3,
+              "literalReadCount": 0,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 1,
+              "requestedBytes": 12288,
+              "payloadBytes": 31879,
+              "recipeMetadataBytes": 19591,
+              "planningHashedBytes": 65536,
+              "peakAlgorithmicPayloadBytes": 85127,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 3,
+              "literalReadCount": 0,
+              "correctness": true,
+              "storageUnchanged": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "16m-spread-16-pages",
+      "fileBytes": 16777216,
+      "dirtyPages": 16,
+      "distribution": "spread",
+      "accessShape": "quarter-sequential",
+      "routes": {
+        "full-materialization": {
+          "localMs": 16,
+          "requestedBytes": 4194304,
+          "payloadBytes": 16777216,
+          "recipeMetadataBytes": 0,
+          "planningHashedBytes": 16777216,
+          "peakAlgorithmicPayloadBytes": 16777216,
+          "completeFileMaterializations": 1,
+          "objectRangeReadCount": 0,
+          "literalReadCount": 0,
+          "correctness": true,
+          "storageUnchanged": true,
+          "samples": [
+            {
+              "localMs": 80,
+              "requestedBytes": 4194304,
+              "payloadBytes": 16777216,
+              "recipeMetadataBytes": 0,
+              "planningHashedBytes": 16777216,
+              "peakAlgorithmicPayloadBytes": 16777216,
+              "completeFileMaterializations": 1,
+              "objectRangeReadCount": 0,
+              "literalReadCount": 0,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 16,
+              "requestedBytes": 4194304,
+              "payloadBytes": 16777216,
+              "recipeMetadataBytes": 0,
+              "planningHashedBytes": 16777216,
+              "peakAlgorithmicPayloadBytes": 16777216,
+              "completeFileMaterializations": 1,
+              "objectRangeReadCount": 0,
+              "literalReadCount": 0,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 14,
+              "requestedBytes": 4194304,
+              "payloadBytes": 16777216,
+              "recipeMetadataBytes": 0,
+              "planningHashedBytes": 16777216,
+              "peakAlgorithmicPayloadBytes": 16777216,
+              "completeFileMaterializations": 1,
+              "objectRangeReadCount": 0,
+              "literalReadCount": 0,
+              "correctness": true,
+              "storageUnchanged": true
+            }
+          ]
+        },
+        "full-recipe-stream": {
+          "localMs": 14,
+          "requestedBytes": 4194304,
+          "payloadBytes": 16796807,
+          "recipeMetadataBytes": 19591,
+          "planningHashedBytes": 65536,
+          "peakAlgorithmicPayloadBytes": 383085,
+          "completeFileMaterializations": 0,
+          "objectRangeReadCount": 124,
+          "literalReadCount": 17,
+          "correctness": true,
+          "storageUnchanged": true,
+          "samples": [
+            {
+              "localMs": 14,
+              "requestedBytes": 4194304,
+              "payloadBytes": 16796807,
+              "recipeMetadataBytes": 19591,
+              "planningHashedBytes": 65536,
+              "peakAlgorithmicPayloadBytes": 383085,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 124,
+              "literalReadCount": 17,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 15,
+              "requestedBytes": 4194304,
+              "payloadBytes": 16796807,
+              "recipeMetadataBytes": 19591,
+              "planningHashedBytes": 65536,
+              "peakAlgorithmicPayloadBytes": 383085,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 124,
+              "literalReadCount": 17,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 13,
+              "requestedBytes": 4194304,
+              "payloadBytes": 16796807,
+              "recipeMetadataBytes": 19591,
+              "planningHashedBytes": 65536,
+              "peakAlgorithmicPayloadBytes": 383085,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 124,
+              "literalReadCount": 17,
+              "correctness": true,
+              "storageUnchanged": true
+            }
+          ]
+        },
+        "range-recipe": {
+          "localMs": 6,
+          "requestedBytes": 4194304,
+          "payloadBytes": 4213895,
+          "recipeMetadataBytes": 19591,
+          "planningHashedBytes": 65536,
+          "peakAlgorithmicPayloadBytes": 360249,
+          "completeFileMaterializations": 0,
+          "objectRangeReadCount": 31,
+          "literalReadCount": 4,
+          "correctness": true,
+          "storageUnchanged": true,
+          "samples": [
+            {
+              "localMs": 27,
+              "requestedBytes": 4194304,
+              "payloadBytes": 4213895,
+              "recipeMetadataBytes": 19591,
+              "planningHashedBytes": 65536,
+              "peakAlgorithmicPayloadBytes": 360249,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 31,
+              "literalReadCount": 4,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 6,
+              "requestedBytes": 4194304,
+              "payloadBytes": 4213895,
+              "recipeMetadataBytes": 19591,
+              "planningHashedBytes": 65536,
+              "peakAlgorithmicPayloadBytes": 360249,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 31,
+              "literalReadCount": 4,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 4,
+              "requestedBytes": 4194304,
+              "payloadBytes": 4213895,
+              "recipeMetadataBytes": 19591,
+              "planningHashedBytes": 65536,
+              "peakAlgorithmicPayloadBytes": 360249,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 31,
+              "literalReadCount": 4,
+              "correctness": true,
+              "storageUnchanged": true
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "16m-spread-16-pages",
+      "fileBytes": 16777216,
+      "dirtyPages": 16,
+      "distribution": "spread",
+      "accessShape": "full-sequential",
+      "routes": {
+        "full-materialization": {
+          "localMs": 102,
+          "requestedBytes": 16777216,
+          "payloadBytes": 16777216,
+          "recipeMetadataBytes": 0,
+          "planningHashedBytes": 16777216,
+          "peakAlgorithmicPayloadBytes": 16777216,
+          "completeFileMaterializations": 1,
+          "objectRangeReadCount": 0,
+          "literalReadCount": 0,
+          "correctness": true,
+          "storageUnchanged": true,
+          "samples": [
+            {
+              "localMs": 165,
+              "requestedBytes": 16777216,
+              "payloadBytes": 16777216,
+              "recipeMetadataBytes": 0,
+              "planningHashedBytes": 16777216,
+              "peakAlgorithmicPayloadBytes": 16777216,
+              "completeFileMaterializations": 1,
+              "objectRangeReadCount": 0,
+              "literalReadCount": 0,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 102,
+              "requestedBytes": 16777216,
+              "payloadBytes": 16777216,
+              "recipeMetadataBytes": 0,
+              "planningHashedBytes": 16777216,
+              "peakAlgorithmicPayloadBytes": 16777216,
+              "completeFileMaterializations": 1,
+              "objectRangeReadCount": 0,
+              "literalReadCount": 0,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 65,
+              "requestedBytes": 16777216,
+              "payloadBytes": 16777216,
+              "recipeMetadataBytes": 0,
+              "planningHashedBytes": 16777216,
+              "peakAlgorithmicPayloadBytes": 16777216,
+              "completeFileMaterializations": 1,
+              "objectRangeReadCount": 0,
+              "literalReadCount": 0,
+              "correctness": true,
+              "storageUnchanged": true
+            }
+          ]
+        },
+        "full-recipe-stream": {
+          "localMs": 19,
+          "requestedBytes": 16777216,
+          "payloadBytes": 16796807,
+          "recipeMetadataBytes": 19591,
+          "planningHashedBytes": 65536,
+          "peakAlgorithmicPayloadBytes": 383085,
+          "completeFileMaterializations": 0,
+          "objectRangeReadCount": 124,
+          "literalReadCount": 17,
+          "correctness": true,
+          "storageUnchanged": true,
+          "samples": [
+            {
+              "localMs": 18,
+              "requestedBytes": 16777216,
+              "payloadBytes": 16796807,
+              "recipeMetadataBytes": 19591,
+              "planningHashedBytes": 65536,
+              "peakAlgorithmicPayloadBytes": 383085,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 124,
+              "literalReadCount": 17,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 19,
+              "requestedBytes": 16777216,
+              "payloadBytes": 16796807,
+              "recipeMetadataBytes": 19591,
+              "planningHashedBytes": 65536,
+              "peakAlgorithmicPayloadBytes": 383085,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 124,
+              "literalReadCount": 17,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 81,
+              "requestedBytes": 16777216,
+              "payloadBytes": 16796807,
+              "recipeMetadataBytes": 19591,
+              "planningHashedBytes": 65536,
+              "peakAlgorithmicPayloadBytes": 383085,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 124,
+              "literalReadCount": 17,
+              "correctness": true,
+              "storageUnchanged": true
+            }
+          ]
+        },
+        "range-recipe": {
+          "localMs": 16,
+          "requestedBytes": 16777216,
+          "payloadBytes": 16796807,
+          "recipeMetadataBytes": 19591,
+          "planningHashedBytes": 65536,
+          "peakAlgorithmicPayloadBytes": 383085,
+          "completeFileMaterializations": 0,
+          "objectRangeReadCount": 124,
+          "literalReadCount": 17,
+          "correctness": true,
+          "storageUnchanged": true,
+          "samples": [
+            {
+              "localMs": 82,
+              "requestedBytes": 16777216,
+              "payloadBytes": 16796807,
+              "recipeMetadataBytes": 19591,
+              "planningHashedBytes": 65536,
+              "peakAlgorithmicPayloadBytes": 383085,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 124,
+              "literalReadCount": 17,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 16,
+              "requestedBytes": 16777216,
+              "payloadBytes": 16796807,
+              "recipeMetadataBytes": 19591,
+              "planningHashedBytes": 65536,
+              "peakAlgorithmicPayloadBytes": 383085,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 124,
+              "literalReadCount": 17,
+              "correctness": true,
+              "storageUnchanged": true
+            },
+            {
+              "localMs": 16,
+              "requestedBytes": 16777216,
+              "payloadBytes": 16796807,
+              "recipeMetadataBytes": 19591,
+              "planningHashedBytes": 65536,
+              "peakAlgorithmicPayloadBytes": 383085,
+              "completeFileMaterializations": 0,
+              "objectRangeReadCount": 124,
+              "literalReadCount": 17,
+              "correctness": true,
+              "storageUnchanged": true
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "capture": {
+    "id": "1",
+    "capturedAt": "2026-08-10T12:16:15.046Z",
+    "output": "results/c3-range-recipe-recovery-formal-run-1.json"
+  }
+}

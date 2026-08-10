@@ -51,6 +51,50 @@ export interface ExperimentalRangeEdit {
   bytes: Uint8Array;
 }
 
+export interface ExperimentalCasRecipeExtent {
+  kind: "cas";
+  fileOffset: number;
+  length: number;
+  objectHash: string;
+  objectOffset: number;
+}
+
+export interface ExperimentalLiteralRecipeExtent {
+  kind: "literal";
+  fileOffset: number;
+  length: number;
+  bytes: Uint8Array;
+}
+
+export type ExperimentalSparseRecipeExtent =
+  | ExperimentalCasRecipeExtent
+  | ExperimentalLiteralRecipeExtent;
+
+export interface ExperimentalSparseRecipe {
+  schemaVersion: 1;
+  fileSize: number;
+  baseManifestHash: string;
+  extents: ExperimentalSparseRecipeExtent[];
+  metadataBytes: number;
+  literalBytes: number;
+  referencedBytes: number;
+}
+
+export interface ExperimentalRecipeRange {
+  offset: number;
+  length: number;
+}
+
+export interface ExperimentalSparseReadMetrics {
+  requestedBytes: number;
+  payloadBytes: number;
+  recipeMetadataBytes: number;
+  objectRangeReadCount: number;
+  literalReadCount: number;
+  peakAlgorithmicPayloadBytes: number;
+  completeFileMaterializations: number;
+}
+
 export type ExperimentalPagePublishStrategy =
   | "single-window"
   | "multi-window"
@@ -1364,6 +1408,319 @@ export class CasCdcCowWorkspaceStore implements BranchWorkspaceStorageEngine {
       );
     }
     return result;
+  }
+
+  /**
+   * Read-only benchmark prototype: describe an equal-length COW branch as an
+   * ordered recipe of immutable CAS ranges and literal dirty-page ranges.
+   *
+   * This deliberately does not publish, persist a new manifest, reconstruct a
+   * complete logical file, or install a receiver cache. It is an experimental
+   * surface for the v0.5/v0.6R mechanism benchmarks only.
+   */
+  exportExperimentalSparseRecipe(
+    branchId: string,
+    path: string,
+  ): ExperimentalSparseRecipe {
+    const branch = this.branch(branchId);
+    if (branch.state !== "active") throw new Error(`branch ${branchId} is not active`);
+    const changed = maybeOne<BranchFileRow & Record<string, SqlStorageValue>>(
+      this.sql,
+      `SELECT base_manifest, base_size, materialized_manifest, materialized_size
+         FROM ccdc_branch_files
+        WHERE branch_id = ? AND path = ?`,
+      branchId,
+      path,
+    );
+    const historical = changed === undefined
+      ? this.versionAt(path, branch.base_commit)
+      : undefined;
+    const manifestHash = changed === undefined
+      ? historical!.manifest_hash
+      : (changed.materialized_manifest ?? changed.base_manifest);
+    const fileSize = changed === undefined
+      ? historical!.size
+      : (changed.materialized_size ?? changed.base_size);
+    if (!isContentManifest(manifestHash)) throw new Error(`no such file: ${path}`);
+    const patches = this.patchStats(branchId, path);
+    if (patches.count !== 0 || patches.size_delta !== 0) {
+      throw new Error("experimental sparse recipes require a patch-free equal-length file");
+    }
+
+    const pages = this.sql.exec<PageRow>(
+      `SELECT page_index, byte_length, bytes FROM ccdc_branch_pages
+        WHERE branch_id = ? AND path = ? ORDER BY page_index`,
+      branchId,
+      path,
+    ).toArray();
+    const entries = this.manifestEntries(manifestHash, fileSize);
+    const extents: ExperimentalSparseRecipeExtent[] = [];
+    let fileOffset = 0;
+    let pageCursor = 0;
+
+    for (const entry of entries) {
+      const objectStart = fileOffset;
+      const objectEnd = objectStart + entry.size;
+      let cursor = objectStart;
+      while (
+        pageCursor < pages.length &&
+        pages[pageCursor].page_index * COW_PAGE_BYTES + pages[pageCursor].byte_length <= cursor
+      ) pageCursor++;
+
+      let localPageCursor = pageCursor;
+      while (localPageCursor < pages.length) {
+        const page = pages[localPageCursor];
+        const pageStart = page.page_index * COW_PAGE_BYTES;
+        const pageEnd = pageStart + page.byte_length;
+        if (pageStart >= objectEnd) break;
+        if (pageEnd <= cursor) {
+          localPageCursor++;
+          continue;
+        }
+        const overlapStart = Math.max(cursor, pageStart);
+        const overlapEnd = Math.min(objectEnd, pageEnd);
+        if (cursor < overlapStart) {
+          extents.push({
+            kind: "cas",
+            fileOffset: cursor,
+            length: overlapStart - cursor,
+            objectHash: entry.hash,
+            objectOffset: cursor - objectStart,
+          });
+        }
+        const pageBytes = asBytes(page.bytes);
+        extents.push({
+          kind: "literal",
+          fileOffset: overlapStart,
+          length: overlapEnd - overlapStart,
+          bytes: new Uint8Array(pageBytes.subarray(
+            overlapStart - pageStart,
+            overlapEnd - pageStart,
+          )),
+        });
+        cursor = overlapEnd;
+        if (pageEnd <= objectEnd) localPageCursor++;
+        if (cursor >= objectEnd) break;
+      }
+      if (cursor < objectEnd) {
+        extents.push({
+          kind: "cas",
+          fileOffset: cursor,
+          length: objectEnd - cursor,
+          objectHash: entry.hash,
+          objectOffset: cursor - objectStart,
+        });
+      }
+      fileOffset = objectEnd;
+      pageCursor = localPageCursor;
+    }
+
+    const describedBytes = extents.reduce((total, extent) => total + extent.length, 0);
+    if (describedBytes !== fileSize) {
+      throw new Error(`sparse recipe describes ${describedBytes} of ${fileSize} bytes`);
+    }
+    const literalBytes = extents.reduce(
+      (total, extent) => total + (extent.kind === "literal" ? extent.length : 0),
+      0,
+    );
+    const metadata = {
+      schemaVersion: 1,
+      fileSize,
+      baseManifestHash: manifestHash,
+      extents: extents.map((extent) => extent.kind === "cas"
+        ? extent
+        : {
+            kind: extent.kind,
+            fileOffset: extent.fileOffset,
+            length: extent.length,
+          }),
+    };
+    return {
+      schemaVersion: 1,
+      fileSize,
+      baseManifestHash: manifestHash,
+      extents,
+      metadataBytes: new TextEncoder().encode(JSON.stringify(metadata)).byteLength,
+      literalBytes,
+      referencedBytes: fileSize - literalBytes,
+    };
+  }
+
+  private readExperimentalRecipeExtent(
+    extent: ExperimentalSparseRecipeExtent,
+    offset: number,
+    length: number,
+  ): Uint8Array {
+    if (offset < 0 || length < 0 || offset + length > extent.length) {
+      throw new RangeError(`invalid recipe extent range ${offset}:${length}`);
+    }
+    if (extent.kind === "literal") {
+      return new Uint8Array(extent.bytes.subarray(offset, offset + length));
+    }
+    const row = one<{ bytes: ArrayBuffer }>(
+      this.sql,
+      `SELECT substr(bytes, ?, ?) AS bytes FROM ccdc_objects WHERE hash = ?`,
+      extent.objectOffset + offset + 1,
+      length,
+      extent.objectHash,
+    );
+    return new Uint8Array(asBytes(row.bytes));
+  }
+
+  consumeExperimentalSparseRecipe(
+    recipe: ExperimentalSparseRecipe,
+  ): ExperimentalSparseReadMetrics & { checksum: number } {
+    let checksum = 0;
+    let objectRangeReadCount = 0;
+    let literalReadCount = 0;
+    let peakAlgorithmicPayloadBytes = recipe.metadataBytes;
+    for (const extent of recipe.extents) {
+      const bytes = this.readExperimentalRecipeExtent(extent, 0, extent.length);
+      if (extent.kind === "cas") objectRangeReadCount++;
+      else literalReadCount++;
+      peakAlgorithmicPayloadBytes = Math.max(peakAlgorithmicPayloadBytes, bytes.byteLength);
+      if (bytes.byteLength > 0) {
+        checksum = (
+          checksum + bytes[0] + bytes[bytes.byteLength - 1] + bytes.byteLength
+        ) >>> 0;
+      }
+    }
+    return {
+      checksum,
+      requestedBytes: recipe.fileSize,
+      payloadBytes: recipe.fileSize,
+      recipeMetadataBytes: recipe.metadataBytes,
+      objectRangeReadCount,
+      literalReadCount,
+      peakAlgorithmicPayloadBytes,
+      completeFileMaterializations: 0,
+    };
+  }
+
+  readExperimentalSparseRecipeRanges(
+    recipe: ExperimentalSparseRecipe,
+    ranges: ExperimentalRecipeRange[],
+  ): { bytes: Uint8Array[]; metrics: ExperimentalSparseReadMetrics } {
+    for (const range of ranges) {
+      if (
+        !Number.isSafeInteger(range.offset) ||
+        !Number.isSafeInteger(range.length) ||
+        range.offset < 0 ||
+        range.length < 0 ||
+        range.offset + range.length > recipe.fileSize
+      ) throw new RangeError(`invalid recipe range ${range.offset}:${range.length}`);
+    }
+    let objectRangeReadCount = 0;
+    let literalReadCount = 0;
+    let transferredBytes = 0;
+    let peakAlgorithmicPayloadBytes = recipe.metadataBytes;
+    const outputs = ranges.map((range) => {
+      const output = new Uint8Array(range.length);
+      const rangeEnd = range.offset + range.length;
+      for (const extent of recipe.extents) {
+        const extentEnd = extent.fileOffset + extent.length;
+        if (extentEnd <= range.offset) continue;
+        if (extent.fileOffset >= rangeEnd) break;
+        const overlapStart = Math.max(range.offset, extent.fileOffset);
+        const overlapEnd = Math.min(rangeEnd, extentEnd);
+        const bytes = this.readExperimentalRecipeExtent(
+          extent,
+          overlapStart - extent.fileOffset,
+          overlapEnd - overlapStart,
+        );
+        output.set(bytes, overlapStart - range.offset);
+        transferredBytes += bytes.byteLength;
+        if (extent.kind === "cas") objectRangeReadCount++;
+        else literalReadCount++;
+        peakAlgorithmicPayloadBytes = Math.max(
+          peakAlgorithmicPayloadBytes,
+          bytes.byteLength,
+        );
+      }
+      return output;
+    });
+    return {
+      bytes: outputs,
+      metrics: {
+        requestedBytes: ranges.reduce((total, range) => total + range.length, 0),
+        payloadBytes: recipe.metadataBytes + transferredBytes,
+        recipeMetadataBytes: recipe.metadataBytes,
+        objectRangeReadCount,
+        literalReadCount,
+        peakAlgorithmicPayloadBytes,
+        completeFileMaterializations: 0,
+      },
+    };
+  }
+
+  readExperimentalSparseRecipeRangesViaFullStream(
+    recipe: ExperimentalSparseRecipe,
+    ranges: ExperimentalRecipeRange[],
+  ): { bytes: Uint8Array[]; metrics: ExperimentalSparseReadMetrics } {
+    for (const range of ranges) {
+      if (
+        !Number.isSafeInteger(range.offset) ||
+        !Number.isSafeInteger(range.length) ||
+        range.offset < 0 ||
+        range.length < 0 ||
+        range.offset + range.length > recipe.fileSize
+      ) throw new RangeError(`invalid recipe range ${range.offset}:${range.length}`);
+    }
+    const outputs = ranges.map((range) => new Uint8Array(range.length));
+    let objectRangeReadCount = 0;
+    let literalReadCount = 0;
+    let peakAlgorithmicPayloadBytes = recipe.metadataBytes;
+    for (const extent of recipe.extents) {
+      const bytes = this.readExperimentalRecipeExtent(extent, 0, extent.length);
+      if (extent.kind === "cas") objectRangeReadCount++;
+      else literalReadCount++;
+      peakAlgorithmicPayloadBytes = Math.max(peakAlgorithmicPayloadBytes, bytes.byteLength);
+      const extentEnd = extent.fileOffset + extent.length;
+      ranges.forEach((range, index) => {
+        const rangeEnd = range.offset + range.length;
+        const overlapStart = Math.max(range.offset, extent.fileOffset);
+        const overlapEnd = Math.min(rangeEnd, extentEnd);
+        if (overlapStart >= overlapEnd) return;
+        outputs[index].set(
+          bytes.subarray(
+            overlapStart - extent.fileOffset,
+            overlapEnd - extent.fileOffset,
+          ),
+          overlapStart - range.offset,
+        );
+      });
+    }
+    return {
+      bytes: outputs,
+      metrics: {
+        requestedBytes: ranges.reduce((total, range) => total + range.length, 0),
+        payloadBytes: recipe.metadataBytes + recipe.fileSize,
+        recipeMetadataBytes: recipe.metadataBytes,
+        objectRangeReadCount,
+        literalReadCount,
+        peakAlgorithmicPayloadBytes,
+        completeFileMaterializations: 0,
+      },
+    };
+  }
+
+  verifyExperimentalSparseRecipe(
+    recipe: ExperimentalSparseRecipe,
+    expected: Uint8Array,
+  ): boolean {
+    if (expected.byteLength !== recipe.fileSize) return false;
+    for (const extent of recipe.extents) {
+      const bytes = this.readExperimentalRecipeExtent(extent, 0, extent.length);
+      const expectedBytes = expected.subarray(
+        extent.fileOffset,
+        extent.fileOffset + extent.length,
+      );
+      if (bytes.byteLength !== expectedBytes.byteLength) return false;
+      for (let index = 0; index < bytes.byteLength; index++) {
+        if (bytes[index] !== expectedBytes[index]) return false;
+      }
+    }
+    return true;
   }
 
   async writeBranchFile(branchId: string, path: string, bytes: Uint8Array): Promise<void> {

@@ -1,0 +1,120 @@
+{
+  "schemaVersion": 1,
+  "experiment": "c3-no-cache-sparse-transfer-v0.5-recovery-formal",
+  "date": "2026-08-10",
+  "author": "Wang Runyuan",
+  "repositoryBaseRevision": "e745e1da8a6ee3e97fa794ce36a5d504d74bdeb3",
+  "recoveryNotice": "fresh rerun after the unpushed local workspace was pruned; not the lost original bytes",
+  "sourceRuns": [
+    {
+      "path": "results/c3-sparse-transfer-recovery-formal-run-1.json",
+      "sha256": "fbe703ca0f212a521cd112d7d1c7bab88422936b8520eb423248928a5581bfe9",
+      "bytes": 88519,
+      "capture": {
+        "id": "1",
+        "capturedAt": "2026-08-10T12:15:09.334Z",
+        "output": "results/c3-sparse-transfer-recovery-formal-run-1.json"
+      },
+      "formalExecutions": 144
+    },
+    {
+      "path": "results/c3-sparse-transfer-recovery-formal-run-2.json",
+      "sha256": "1eb49e9fa1c48f3f01b0917b68fefdf21e4c5876f7e2b9aa5f79d2dbd35efd46",
+      "bytes": 88521,
+      "capture": {
+        "id": "2",
+        "capturedAt": "2026-08-10T12:15:47.856Z",
+        "output": "results/c3-sparse-transfer-recovery-formal-run-2.json"
+      },
+      "formalExecutions": 144
+    }
+  ],
+  "combinedFormalExecutions": 288,
+  "runSummaries": [
+    {
+      "capture": {
+        "id": "1",
+        "capturedAt": "2026-08-10T12:15:09.334Z",
+        "output": "results/c3-sparse-transfer-recovery-formal-run-1.json"
+      },
+      "fullMedianSumMs": 151,
+      "sparseMedianSumMs": 104,
+      "sparseToFullLocalTimeRatio": 0.688742,
+      "maxHashedByteRatio": 0.0625,
+      "maxLargeFileWorkingSetRatio": 0.03125,
+      "minReferencedByteRatio": 0.9375
+    },
+    {
+      "capture": {
+        "id": "2",
+        "capturedAt": "2026-08-10T12:15:47.856Z",
+        "output": "results/c3-sparse-transfer-recovery-formal-run-2.json"
+      },
+      "fullMedianSumMs": 172,
+      "sparseMedianSumMs": 103,
+      "sparseToFullLocalTimeRatio": 0.598837,
+      "maxHashedByteRatio": 0.0625,
+      "maxLargeFileWorkingSetRatio": 0.03125,
+      "minReferencedByteRatio": 0.9375
+    }
+  ],
+  "hypotheses": {
+    "H1_correctness": {
+      "passed": true,
+      "threshold": "288/288 formal executions exact",
+      "actual": 288
+    },
+    "H2_readOnly": {
+      "passed": true,
+      "threshold": "288/288 storage fingerprints unchanged",
+      "actual": 288
+    },
+    "H3_noCompleteMaterialization": {
+      "passed": true,
+      "threshold": "zero complete logical-file materializations on sparse route"
+    },
+    "H4_boundedIdentityWork": {
+      "passed": true,
+      "threshold": "hashed bytes <= 10% of file in every scenario/run",
+      "perRunMaxRatio": [
+        0.0625,
+        0.0625
+      ]
+    },
+    "H5_largeFileWorkingSet": {
+      "passed": true,
+      "threshold": "16 MiB sparse peak <= 5% of file in every scenario/run",
+      "perRunMaxRatio": [
+        0.03125,
+        0.03125
+      ]
+    },
+    "H6_honestColdPayload": {
+      "passed": true,
+      "threshold": "cold wire payload equals file size; no cache credit"
+    },
+    "H7_structuralReuse": {
+      "passed": true,
+      "threshold": "at least 90% referenced bytes in every scenario/run",
+      "perRunMinRatio": [
+        0.9375,
+        0.9375
+      ]
+    },
+    "H8_replicatedLocalDirection": {
+      "passed": true,
+      "threshold": "sparse median-sum local time <= 1.25x full in each run",
+      "perRunRatio": [
+        0.688742,
+        0.598837
+      ]
+    }
+  },
+  "allPassed": true,
+  "interpretationLimits": [
+    "cold wire payload remains one complete file because no receiver cache is assumed",
+    "local timing excludes RPC, network, FUSE, native disk, concurrency, and production workload weighting",
+    "the prototype handles only patch-free equal-length COW branches",
+    "no production, three-dimensional, or neural-network claim"
+  ]
+}
