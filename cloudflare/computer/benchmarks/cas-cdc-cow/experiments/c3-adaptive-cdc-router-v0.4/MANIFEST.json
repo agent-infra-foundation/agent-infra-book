@@ -55,14 +55,14 @@
     {
       "path": "src/engines/cas-cdc-cow.ts",
       "purpose": "opt-in coalesced and adaptive page publication, scan budgets, and metrics; default behavior unchanged",
-      "sha256": "d053ed13d51504f252951fac322ca3b36bf8018418ae3481e593a73bb45f8513",
-      "bytes": 75445
+      "sha256": "6cc242c90b225cf913d091dcd717aba3cbb096691ce577c8c23dbe1f3aea39b2",
+      "bytes": 75628
     },
     {
       "path": "src/tests/experimental-multi-window.test.ts",
       "purpose": "targeted correctness, pre-merge, and route-selection tests",
-      "sha256": "16be46280809a39662456ff78ea3f9974b7acdf91b877840ff1b1f87cb7b3c4d",
-      "bytes": 6742
+      "sha256": "d89f05b6ac31fbf6014ea188631c38afb6cb70ed93ddfa590c46f67a1236bfaa",
+      "bytes": 7650
     },
     {
       "path": "src/bench/adaptive-cdc-router.bench.ts",
@@ -79,14 +79,14 @@
     {
       "path": "scripts/analyze-adaptive-cdc-router.mjs",
       "purpose": "deterministic analysis, CSV, and report generator",
-      "sha256": "0961a04728705ac9e670b5087b32096239153b1e6d3ca60a3bc90a9aab424932",
-      "bytes": 19709
+      "sha256": "af1d288527a4b771088c6f9dd8b9c229344ac1115b0cb79e10c3c13c75e2210e",
+      "bytes": 19848
     },
     {
       "path": "scripts/verify-adaptive-cdc-router.mjs",
       "purpose": "inventory, raw-evidence, and frozen-decision verifier",
-      "sha256": "0c24ac92cacf9575aaffdafb2b0b854c2d1ae25a3cf3ba6db5ce620bb89b088f",
-      "bytes": 5805
+      "sha256": "5351384050b24d3b848451d57960f8e2bfa8867ff8d679faca8bceb1cfcfbe09",
+      "bytes": 5951
     },
     {
       "path": "experiments/C3_ADAPTIVE_CDC_ROUTER_V04.md",

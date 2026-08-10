@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { readFileSync, statSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import { dirname, isAbsolute, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -38,6 +38,10 @@ function sha256(bytes) {
   return createHash("sha256").update(bytes).digest("hex");
 }
 
+function canonicalTextBytes(bytes) {
+  return Buffer.from(bytes.toString("utf8").replaceAll("\r\n", "\n"), "utf8");
+}
+
 function readJson(path) {
   return JSON.parse(readFileSync(path, "utf8"));
 }
@@ -54,15 +58,15 @@ for (const item of manifest.inventory) {
   check(!inventoryPaths.has(item.path), `duplicate inventory path: ${item.path}`);
   inventoryPaths.add(item.path);
   try {
-    const bytes = readFileSync(path);
-    check(statSync(path).size === item.bytes, `byte count mismatch: ${item.path}`);
+    const bytes = canonicalTextBytes(readFileSync(path));
+    check(bytes.byteLength === item.bytes, `byte count mismatch: ${item.path}`);
     check(sha256(bytes) === item.sha256, `SHA-256 mismatch: ${item.path}`);
   } catch (error) {
     failures.push(`cannot read inventory file ${item.path}: ${error.message}`);
   }
 }
 
-const rawBytes = readFileSync(rawPath);
+const rawBytes = canonicalTextBytes(readFileSync(rawPath));
 const raw = JSON.parse(rawBytes.toString("utf8"));
 const analysis = readJson(analysisPath);
 const rawSha256 = sha256(rawBytes);

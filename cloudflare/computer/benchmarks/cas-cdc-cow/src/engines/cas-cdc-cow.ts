@@ -1273,6 +1273,7 @@ export class CasCdcCowWorkspaceStore implements BranchWorkspaceStorageEngine {
       branchId,
       this.mainCommit(),
     );
+    this.experimentalPagePublishStrategies.delete(branchId);
   }
 
   listFiles(branchId: string | null): string[] {
@@ -1984,6 +1985,7 @@ export class CasCdcCowWorkspaceStore implements BranchWorkspaceStorageEngine {
       }
     });
 
+    this.experimentalPagePublishStrategies.delete(branchId);
     return { outcome: "merged", commit, conflicts: [] };
   }
 
@@ -1994,6 +1996,7 @@ export class CasCdcCowWorkspaceStore implements BranchWorkspaceStorageEngine {
       this.sql.exec("DELETE FROM ccdc_branch_files WHERE branch_id = ?", branchId);
       this.sql.exec("UPDATE ccdc_branches SET state = 'discarded' WHERE branch_id = ?", branchId);
     });
+    this.experimentalPagePublishStrategies.delete(branchId);
   }
 
   private retainedManifestHashes(

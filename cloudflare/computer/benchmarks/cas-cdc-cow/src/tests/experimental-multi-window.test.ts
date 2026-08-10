@@ -169,4 +169,29 @@ describe("experimental batched COW and multi-window CDC", () => {
     expect(adaptive.metrics.cdcWindowCount).toBe(1);
     expect(adaptive.metrics.fullManifestCount).toBe(1);
   });
+
+  it("does not retain an experimental route when a branch id is reused", async () => {
+    await withEngine("cas-cdc-cow", async ({ engine }) => {
+      const c3 = engine as CasCdcCowWorkspaceStore;
+      const base = fixtureBytes(4 * MIB, 0x71a3);
+      const ranges = [64 * KIB, 3 * MIB].map((offset) => ({
+        offset,
+        bytes: new Uint8Array(4 * KIB).fill(0xa5),
+      }));
+
+      await c3.seedFile("/workspace.bin", base);
+      c3.createBranch("agent-a");
+      c3.setExperimentalPagePublishStrategy("agent-a", "adaptive");
+      await c3.editFileRanges("agent-a", "/workspace.bin", ranges);
+      await c3.publish("agent-a");
+      await c3.gc(1);
+
+      c3.createBranch("agent-a");
+      c3.resetCounters();
+      await c3.editFileRanges("agent-a", "/workspace.bin", ranges);
+      await c3.publish("agent-a");
+
+      expect(c3.experimentalMetrics.adaptivePlanCount).toBe(0);
+    });
+  });
 });

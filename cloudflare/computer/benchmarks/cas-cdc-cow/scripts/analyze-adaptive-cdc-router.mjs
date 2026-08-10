@@ -86,7 +86,11 @@ function hypothesisLabel(passed) {
   return passed ? "PASS" : "FAIL";
 }
 
-const rawBytes = readFileSync(rawPath);
+function canonicalTextBytes(bytes) {
+  return Buffer.from(bytes.toString("utf8").replaceAll("\r\n", "\n"), "utf8");
+}
+
+const rawBytes = canonicalTextBytes(readFileSync(rawPath));
 const rawSha256 = createHash("sha256").update(rawBytes).digest("hex");
 const raw = JSON.parse(rawBytes.toString("utf8"));
 const rows = raw.results;
