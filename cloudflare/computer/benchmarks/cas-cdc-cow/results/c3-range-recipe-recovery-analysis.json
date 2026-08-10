@@ -1,0 +1,154 @@
+{
+  "schemaVersion": 1,
+  "experiment": "c3-no-cache-range-recipe-v0.6R-recovery-formal",
+  "date": "2026-08-10",
+  "author": "Wang Runyuan",
+  "repositoryBaseRevision": "e745e1da8a6ee3e97fa794ce36a5d504d74bdeb3",
+  "recoveryNotice": "fresh rerun after the unpushed local workspace was pruned; not the lost original bytes",
+  "sourceRuns": [
+    {
+      "path": "results/c3-range-recipe-recovery-formal-run-1.json",
+      "sha256": "6f3104beae91687911832d9c458a265183b031b138a3d5008a8db85f250520d4",
+      "bytes": 90726,
+      "capture": {
+        "id": "1",
+        "capturedAt": "2026-08-10T12:16:15.046Z",
+        "output": "results/c3-range-recipe-recovery-formal-run-1.json"
+      },
+      "formalExecutions": 135
+    },
+    {
+      "path": "results/c3-range-recipe-recovery-formal-run-2.json",
+      "sha256": "c379b07726f0c50749da76b33bbd4c91f590b207df520425941f8715e854b0fa",
+      "bytes": 90736,
+      "capture": {
+        "id": "2",
+        "capturedAt": "2026-08-10T12:16:40.304Z",
+        "output": "results/c3-range-recipe-recovery-formal-run-2.json"
+      },
+      "formalExecutions": 135
+    }
+  ],
+  "combinedFormalExecutions": 270,
+  "runSummaries": [
+    {
+      "capture": {
+        "id": "1",
+        "capturedAt": "2026-08-10T12:16:15.046Z",
+        "output": "results/c3-range-recipe-recovery-formal-run-1.json"
+      },
+      "sparsePayloadRatio": 0.002286,
+      "quarterPayloadRatio": 0.25117,
+      "fullPayloadRatio": 1.00117,
+      "planningHashedByteRatio": 0.003906,
+      "maxWorkingSetRatio": 0.210268,
+      "nonFullPayloadSpecificity": true,
+      "rangeObjectReadCount": 217,
+      "fullSequentialObjectReadCount": 162,
+      "sparseFullMedianSumMs": 128,
+      "sparseRangeMedianSumMs": 7,
+      "sparseLocalTimeRatio": 0.054688
+    },
+    {
+      "capture": {
+        "id": "2",
+        "capturedAt": "2026-08-10T12:16:40.304Z",
+        "output": "results/c3-range-recipe-recovery-formal-run-2.json"
+      },
+      "sparsePayloadRatio": 0.002286,
+      "quarterPayloadRatio": 0.25117,
+      "fullPayloadRatio": 1.00117,
+      "planningHashedByteRatio": 0.003906,
+      "maxWorkingSetRatio": 0.210268,
+      "nonFullPayloadSpecificity": true,
+      "rangeObjectReadCount": 217,
+      "fullSequentialObjectReadCount": 162,
+      "sparseFullMedianSumMs": 181,
+      "sparseRangeMedianSumMs": 4,
+      "sparseLocalTimeRatio": 0.022099
+    }
+  ],
+  "hypotheses": {
+    "H1_correctness": {
+      "passed": true,
+      "threshold": "270/270 formal executions exact",
+      "actual": 270
+    },
+    "H2_readOnly": {
+      "passed": true,
+      "threshold": "270/270 storage fingerprints unchanged",
+      "actual": 270
+    },
+    "H3_noCompleteMaterialization": {
+      "passed": true,
+      "threshold": "zero complete logical-file materializations on range-recipe route"
+    },
+    "H4_sparsePayload": {
+      "passed": true,
+      "threshold": "three sparse shapes <= 2% aggregate payload in each run",
+      "perRunRatio": [
+        0.002286,
+        0.002286
+      ]
+    },
+    "H5_quarterPayload": {
+      "passed": true,
+      "threshold": "quarter access <= 26% aggregate payload in each run",
+      "perRunRatio": [
+        0.25117,
+        0.25117
+      ]
+    },
+    "H6_fullAccessOverhead": {
+      "passed": true,
+      "threshold": "full access <= 101% aggregate payload in each run",
+      "perRunRatio": [
+        1.00117,
+        1.00117
+      ]
+    },
+    "H7_boundedIdentityWork": {
+      "passed": true,
+      "threshold": "planning hashed bytes <= 1% aggregate file bytes in each run",
+      "perRunRatio": [
+        0.003906,
+        0.003906
+      ]
+    },
+    "H8_boundedWorkingSet": {
+      "passed": true,
+      "threshold": "range-recipe peak <= 25% of file in every scenario/run",
+      "perRunMaxRatio": [
+        0.210268,
+        0.210268
+      ]
+    },
+    "H9_rangeSpecificity": {
+      "passed": true,
+      "threshold": "range payload < full-recipe payload in every non-full scenario/run"
+    },
+    "H10_actualCasRangeReads": {
+      "passed": true,
+      "threshold": "at least one CAS object-range query in each run",
+      "perRunCount": [
+        217,
+        217
+      ]
+    },
+    "H11_replicatedSparseLocalDirection": {
+      "passed": true,
+      "threshold": "sparse-shape range local median sum < full materialization in each run",
+      "perRunRatio": [
+        0.054688,
+        0.022099
+      ]
+    }
+  },
+  "allPassed": true,
+  "interpretationLimits": [
+    "payload ratios are deterministic mechanism accounting, not measured network throughput",
+    "full sequential demand intentionally approaches one complete file of payload",
+    "local timing excludes RPC, network, FUSE, native disk, concurrency, and production workload weighting",
+    "no persistent receiver cache, production, three-dimensional, or neural-network claim"
+  ]
+}
