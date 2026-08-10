@@ -46,6 +46,57 @@ interface BranchFileRow {
   materialized_size: number | null;
 }
 
+export interface ExperimentalRangeEdit {
+  offset: number;
+  bytes: Uint8Array;
+}
+
+export type ExperimentalPagePublishStrategy =
+  | "single-window"
+  | "multi-window"
+  | "coalesced-multi-window"
+  | "adaptive";
+
+export const EXPERIMENTAL_ADAPTIVE_C3_POLICY = {
+  mergeGapBytes: DEFAULT_FASTCDC.maxSize * 2,
+  maxIndependentWindows: 8,
+  scanBudgetFileRatio: 1,
+  localizedSingleWindowFileRatio: 0.5,
+} as const;
+
+export interface C3ExperimentMetrics {
+  cdcScanBytes: number;
+  cdcWindowCount: number;
+  fullManifestCount: number;
+  pageLoadBytes: number;
+  pageLoadCount: number;
+  pageUpsertCount: number;
+  editFileCalls: number;
+  editFileRangesCalls: number;
+  multiWindowMergeCount: number;
+  multiWindowResyncCount: number;
+  multiWindowOriginalRunCount: number;
+  multiWindowPlannedRunCount: number;
+  scanBudgetAbortCount: number;
+  adaptivePlanCount: number;
+  adaptiveOriginalRunCount: number;
+  adaptiveCoalescedRunCount: number;
+  adaptiveEstimatedSingleScanBytes: number;
+  adaptiveEstimatedMultiScanBytes: number;
+  adaptiveScanBudgetBytes: number;
+  adaptiveSelectedSingleWindowCount: number;
+  adaptiveSelectedMultiWindowCount: number;
+  adaptiveSelectedFullScanCount: number;
+  adaptiveBudgetFallbackCount: number;
+}
+
+interface LocalManifestSplice {
+  replacementEntries: ManifestEntry[];
+  chunks: PreparedChunk[];
+  resyncOffset: number;
+  suffixIndex: number;
+}
+
 const COW_PAGE_BYTES = 4 * 1024;
 const MAX_PAGE_EDIT_BYTES = 64 * 1024;
 const MAX_PATCH_BLOB_BYTES = 512 * 1024;
@@ -62,6 +113,35 @@ function isContentManifest(hash: string): boolean {
 export class CasCdcCowWorkspaceStore implements BranchWorkspaceStorageEngine {
   readonly name = "cas-cdc-cow" as const;
   readonly counters: EngineCounters = { sqlitePayloadBytes: 0 };
+  readonly experimentalMetrics: C3ExperimentMetrics = {
+    cdcScanBytes: 0,
+    cdcWindowCount: 0,
+    fullManifestCount: 0,
+    pageLoadBytes: 0,
+    pageLoadCount: 0,
+    pageUpsertCount: 0,
+    editFileCalls: 0,
+    editFileRangesCalls: 0,
+    multiWindowMergeCount: 0,
+    multiWindowResyncCount: 0,
+    multiWindowOriginalRunCount: 0,
+    multiWindowPlannedRunCount: 0,
+    scanBudgetAbortCount: 0,
+    adaptivePlanCount: 0,
+    adaptiveOriginalRunCount: 0,
+    adaptiveCoalescedRunCount: 0,
+    adaptiveEstimatedSingleScanBytes: 0,
+    adaptiveEstimatedMultiScanBytes: 0,
+    adaptiveScanBudgetBytes: 0,
+    adaptiveSelectedSingleWindowCount: 0,
+    adaptiveSelectedMultiWindowCount: 0,
+    adaptiveSelectedFullScanCount: 0,
+    adaptiveBudgetFallbackCount: 0,
+  };
+  private readonly experimentalPagePublishStrategies = new Map<
+    string,
+    ExperimentalPagePublishStrategy
+  >();
 
   constructor(private readonly storage: DurableObjectStorage) {}
 
@@ -190,6 +270,18 @@ export class CasCdcCowWorkspaceStore implements BranchWorkspaceStorageEngine {
 
   resetCounters(): void {
     this.counters.sqlitePayloadBytes = 0;
+    for (const key of Object.keys(this.experimentalMetrics) as Array<keyof C3ExperimentMetrics>) {
+      this.experimentalMetrics[key] = 0;
+    }
+  }
+
+  setExperimentalPagePublishStrategy(
+    branchId: string,
+    strategy: ExperimentalPagePublishStrategy,
+  ): void {
+    const branch = this.branch(branchId);
+    if (branch.state !== "active") throw new Error(`branch ${branchId} is not active`);
+    this.experimentalPagePublishStrategies.set(branchId, strategy);
   }
 
   private mainCommit(): number {
@@ -239,6 +331,9 @@ export class CasCdcCowWorkspaceStore implements BranchWorkspaceStorageEngine {
   }
 
   private async prepareManifest(bytes: Uint8Array): Promise<PreparedManifest> {
+    this.experimentalMetrics.cdcScanBytes += bytes.byteLength;
+    this.experimentalMetrics.cdcWindowCount++;
+    this.experimentalMetrics.fullManifestCount++;
     return prepareFullManifest(bytes);
   }
 
@@ -489,6 +584,8 @@ export class CasCdcCowWorkspaceStore implements BranchWorkspaceStorageEngine {
       const page = existing === undefined
         ? this.readManifestRange(manifestHash, fileSize, pageOffset, pageLength)
         : new Uint8Array(asBytes(existing.bytes).subarray(0, existing.byte_length));
+      this.experimentalMetrics.pageLoadCount++;
+      this.experimentalMetrics.pageLoadBytes += page.byteLength;
       const editStart = Math.max(offset, pageOffset);
       const editEnd = Math.min(offset + insert.byteLength, pageOffset + pageLength);
       page.set(
@@ -514,6 +611,78 @@ export class CasCdcCowWorkspaceStore implements BranchWorkspaceStorageEngine {
           page.bytes,
         );
         this.counters.sqlitePayloadBytes += page.bytes.byteLength;
+        this.experimentalMetrics.pageUpsertCount++;
+      }
+    });
+  }
+
+  private writeBranchPageRanges(
+    branchId: string,
+    path: string,
+    manifestHash: string,
+    fileSize: number,
+    ranges: ExperimentalRangeEdit[],
+  ): void {
+    const editsByPage = new Map<number, ExperimentalRangeEdit[]>();
+    for (const range of ranges) {
+      const firstPage = Math.floor(range.offset / COW_PAGE_BYTES);
+      const lastPage = Math.floor((range.offset + range.bytes.byteLength - 1) / COW_PAGE_BYTES);
+      for (let pageIndex = firstPage; pageIndex <= lastPage; pageIndex++) {
+        const edits = editsByPage.get(pageIndex) ?? [];
+        edits.push(range);
+        editsByPage.set(pageIndex, edits);
+      }
+    }
+
+    const pages: Array<{ index: number; bytes: Uint8Array }> = [];
+    for (const [pageIndex, edits] of [...editsByPage].sort((left, right) => left[0] - right[0])) {
+      const pageOffset = pageIndex * COW_PAGE_BYTES;
+      const pageLength = Math.min(COW_PAGE_BYTES, fileSize - pageOffset);
+      const existing = maybeOne<{ bytes: ArrayBuffer; byte_length: number }>(
+        this.sql,
+        `SELECT bytes, byte_length FROM ccdc_branch_pages
+          WHERE branch_id = ? AND path = ? AND page_index = ?`,
+        branchId,
+        path,
+        pageIndex,
+      );
+      const page = existing === undefined
+        ? this.readManifestRange(manifestHash, fileSize, pageOffset, pageLength)
+        : new Uint8Array(asBytes(existing.bytes).subarray(0, existing.byte_length));
+      this.experimentalMetrics.pageLoadCount++;
+      this.experimentalMetrics.pageLoadBytes += page.byteLength;
+      for (const edit of edits) {
+        const editStart = Math.max(edit.offset, pageOffset);
+        const editEnd = Math.min(
+          edit.offset + edit.bytes.byteLength,
+          pageOffset + pageLength,
+        );
+        if (editStart >= editEnd) continue;
+        page.set(
+          edit.bytes.subarray(editStart - edit.offset, editEnd - edit.offset),
+          editStart - pageOffset,
+        );
+      }
+      pages.push({ index: pageIndex, bytes: page });
+    }
+
+    this.storage.transactionSync(() => {
+      for (const page of pages) {
+        this.sql.exec(
+          `INSERT INTO ccdc_branch_pages(
+             branch_id, path, page_index, byte_length, bytes
+           ) VALUES (?, ?, ?, ?, ?)
+           ON CONFLICT(branch_id, path, page_index) DO UPDATE SET
+             byte_length = excluded.byte_length,
+             bytes = excluded.bytes`,
+          branchId,
+          path,
+          page.index,
+          page.bytes.byteLength,
+          page.bytes,
+        );
+        this.counters.sqlitePayloadBytes += page.bytes.byteLength;
+        this.experimentalMetrics.pageUpsertCount++;
       }
     });
   }
@@ -566,26 +735,15 @@ export class CasCdcCowWorkspaceStore implements BranchWorkspaceStorageEngine {
     }
   }
 
-  private async spliceLocalManifest(
-    fileSize: number,
-    entries: ManifestEntry[],
-    startIndex: number,
+  private async prepareLocalSplice(
     windowOffset: number,
     windowBytes: Uint8Array,
     dirtyEnd: number,
     boundaryToIndex: Map<number, number>,
     boundaryDelta: number,
     isWholeFileEnd: boolean,
-  ): Promise<PreparedManifest | null> {
-    if (windowBytes.byteLength === 0) {
-      const suffixIndex = boundaryToIndex.get(windowOffset - boundaryDelta);
-      if (!isWholeFileEnd || windowOffset < dirtyEnd || suffixIndex === undefined) return null;
-      return prepareManifestFromEntries(
-        fileSize,
-        [...entries.slice(0, startIndex), ...entries.slice(suffixIndex)],
-        [],
-      );
-    }
+  ): Promise<LocalManifestSplice | null> {
+    if (windowBytes.byteLength === 0) return null;
     const boundaries = fastCdc(windowBytes);
     let resyncOffset: number | null = null;
     let suffixIndex: number | null = null;
@@ -616,20 +774,61 @@ export class CasCdcCowWorkspaceStore implements BranchWorkspaceStorageEngine {
       if (absoluteEnd === resyncOffset) break;
     }
     const chunks = await prepareExplicitChunks(chunkBytes);
-    const nextEntries: ManifestEntry[] = [
-      ...entries.slice(0, startIndex),
-      ...chunks.map(({ hash, size }) => ({ hash, size })),
-      ...entries.slice(suffixIndex),
-    ];
-    return prepareManifestFromEntries(fileSize, nextEntries, chunks);
+    return {
+      replacementEntries: chunks.map(({ hash, size }) => ({ hash, size })),
+      chunks,
+      resyncOffset,
+      suffixIndex,
+    };
   }
 
-  private async preparePageManifest(
+  private async spliceLocalManifest(
+    fileSize: number,
+    entries: ManifestEntry[],
+    startIndex: number,
+    windowOffset: number,
+    windowBytes: Uint8Array,
+    dirtyEnd: number,
+    boundaryToIndex: Map<number, number>,
+    boundaryDelta: number,
+    isWholeFileEnd: boolean,
+  ): Promise<PreparedManifest | null> {
+    if (windowBytes.byteLength === 0) {
+      const suffixIndex = boundaryToIndex.get(windowOffset - boundaryDelta);
+      if (!isWholeFileEnd || windowOffset < dirtyEnd || suffixIndex === undefined) return null;
+      return prepareManifestFromEntries(
+        fileSize,
+        [...entries.slice(0, startIndex), ...entries.slice(suffixIndex)],
+        [],
+      );
+    }
+    const splice = await this.prepareLocalSplice(
+      windowOffset,
+      windowBytes,
+      dirtyEnd,
+      boundaryToIndex,
+      boundaryDelta,
+      isWholeFileEnd,
+    );
+    if (splice === null) return null;
+    return prepareManifestFromEntries(
+      fileSize,
+      [
+        ...entries.slice(0, startIndex),
+        ...splice.replacementEntries,
+        ...entries.slice(splice.suffixIndex),
+      ],
+      splice.chunks,
+    );
+  }
+
+  private async tryPreparePageManifest(
     branchId: string,
     path: string,
     manifestHash: string,
     fileSize: number,
-  ): Promise<PreparedManifest> {
+    scanBudgetBytes: number,
+  ): Promise<PreparedManifest | null> {
     const pages = this.sql.exec<PageRow>(
       `SELECT page_index, byte_length, bytes FROM ccdc_branch_pages
         WHERE branch_id = ? AND path = ? ORDER BY page_index`,
@@ -652,14 +851,23 @@ export class CasCdcCowWorkspaceStore implements BranchWorkspaceStorageEngine {
         windowOffset + DEFAULT_FASTCDC.maxSize * 2,
       ),
     );
+    let localScanBytes = 0;
 
     while (true) {
+      const nextScanBytes = windowEnd - windowOffset;
+      if (localScanBytes + nextScanBytes > scanBudgetBytes) {
+        this.experimentalMetrics.scanBudgetAbortCount++;
+        return null;
+      }
       const window = this.readManifestRangeFromEntries(
         entries,
         fileSize,
         windowOffset,
-        windowEnd - windowOffset,
+        nextScanBytes,
       );
+      localScanBytes += window.byteLength;
+      this.experimentalMetrics.cdcScanBytes += window.byteLength;
+      this.experimentalMetrics.cdcWindowCount++;
       this.overlayPages(window, windowOffset, pages);
       const prepared = await this.spliceLocalManifest(
         fileSize,
@@ -678,6 +886,297 @@ export class CasCdcCowWorkspaceStore implements BranchWorkspaceStorageEngine {
       }
       windowEnd = Math.min(fileSize, windowEnd + DEFAULT_FASTCDC.maxSize * 2);
     }
+  }
+
+  private async preparePageManifest(
+    branchId: string,
+    path: string,
+    manifestHash: string,
+    fileSize: number,
+  ): Promise<PreparedManifest> {
+    const prepared = await this.tryPreparePageManifest(
+      branchId,
+      path,
+      manifestHash,
+      fileSize,
+      Number.POSITIVE_INFINITY,
+    );
+    if (prepared === null) throw new Error(`unbounded local CDC aborted for ${path}`);
+    return prepared;
+  }
+
+  private pageRuns(
+    pages: PageRow[],
+    mergeGapBytes = 0,
+  ): Array<{ start: number; end: number }> {
+    const runs: Array<{ start: number; end: number }> = [];
+    for (const page of pages) {
+      const start = page.page_index * COW_PAGE_BYTES;
+      const end = start + page.byte_length;
+      const previous = runs.at(-1);
+      if (previous !== undefined && start <= previous.end + mergeGapBytes) {
+        previous.end = Math.max(previous.end, end);
+      } else {
+        runs.push({ start, end });
+      }
+    }
+    return runs;
+  }
+
+  private initialSingleWindowScanBytes(
+    entries: ManifestEntry[],
+    starts: number[],
+    runs: Array<{ start: number; end: number }>,
+    fileSize: number,
+  ): number {
+    const dirtyStart = runs[0].start;
+    const dirtyEnd = runs[runs.length - 1].end;
+    const startIndex = this.chunkIndexAt(entries, starts, dirtyStart);
+    const windowOffset = starts[startIndex] ?? 0;
+    const windowEnd = Math.min(
+      fileSize,
+      Math.max(
+        dirtyEnd + DEFAULT_FASTCDC.maxSize * 2,
+        windowOffset + DEFAULT_FASTCDC.maxSize * 2,
+      ),
+    );
+    return windowEnd - windowOffset;
+  }
+
+  private initialMultiWindowScanBytes(
+    entries: ManifestEntry[],
+    starts: number[],
+    runs: Array<{ start: number; end: number }>,
+    fileSize: number,
+  ): number {
+    let total = 0;
+    for (const [index, run] of runs.entries()) {
+      const startIndex = this.chunkIndexAt(entries, starts, run.start);
+      const windowOffset = starts[startIndex] ?? 0;
+      const hardEnd = runs[index + 1]?.start ?? fileSize;
+      const windowEnd = Math.min(
+        hardEnd,
+        Math.max(
+          run.end + DEFAULT_FASTCDC.maxSize * 2,
+          windowOffset + DEFAULT_FASTCDC.maxSize * 2,
+        ),
+      );
+      total += Math.max(0, windowEnd - windowOffset);
+    }
+    return total;
+  }
+
+  private async tryPreparePageManifestMultiWindow(
+    branchId: string,
+    path: string,
+    manifestHash: string,
+    fileSize: number,
+    mergeGapBytes: number,
+    scanBudgetBytes: number,
+  ): Promise<PreparedManifest | null> {
+    const pages = this.sql.exec<PageRow>(
+      `SELECT page_index, byte_length, bytes FROM ccdc_branch_pages
+        WHERE branch_id = ? AND path = ? ORDER BY page_index`,
+      branchId,
+      path,
+    ).toArray();
+    if (pages.length === 0) throw new Error(`branch ${branchId} has no pages for ${path}`);
+
+    const entries = this.manifestEntries(manifestHash, fileSize);
+    const { starts, boundaryToIndex } = this.manifestLayout(entries);
+    const originalRuns = this.pageRuns(pages);
+    const runs = this.pageRuns(pages, mergeGapBytes);
+    this.experimentalMetrics.multiWindowOriginalRunCount += originalRuns.length;
+    this.experimentalMetrics.multiWindowPlannedRunCount += runs.length;
+    const finalEntries: ManifestEntry[] = [];
+    const chunks: PreparedChunk[] = [];
+    let cursorIndex = 0;
+    let runStart = 0;
+    let localScanBytes = 0;
+
+    while (runStart < runs.length) {
+      let runEnd = runStart;
+      let completed = false;
+      while (!completed) {
+        const dirtyStart = runs[runStart].start;
+        const dirtyEnd = runs[runEnd].end;
+        const startIndex = this.chunkIndexAt(entries, starts, dirtyStart);
+        if (startIndex < cursorIndex) {
+          throw new Error(`multi-window CDC overlapped a prior splice for ${path}`);
+        }
+        const windowOffset = starts[startIndex] ?? 0;
+        const nextRunStart = runs[runEnd + 1]?.start;
+        const hardEnd = nextRunStart ?? fileSize;
+        let windowEnd = Math.min(
+          hardEnd,
+          Math.max(
+            dirtyEnd + DEFAULT_FASTCDC.maxSize * 2,
+            windowOffset + DEFAULT_FASTCDC.maxSize * 2,
+          ),
+        );
+
+        while (true) {
+          const nextScanBytes = windowEnd - windowOffset;
+          if (localScanBytes + nextScanBytes > scanBudgetBytes) {
+            this.experimentalMetrics.scanBudgetAbortCount++;
+            return null;
+          }
+          const window = this.readManifestRangeFromEntries(
+            entries,
+            fileSize,
+            windowOffset,
+            nextScanBytes,
+          );
+          localScanBytes += window.byteLength;
+          this.experimentalMetrics.cdcScanBytes += window.byteLength;
+          this.experimentalMetrics.cdcWindowCount++;
+          this.overlayPages(window, windowOffset, pages);
+          const splice = await this.prepareLocalSplice(
+            windowOffset,
+            window,
+            dirtyEnd,
+            boundaryToIndex,
+            0,
+            windowEnd === fileSize,
+          );
+          if (splice !== null) {
+            finalEntries.push(
+              ...entries.slice(cursorIndex, startIndex),
+              ...splice.replacementEntries,
+            );
+            chunks.push(...splice.chunks);
+            cursorIndex = splice.suffixIndex;
+            this.experimentalMetrics.multiWindowResyncCount++;
+            runStart = runEnd + 1;
+            completed = true;
+            break;
+          }
+          if (windowEnd < hardEnd) {
+            windowEnd = Math.min(hardEnd, windowEnd + DEFAULT_FASTCDC.maxSize * 2);
+            continue;
+          }
+          if (nextRunStart !== undefined) {
+            runEnd++;
+            this.experimentalMetrics.multiWindowMergeCount++;
+            break;
+          }
+          throw new Error(`multi-window local CDC failed to terminate at EOF for ${path}`);
+        }
+      }
+    }
+
+    finalEntries.push(...entries.slice(cursorIndex));
+    return prepareManifestFromEntries(fileSize, finalEntries, chunks);
+  }
+
+  private async preparePageManifestMultiWindow(
+    branchId: string,
+    path: string,
+    manifestHash: string,
+    fileSize: number,
+    mergeGapBytes = 0,
+  ): Promise<PreparedManifest> {
+    const prepared = await this.tryPreparePageManifestMultiWindow(
+      branchId,
+      path,
+      manifestHash,
+      fileSize,
+      mergeGapBytes,
+      Number.POSITIVE_INFINITY,
+    );
+    if (prepared === null) throw new Error(`unbounded multi-window CDC aborted for ${path}`);
+    return prepared;
+  }
+
+  private async preparePageManifestFullScan(
+    branchId: string,
+    path: string,
+  ): Promise<PreparedManifest> {
+    return this.prepareManifest(await this.readFile(branchId, path));
+  }
+
+  private async preparePageManifestAdaptive(
+    branchId: string,
+    path: string,
+    manifestHash: string,
+    fileSize: number,
+  ): Promise<PreparedManifest> {
+    const pages = this.sql.exec<PageRow>(
+      `SELECT page_index, byte_length, bytes FROM ccdc_branch_pages
+        WHERE branch_id = ? AND path = ? ORDER BY page_index`,
+      branchId,
+      path,
+    ).toArray();
+    if (pages.length === 0) throw new Error(`branch ${branchId} has no pages for ${path}`);
+
+    const entries = this.manifestEntries(manifestHash, fileSize);
+    const { starts } = this.manifestLayout(entries);
+    const originalRuns = this.pageRuns(pages);
+    const coalescedRuns = this.pageRuns(
+      pages,
+      EXPERIMENTAL_ADAPTIVE_C3_POLICY.mergeGapBytes,
+    );
+    const estimatedSingleScanBytes = this.initialSingleWindowScanBytes(
+      entries,
+      starts,
+      originalRuns,
+      fileSize,
+    );
+    const estimatedMultiScanBytes = this.initialMultiWindowScanBytes(
+      entries,
+      starts,
+      coalescedRuns,
+      fileSize,
+    );
+    const scanBudgetBytes = Math.floor(
+      fileSize * EXPERIMENTAL_ADAPTIVE_C3_POLICY.scanBudgetFileRatio,
+    );
+
+    this.experimentalMetrics.adaptivePlanCount++;
+    this.experimentalMetrics.adaptiveOriginalRunCount += originalRuns.length;
+    this.experimentalMetrics.adaptiveCoalescedRunCount += coalescedRuns.length;
+    this.experimentalMetrics.adaptiveEstimatedSingleScanBytes += estimatedSingleScanBytes;
+    this.experimentalMetrics.adaptiveEstimatedMultiScanBytes += estimatedMultiScanBytes;
+    this.experimentalMetrics.adaptiveScanBudgetBytes += scanBudgetBytes;
+
+    if (
+      coalescedRuns.length >= 2 &&
+      coalescedRuns.length <= EXPERIMENTAL_ADAPTIVE_C3_POLICY.maxIndependentWindows &&
+      estimatedMultiScanBytes <= scanBudgetBytes
+    ) {
+      const prepared = await this.tryPreparePageManifestMultiWindow(
+        branchId,
+        path,
+        manifestHash,
+        fileSize,
+        EXPERIMENTAL_ADAPTIVE_C3_POLICY.mergeGapBytes,
+        scanBudgetBytes,
+      );
+      if (prepared !== null) {
+        this.experimentalMetrics.adaptiveSelectedMultiWindowCount++;
+        return prepared;
+      }
+      this.experimentalMetrics.adaptiveBudgetFallbackCount++;
+    } else if (
+      estimatedSingleScanBytes <=
+        fileSize * EXPERIMENTAL_ADAPTIVE_C3_POLICY.localizedSingleWindowFileRatio
+    ) {
+      const prepared = await this.tryPreparePageManifest(
+        branchId,
+        path,
+        manifestHash,
+        fileSize,
+        scanBudgetBytes,
+      );
+      if (prepared !== null) {
+        this.experimentalMetrics.adaptiveSelectedSingleWindowCount++;
+        return prepared;
+      }
+      this.experimentalMetrics.adaptiveBudgetFallbackCount++;
+    }
+
+    this.experimentalMetrics.adaptiveSelectedFullScanCount++;
+    return this.preparePageManifestFullScan(branchId, path);
   }
 
   private async prepareStructuralManifest(
@@ -774,6 +1273,7 @@ export class CasCdcCowWorkspaceStore implements BranchWorkspaceStorageEngine {
       branchId,
       this.mainCommit(),
     );
+    this.experimentalPagePublishStrategies.delete(branchId);
   }
 
   listFiles(branchId: string | null): string[] {
@@ -1065,6 +1565,47 @@ export class CasCdcCowWorkspaceStore implements BranchWorkspaceStorageEngine {
     });
   }
 
+  async editFileRanges(
+    branchId: string,
+    path: string,
+    ranges: ExperimentalRangeEdit[],
+  ): Promise<void> {
+    this.experimentalMetrics.editFileRangesCalls++;
+    if (ranges.length === 0) return;
+    const branch = this.branch(branchId);
+    if (branch.state !== "active") throw new Error(`branch ${branchId} is not active`);
+    const branchFile = this.ensureBranchFile(branchId, path, branch.base_commit);
+    const manifestHash = branchFile.materialized_manifest ?? branchFile.base_manifest;
+    const manifestSize = branchFile.materialized_size ?? branchFile.base_size;
+    const patches = this.patchStats(branchId, path);
+    if (patches.count !== 0 || patches.size_delta !== 0) {
+      throw new Error("experimental batched page edits require a patch-free branch file");
+    }
+
+    const sorted = [...ranges].sort((left, right) => left.offset - right.offset);
+    for (const [index, range] of sorted.entries()) {
+      if (!Number.isSafeInteger(range.offset) || range.offset < 0) {
+        throw new RangeError(`invalid range offset ${range.offset}`);
+      }
+      if (range.bytes.byteLength <= 0 || range.offset + range.bytes.byteLength > manifestSize) {
+        throw new RangeError(
+          `invalid range ${range.offset}:${range.bytes.byteLength} for ${manifestSize}`,
+        );
+      }
+      const previous = sorted[index - 1];
+      if (previous !== undefined && previous.offset + previous.bytes.byteLength > range.offset) {
+        throw new RangeError("experimental batched page edits must not overlap");
+      }
+    }
+    this.writeBranchPageRanges(
+      branchId,
+      path,
+      manifestHash,
+      manifestSize,
+      sorted,
+    );
+  }
+
   async editFile(
     branchId: string,
     path: string,
@@ -1072,6 +1613,7 @@ export class CasCdcCowWorkspaceStore implements BranchWorkspaceStorageEngine {
     deleteLength: number,
     insert: Uint8Array,
   ): Promise<void> {
+    this.experimentalMetrics.editFileCalls++;
     const branch = this.branch(branchId);
     if (branch.state !== "active") throw new Error(`branch ${branchId} is not active`);
 
@@ -1294,12 +1836,38 @@ export class CasCdcCowWorkspaceStore implements BranchWorkspaceStorageEngine {
         }
         let manifest: PreparedManifest;
         if (pageCount > 0 && patches.length === 0) {
-          manifest = await this.preparePageManifest(
-            branchId,
-            change.path,
-            sourceManifest,
-            sourceSize,
-          );
+          const strategy = this.experimentalPagePublishStrategies.get(branchId) ??
+            "single-window";
+          if (strategy === "multi-window") {
+            manifest = await this.preparePageManifestMultiWindow(
+              branchId,
+              change.path,
+              sourceManifest,
+              sourceSize,
+            );
+          } else if (strategy === "coalesced-multi-window") {
+            manifest = await this.preparePageManifestMultiWindow(
+              branchId,
+              change.path,
+              sourceManifest,
+              sourceSize,
+              EXPERIMENTAL_ADAPTIVE_C3_POLICY.mergeGapBytes,
+            );
+          } else if (strategy === "adaptive") {
+            manifest = await this.preparePageManifestAdaptive(
+              branchId,
+              change.path,
+              sourceManifest,
+              sourceSize,
+            );
+          } else {
+            manifest = await this.preparePageManifest(
+              branchId,
+              change.path,
+              sourceManifest,
+              sourceSize,
+            );
+          }
         } else if (
           pageCount === 0 &&
           patches.length === 1 &&
@@ -1417,6 +1985,7 @@ export class CasCdcCowWorkspaceStore implements BranchWorkspaceStorageEngine {
       }
     });
 
+    this.experimentalPagePublishStrategies.delete(branchId);
     return { outcome: "merged", commit, conflicts: [] };
   }
 
@@ -1427,6 +1996,7 @@ export class CasCdcCowWorkspaceStore implements BranchWorkspaceStorageEngine {
       this.sql.exec("DELETE FROM ccdc_branch_files WHERE branch_id = ?", branchId);
       this.sql.exec("UPDATE ccdc_branches SET state = 'discarded' WHERE branch_id = ?", branchId);
     });
+    this.experimentalPagePublishStrategies.delete(branchId);
   }
 
   private retainedManifestHashes(
