@@ -1,0 +1,136 @@
+{
+  "bundle": {
+    "name": "c3-adaptive-cdc-router-v0.4",
+    "date": "2026-08-09",
+    "author": "Wang Runyuan",
+    "repository_base_revision": "d63eec0a10c327fa52c52e83897cf6e43490df68",
+    "scope": "engine-layer five-route engineering experiment; no production default change; publication is review-only"
+  },
+  "execution": {
+    "scenarios": 40,
+    "routes": 5,
+    "repetitions": 5,
+    "formal_executions": 1000,
+    "warmup_correctness_executions": 5,
+    "correctness_executions": 1005,
+    "correctness_passed": 1005,
+    "retained_growth_mismatches": 0
+  },
+  "adaptive_policy": {
+    "merge_gap_bytes": 1048576,
+    "max_independent_windows": 8,
+    "scan_budget_file_ratio": 1,
+    "localized_single_window_file_ratio": 0.5
+  },
+  "route_total_ms": {
+    "single-window-cow": 1120,
+    "raw-multi-window-cow": 831,
+    "coalesced-multi-window-cow": 835,
+    "adaptive-cow": 882,
+    "materialized": 835
+  },
+  "many_range_result": {
+    "scenarios": 24,
+    "raw_multi_windows": 960,
+    "adaptive_windows": 24,
+    "window_ratio": 0.025,
+    "raw_multi_scan_bytes": 238984545,
+    "adaptive_scan_bytes": 154805964,
+    "scan_ratio": 0.648,
+    "raw_multi_total_ms": 692,
+    "adaptive_total_ms": 745,
+    "latency_ratio": 1.077
+  },
+  "hypotheses": {
+    "H1_structuralRouting": true,
+    "H2_windowBound": true,
+    "H3_scanReduction": true,
+    "H4_latencyReduction": false,
+    "H5_boundedRegret": false,
+    "H6_sparseStorage": true,
+    "H7_scanBudget": true,
+    "H8_correctness": true
+  },
+  "inventory": [
+    {
+      "path": "src/engines/cas-cdc-cow.ts",
+      "purpose": "opt-in coalesced and adaptive page publication, scan budgets, and metrics; default behavior unchanged",
+      "sha256": "d053ed13d51504f252951fac322ca3b36bf8018418ae3481e593a73bb45f8513",
+      "bytes": 75445
+    },
+    {
+      "path": "src/tests/experimental-multi-window.test.ts",
+      "purpose": "targeted correctness, pre-merge, and route-selection tests",
+      "sha256": "16be46280809a39662456ff78ea3f9974b7acdf91b877840ff1b1f87cb7b3c4d",
+      "bytes": 6742
+    },
+    {
+      "path": "src/bench/adaptive-cdc-router.bench.ts",
+      "purpose": "frozen 40-scenario, five-route, order-balanced benchmark",
+      "sha256": "f0f9f2b16ef6e7f92cb263a26cf6d64e1c404fd062bd0372f171c6cbc37f17a6",
+      "bytes": 12869
+    },
+    {
+      "path": "scripts/run-adaptive-cdc-router.mjs",
+      "purpose": "formal benchmark capture runner",
+      "sha256": "f869055fe13dd32754d32f309c7904900f914f41b188cd1fec5009a3f51ee6f9",
+      "bytes": 2304
+    },
+    {
+      "path": "scripts/analyze-adaptive-cdc-router.mjs",
+      "purpose": "deterministic analysis, CSV, and report generator",
+      "sha256": "0961a04728705ac9e670b5087b32096239153b1e6d3ca60a3bc90a9aab424932",
+      "bytes": 19709
+    },
+    {
+      "path": "scripts/verify-adaptive-cdc-router.mjs",
+      "purpose": "inventory, raw-evidence, and frozen-decision verifier",
+      "sha256": "0c24ac92cacf9575aaffdafb2b0b854c2d1ae25a3cf3ba6db5ce620bb89b088f",
+      "bytes": 5805
+    },
+    {
+      "path": "experiments/C3_ADAPTIVE_CDC_ROUTER_V04.md",
+      "purpose": "frozen design",
+      "sha256": "3a3bacaf93ef5216786701748cc8d2a1504d1763f95e718a712c351e08fecb31",
+      "bytes": 5322
+    },
+    {
+      "path": "experiments/C3_ADAPTIVE_CDC_ROUTER_V04_RESULTS.md",
+      "purpose": "English technical result report",
+      "sha256": "37edb264dcc3c3a8620e6f95627a5a739b97a90c4eaa8727a3d9286206d889cd",
+      "bytes": 4478
+    },
+    {
+      "path": "experiments/C3_ADAPTIVE_CDC_ROUTER_V04_RESULTS_CN.md",
+      "purpose": "Chinese plain-language result report",
+      "sha256": "08ffe77e759588302fe9a431f9a8f98f0e44fad742e179c96c0944ab67b82a0b",
+      "bytes": 2603
+    },
+    {
+      "path": "results/c3-adaptive-cdc-router-raw-v04.json",
+      "purpose": "raw route medians and all five-repeat samples",
+      "sha256": "e592facd8d34cf14e4828611ea1e8bf7cd1c494b2683367d7a09182bfac479fc",
+      "bytes": 837871
+    },
+    {
+      "path": "results/c3-adaptive-cdc-router-analysis-v04.json",
+      "purpose": "machine-readable analysis and frozen hypothesis decisions",
+      "sha256": "f8b79df8560a5b1cd2ac279241cbff8a2dc8f0d03c832a96bc0cb404c0124c29",
+      "bytes": 86613
+    },
+    {
+      "path": "results/c3-adaptive-cdc-router-records-v04.csv",
+      "purpose": "flat 200-row route-level median table",
+      "sha256": "98a5ae032f472b0b843aa53df43711aee5a909d4894c48c6fd1d7af42b7ee44f",
+      "bytes": 36357
+    }
+  ],
+  "limits": [
+    "engine-layer synthetic evidence only",
+    "five balanced-order repetitions per route and scenario do not establish production distributions",
+    "equal-weighted scenario summaries are not production workload weights",
+    "full Computer RPC, computerd, FUSE, native disk, diff construction, concurrency, warm CAS, and network transfer are excluded",
+    "scan bytes and window count omit full-buffer allocation, copy, and working-set costs",
+    "the frozen v0.4 policy failed latency and bounded-regret hypotheses and must not be promoted"
+  ]
+}
