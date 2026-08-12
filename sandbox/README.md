@@ -8,4 +8,17 @@ This section studies the sandbox as an agent infrastructure primitive:
 - agent-facing tools and protocols;
 - provenance, publication, and recovery.
 
-The first series is [`ephemeral-sandbox/`](ephemeral-sandbox/).
+## Books and Dossiers
+
+### Ephemeral Sandbox
+
+Book series about parallel coding-agent workspaces.
+
+[Series overview →](ephemeral-sandbox/README.md)
+
+### Kimi Sandbox
+
+Research dossier on Kimi's container runtime, FUSE-backed persistent storage,
+security boundary, and performance.
+
+[Dossier overview →](kimi/README.md)

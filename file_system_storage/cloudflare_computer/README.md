@@ -35,7 +35,7 @@ answers three questions:
   80%** turns the architecture into a runnable dual-mode website tutorial. It
   keeps ordinary work in isolates, escalates npm and Vite to a container, and
   derives the cost claim from a transparent monthly model.
-- **Part III — Reengineering Cloudflare Computer: 98.4% Less Branch Storage,
+- **Part III — Transforming Cloudflare Computer: 98.4% Less Branch Storage,
   3.18× Faster Edits, and Safe Multi-Agent Parallelism** builds and measures an experimental CAS, CDC, COW,
   and conflict-aware branching layer over Durable Object SQLite.
 
@@ -79,8 +79,8 @@ SQLite.
 - [Part I chapter research sources](chapters/part-i/)
 - **Part II — Cloudflare Computer: How to Cut AI Agent Sandboxing Costs by 80%** — [English](chapters/PART-II.md) · [简体中文](chapters/PART-II.zh-CN.md)
 - **Part II X Article editorial edition** — [English](chapters/PART-II-X-ARTICLE.md) · [简体中文](chapters/PART-II-X-ARTICLE.zh-CN.md)
-- **Part III — Reengineering Cloudflare Computer: 98.4% Less Branch Storage, 3.18× Faster Edits, and Safe Multi-Agent Parallelism** — [English](chapters/PART-III.md) · [简体中文](chapters/PART-III.zh-CN.md)
-- **Part III X Article editorial edition** — [简体中文](chapters/PART-III-X-ARTICLE.zh-CN.md)
+- **Part III — Transforming Cloudflare Computer: 98.4% Less Branch Storage, 3.18× Faster Edits, and Safe Multi-Agent Parallelism** — [English](chapters/PART-III.md) · [简体中文](chapters/PART-III.zh-CN.md)
+- **Part III X Article editorial edition** — [English](chapters/PART-III-X-ARTICLE.md) · [简体中文](chapters/PART-III-X-ARTICLE.zh-CN.md)
 - [C3 prototype and benchmarks](benchmarks/cas-cdc-cow/)
 - [Dual-mode website builder tutorial](examples/dual-mode-website-builder/)
 - [Durable Object storage benchmarks](benchmarks/storage/)

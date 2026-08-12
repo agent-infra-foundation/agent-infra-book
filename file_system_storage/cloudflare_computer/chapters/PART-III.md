@@ -1,4 +1,4 @@
-# Part III — Reengineering Cloudflare Computer: 98.4% Less Branch Storage, 3.18× Faster Edits, and Safe Multi-Agent Parallelism
+# Part III — Transforming Cloudflare Computer: 98.4% Less Branch Storage, 3.18× Faster Edits, and Safe Multi-Agent Parallelism
 
 Part II ended with Chapter 8 and one rule: keep durable state available, then
 pay for Linux only when an operation needs Linux. Part III continues at
@@ -893,7 +893,7 @@ observability, and production-scale GC before production use.
 
 ```powershell
 # Storage, edit scale, high volume, and 50-agent publication
-cd cloudflare/computer/benchmarks/cas-cdc-cow
+cd file_system_storage/cloudflare_computer/benchmarks/cas-cdc-cow
 npm.cmd run run
 npm.cmd run run:scale
 npm.cmd run run:volume

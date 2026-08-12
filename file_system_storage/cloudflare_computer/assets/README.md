@@ -23,6 +23,8 @@ tables, and code.
 
 | Asset | Role | Message | Evidence status |
 | --- | --- | --- | --- |
+| [Part III cover — English](part-iii/part-iii-cover-5x2-en.png) | English X Article cover | Highlights 98.4% less branch storage, 3.18× faster edits, and safe multi-agent work. | Editorial illustration; benchmark values are linked from the article |
+| [Part III cover — Chinese](part-iii/part-iii-cover-5x2.png) | Chinese X Article cover | Highlights the same C3 results for the Simplified Chinese edition. | Editorial illustration; benchmark values are linked from the article |
 | [C3 overview](part-iii/c3-overview.png) | Opening mental model | CAS, CDC, and COW form one SQLite-backed storage prototype. | Illustrative only |
 | [Shared base and COW branches](part-iii/shared-base-cow-branches.png) | Chapter 10 branch model | Agents share immutable base content and retain only private COW changes. | Illustrative only; measured branch storage is reported in the article |
 | [Fixed chunks versus CDC](part-iii/fixed-vs-cdc.png) | Chapter 11 edit model | CDC can resynchronize after an offset-shifting edit instead of invalidating every later boundary. | Illustrative only; algorithm details remain in pseudocode |

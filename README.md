@@ -1,57 +1,57 @@
 # Agent Infra Book
 
-Books about the infrastructure that gives AI agents a place to work, a boundary
-around their actions, and a reliable way to preserve and publish results.
+Technical books and research dossiers about the infrastructure that gives AI
+agents private workspaces, controlled execution, durable state, and safe
+publication.
 
-## Explore the Collection
+## Reader Portal
 
-### Sandbox
+### 1. Sandbox
 
-Agent execution environments, private workspaces, isolation, state, resource
-control, recovery, and publication.
+#### Ephemeral Sandbox — Volume I
 
-#### Ephemeral Sandbox
+Building parallel agent workspaces with Ephemeral Sandbox.
 
-A book series about workspace runtimes for parallel coding agents.
+[Book overview →](sandbox/ephemeral-sandbox/volume-1/README.md)
 
-##### Volume I — The Agent Workspace
+| Article | English | 简体中文 |
+|---|---|---|
+| Part 0 — Overview of Agent Sandboxes in Practice | [Read](sandbox/ephemeral-sandbox/volume-1/chapters/PART-0.md) | [阅读](sandbox/ephemeral-sandbox/volume-1/chapters/PART-0.zh-CN.md) |
+| Part I — The Concurrency Ceiling of Parallel Coding Agents | [Read](sandbox/ephemeral-sandbox/volume-1/chapters/PART-I.md) | [阅读](sandbox/ephemeral-sandbox/volume-1/chapters/PART-I.zh-CN.md) |
+| Part II — Shared History and Workspace Sessions | [Read](sandbox/ephemeral-sandbox/volume-1/chapters/PART-II.md) | [阅读](sandbox/ephemeral-sandbox/volume-1/chapters/PART-II.zh-CN.md) |
 
-*Building Parallel Agent Workspaces with Ephemeral Sandbox*
+#### Kimi Sandbox Research Dossier
 
-- **Part 0 — Overview of Agent Sandboxes in Practice** — [English](sandbox/ephemeral-sandbox/volume-1/chapters/PART-0.md) · [简体中文](sandbox/ephemeral-sandbox/volume-1/chapters/PART-0.zh-CN.md)
-- **Part I — The Concurrency Ceiling of Parallel Coding Agents** — [English](sandbox/ephemeral-sandbox/volume-1/chapters/PART-I.md) · [简体中文](sandbox/ephemeral-sandbox/volume-1/chapters/PART-I.zh-CN.md)
-- **Part II — Shared History and Workspace Sessions** — [English](sandbox/ephemeral-sandbox/volume-1/chapters/PART-II.md) · [简体中文](sandbox/ephemeral-sandbox/volume-1/chapters/PART-II.zh-CN.md)
-- **Part III — Private Workspaces and Published History** — [Draft](sandbox/ephemeral-sandbox/volume-1/chapters/PART-III.md)
-- **Part IV — Running and Operating the Workspace Runtime** — Planned
-- **Part V — The Boundary of Version 1** — Planned
-- **Part VI — Reading the Implementation: From Tool Call to Workspace Runtime** — Planned
+Technical investigation of Kimi's container, FUSE storage gateway, security
+boundary, and performance.
 
-[Explore Volume I →](sandbox/ephemeral-sandbox/volume-1/README.md)
+[Dossier overview →](sandbox/kimi/README.md)
 
-### Cloudflare
+| Report | English | 简体中文 |
+|---|---|---|
+| Comprehensive Technical Report | [Read](<sandbox/kimi/Kimi Sandbox Comprehensive Technical Report.md>) | [阅读](sandbox/kimi/Kimi沙箱综合技术报告.md) |
 
-Stateful compute, durable storage, virtual filesystems, isolate execution, and
-agent computers built on Cloudflare's developer platform.
+### 2. File System Storage
 
-#### Durable Objects
+#### From Stateful Compute to Agent Computers
 
-A book about giving application state a globally addressable owner and
-attaching disposable execution environments to that durable state.
+Building durable systems and agent workspaces with Cloudflare Durable Objects.
 
-##### From Stateful Compute to Agent Computers
+[Book overview →](file_system_storage/cloudflare_computer/README.md)
 
-*Building Durable Systems and Agent Workspaces with Cloudflare Durable Objects*
+| Article | English | 简体中文 |
+|---|---|---|
+| Part I — Introducing Cloudflare Durable Objects | [Read](file_system_storage/cloudflare_computer/chapters/PART-I.md) | [阅读](file_system_storage/cloudflare_computer/chapters/PART-I.zh-CN.md) |
+| Part II — Cloudflare Computer: How to Cut AI Agent Sandboxing Costs by 80% | [Read](file_system_storage/cloudflare_computer/chapters/PART-II.md) | [阅读](file_system_storage/cloudflare_computer/chapters/PART-II.zh-CN.md) |
+| Part III — Transforming Cloudflare Computer: 98.4% Less Branch Storage, 3.18× Faster Edits, and Safe Multi-Agent Parallelism | [Read](file_system_storage/cloudflare_computer/chapters/PART-III.md) | [阅读](file_system_storage/cloudflare_computer/chapters/PART-III.zh-CN.md) |
 
-- **Part I — Introducing Cloudflare Durable Objects** — [English](cloudflare/computer/chapters/PART-I.md) · [简体中文](cloudflare/computer/chapters/PART-I.zh-CN.md)
-- **Part II — Cloudflare Computer: How to Cut AI Agent Sandboxing Costs by 80%** — [English](cloudflare/computer/chapters/PART-II.md) · [简体中文](cloudflare/computer/chapters/PART-II.zh-CN.md) · X Article: [English](cloudflare/computer/chapters/PART-II-X-ARTICLE.md) · [简体中文](cloudflare/computer/chapters/PART-II-X-ARTICLE.zh-CN.md) · [Runnable example](cloudflare/computer/examples/dual-mode-website-builder/)
-- **Part III — Reengineering Cloudflare Computer: 98.4% Less Branch Storage, 3.18× Faster Edits, and Safe Multi-Agent Parallelism** — [English](cloudflare/computer/chapters/PART-III.md) · [简体中文](cloudflare/computer/chapters/PART-III.zh-CN.md) · [中文 X Article](cloudflare/computer/chapters/PART-III-X-ARTICLE.zh-CN.md) · [C3 prototype and benchmarks](cloudflare/computer/benchmarks/cas-cdc-cow/)
-- **Companion storage benchmarks** — [Computer baseline method and findings](cloudflare/computer/benchmarks/storage/BENCHMARK.md) · [Latest baseline result](cloudflare/computer/benchmarks/storage/results/medium-summary.md)
+Drafts, planned articles, benchmarks, examples, editorial material, and
+appendices are listed on the relevant book or dossier README. They are not
+duplicated in this reader portal.
 
-[Explore the book →](cloudflare/computer/README.md)
+## Complete Catalog
 
-The books distinguish implemented systems, experimental ideas, comparisons,
-and future design proposals. More agent-infrastructure categories and series
-will be added as the collection grows.
+[Browse the recursive collection catalog →](index.md)
 
 ## WeChat Community
 
