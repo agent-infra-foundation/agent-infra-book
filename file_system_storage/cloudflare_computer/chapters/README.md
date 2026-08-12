@@ -22,8 +22,8 @@ benchmark-backed Part III C3 prototype:
   - Chapter 7 — Follow One Command Across the Durability Boundary
   - Chapter 8 — Calculate the 80% Reduction
   - [Runnable dual-mode website builder](../examples/dual-mode-website-builder/)
-- **Part III — Reengineering Cloudflare Computer: 98.4% Less Branch Storage, 3.18× Faster Edits, and Safe Multi-Agent Parallelism** — [English](PART-III.md) · [简体中文](PART-III.zh-CN.md)
-  - **X Article editorial edition** — [简体中文](PART-III-X-ARTICLE.zh-CN.md)
+- **Part III — Transforming Cloudflare Computer: 98.4% Less Branch Storage, 3.18× Faster Edits, and Safe Multi-Agent Parallelism** — [English](PART-III.md) · [简体中文](PART-III.zh-CN.md)
+  - **X Article editorial edition** — [English](PART-III-X-ARTICLE.md) · [简体中文](PART-III-X-ARTICLE.zh-CN.md)
   - Chapter 9 — CAS: Store Once, Share Everywhere
   - Chapter 10 — COW: Write Only What Changed
   - Chapter 11 — CDC: Keep Small Changes Small

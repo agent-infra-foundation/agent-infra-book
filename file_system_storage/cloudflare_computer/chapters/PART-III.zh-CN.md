@@ -876,7 +876,7 @@ quotas、observability 与生产规模 GC。
 
 ```powershell
 # 存储、编辑规模、高容量和 50 Agent publish
-cd cloudflare/computer/benchmarks/cas-cdc-cow
+cd file_system_storage/cloudflare_computer/benchmarks/cas-cdc-cow
 npm.cmd run run
 npm.cmd run run:scale
 npm.cmd run run:volume

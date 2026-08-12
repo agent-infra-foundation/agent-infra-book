@@ -37,7 +37,7 @@ C3 = CAS + CDC + COW
 - **下一瓶颈是同步：** branch 只占 8.2 KiB，不代表 cold push/pull 也只传 8.2 KiB。
 
 完整书稿、代码和结果均已发布在
-[Agent Infra Book](https://github.com/agent-infra-foundation/agent-infra-book/tree/main/cloudflare/computer)。
+[Agent Infra Book](https://github.com/agent-infra-foundation/agent-infra-book/tree/main/file_system_storage/cloudflare_computer)。
 
 ---
 
@@ -137,7 +137,7 @@ SHA256("Xabcdef")
 只靠 CAS，还不足以让微小编辑变得便宜。
 
 实现入口：
-[`cas-cdc-cow.ts`](https://github.com/agent-infra-foundation/agent-infra-book/blob/30f0a01fe5e8878140a3ffbcd5c07b1245155749/cloudflare/computer/benchmarks/cas-cdc-cow/src/engines/cas-cdc-cow.ts)。
+[`cas-cdc-cow.ts`](https://github.com/agent-infra-foundation/agent-infra-book/blob/30f0a01fe5e8878140a3ffbcd5c07b1245155749/file_system_storage/cloudflare_computer/benchmarks/cas-cdc-cow/src/engines/cas-cdc-cow.ts)。
 
 ---
 
@@ -174,7 +174,7 @@ agent-a
 这里的“完整独占内容”不仅计算 COW pages，也计算 branch-only CAS objects、manifest
 和结构性 patch。它不是只挑一个最好看的内部指标。
 
-[查看 50 Agent 完整结果](https://github.com/agent-infra-foundation/agent-infra-book/blob/30f0a01fe5e8878140a3ffbcd5c07b1245155749/cloudflare/computer/benchmarks/cas-cdc-cow/results/multi-agent-latest.md)。
+[查看 50 Agent 完整结果](https://github.com/agent-infra-foundation/agent-infra-book/blob/30f0a01fe5e8878140a3ffbcd5c07b1245155749/file_system_storage/cloudflare_computer/benchmarks/cas-cdc-cow/results/multi-agent-latest.md)。
 
 ### COW 读取与 fallback
 
@@ -249,7 +249,7 @@ C3 使用 FastCDC 风格的 rolling Gear fingerprint：
 
 这让 CDC 的工作范围尽量跟随变化区域，而不是默认变成 O(file size)。
 
-[查看 FastCDC 实现](https://github.com/agent-infra-foundation/agent-infra-book/blob/30f0a01fe5e8878140a3ffbcd5c07b1245155749/cloudflare/computer/benchmarks/cas-cdc-cow/src/engines/fastcdc.ts)。
+[查看 FastCDC 实现](https://github.com/agent-infra-foundation/agent-infra-book/blob/30f0a01fe5e8878140a3ffbcd5c07b1245155749/file_system_storage/cloudflare_computer/benchmarks/cas-cdc-cow/src/engines/fastcdc.ts)。
 
 ### CDC 把成本从哪里移到了哪里？
 
@@ -350,7 +350,7 @@ C3 在同步 SQLite 事务开始前再次检查 base，并用 operation ID 记�
 故障注入测试还覆盖了事务回滚、响应丢失后的幂等重试、abandoned branch GC、
 truncate 和 rename 回滚。
 
-[查看恢复与幂等测试](https://github.com/agent-infra-foundation/agent-infra-book/blob/30f0a01fe5e8878140a3ffbcd5c07b1245155749/cloudflare/computer/benchmarks/cas-cdc-cow/src/tests/recovery.test.ts)。
+[查看恢复与幂等测试](https://github.com/agent-infra-foundation/agent-infra-book/blob/30f0a01fe5e8878140a3ffbcd5c07b1245155749/file_system_storage/cloudflare_computer/benchmarks/cas-cdc-cow/src/tests/recovery.test.ts)。
 
 ---
 
@@ -405,7 +405,7 @@ shell 命令和最终验证。差异只在 Workspace 与执行侧使用哪一种
 | 文件头插入的 BLOB | 32.00 → 0.19 MiB | **−99.4%** |
 | 最终 SQLite 大小 | 72.32 → 35.89 MiB | **−50.4%** |
 
-[查看配对测试完整结果](https://github.com/agent-infra-foundation/agent-infra-book/blob/30f0a01fe5e8878140a3ffbcd5c07b1245155749/cloudflare/computer/benchmarks/cas-cdc-cow/e2e/results/paired-volume-latest.md)。
+[查看配对测试完整结果](https://github.com/agent-infra-foundation/agent-infra-book/blob/30f0a01fe5e8878140a3ffbcd5c07b1245155749/file_system_storage/cloudflare_computer/benchmarks/cas-cdc-cow/e2e/results/paired-volume-latest.md)。
 
 ### 为什么第一次写入反而更慢？
 
@@ -479,7 +479,7 @@ quota，避免单个 workspace 的同步风暴占满 Durable Object；也需要 
 C3 证明的是“紧凑 branch 可以贯穿真实 Computer 执行”。它没有证明当前同步协议
 已经适合无限扩展。
 
-[查看 two-branch 展示结果](https://github.com/agent-infra-foundation/agent-infra-book/blob/30f0a01fe5e8878140a3ffbcd5c07b1245155749/cloudflare/computer/benchmarks/cas-cdc-cow/e2e/results/branches-presentation.md)。
+[查看 two-branch 展示结果](https://github.com/agent-infra-foundation/agent-infra-book/blob/30f0a01fe5e8878140a3ffbcd5c07b1245155749/file_system_storage/cloudflare_computer/benchmarks/cas-cdc-cow/e2e/results/branches-presentation.md)。
 
 ---
 
@@ -517,7 +517,7 @@ symlink 合并、executor pooling、quota、migration、observability 和更大�
 核心测试命令保持短小：
 
 ```powershell
-cd cloudflare/computer/benchmarks/cas-cdc-cow
+cd file_system_storage/cloudflare_computer/benchmarks/cas-cdc-cow
 npm.cmd test
 npm.cmd run typecheck
 ```
@@ -530,11 +530,11 @@ npm.cmd run paired:volume
 npm.cmd run paired:branches
 ```
 
-- [C3 完整原型与 benchmark](https://github.com/agent-infra-foundation/agent-infra-book/tree/main/cloudflare/computer/benchmarks/cas-cdc-cow)
-- [完整中文版 Part III](https://github.com/agent-infra-foundation/agent-infra-book/blob/main/cloudflare/computer/chapters/PART-III.zh-CN.md)
-- [Computer/FUSE adapter](https://github.com/agent-infra-foundation/agent-infra-book/blob/main/cloudflare/computer/benchmarks/cas-cdc-cow/e2e/template/branch-computer.ts)
-- [50 Agent Durable Object 测试](https://github.com/agent-infra-foundation/agent-infra-book/blob/main/cloudflare/computer/benchmarks/cas-cdc-cow/src/tests/multi-agent-do.test.ts)
-- [机器可读 E2E 结果](https://github.com/agent-infra-foundation/agent-infra-book/tree/main/cloudflare/computer/benchmarks/cas-cdc-cow/e2e/results)
+- [C3 完整原型与 benchmark](https://github.com/agent-infra-foundation/agent-infra-book/tree/main/file_system_storage/cloudflare_computer/benchmarks/cas-cdc-cow)
+- [完整中文版 Part III](https://github.com/agent-infra-foundation/agent-infra-book/blob/main/file_system_storage/cloudflare_computer/chapters/PART-III.zh-CN.md)
+- [Computer/FUSE adapter](https://github.com/agent-infra-foundation/agent-infra-book/blob/main/file_system_storage/cloudflare_computer/benchmarks/cas-cdc-cow/e2e/template/branch-computer.ts)
+- [50 Agent Durable Object 测试](https://github.com/agent-infra-foundation/agent-infra-book/blob/main/file_system_storage/cloudflare_computer/benchmarks/cas-cdc-cow/src/tests/multi-agent-do.test.ts)
+- [机器可读 E2E 结果](https://github.com/agent-infra-foundation/agent-infra-book/tree/main/file_system_storage/cloudflare_computer/benchmarks/cas-cdc-cow/e2e/results)
 
 ---
 
@@ -544,9 +544,9 @@ npm.cmd run paired:branches
 这本系统工程书聚焦编码 Agent 背后的基础设施，包括沙箱、持久工作区与执行架构。
 
 - [Star 并关注 Agent Infra Book](https://github.com/agent-infra-foundation/agent-infra-book)
-- [阅读 Cloudflare Computer 专题](https://github.com/agent-infra-foundation/agent-infra-book/tree/main/cloudflare/computer)
-- [阅读 Part I：Cloudflare Durable Objects](https://github.com/agent-infra-foundation/agent-infra-book/blob/main/cloudflare/computer/chapters/PART-I.zh-CN.md)
-- [阅读 Part II：如何将 Agent 沙箱成本降低 80%](https://github.com/agent-infra-foundation/agent-infra-book/blob/main/cloudflare/computer/chapters/PART-II-X-ARTICLE.zh-CN.md)
+- [阅读 Cloudflare Computer 专题](https://github.com/agent-infra-foundation/agent-infra-book/tree/main/file_system_storage/cloudflare_computer)
+- [阅读 Part I：Cloudflare Durable Objects](https://github.com/agent-infra-foundation/agent-infra-book/blob/main/file_system_storage/cloudflare_computer/chapters/PART-I.zh-CN.md)
+- [阅读 Part II：如何将 Agent 沙箱成本降低 80%](https://github.com/agent-infra-foundation/agent-infra-book/blob/main/file_system_storage/cloudflare_computer/chapters/PART-II-X-ARTICLE.zh-CN.md)
 
 > **如果你正在构建编码 Agent、持久 workspace 或多 Agent 执行系统，欢迎复现、
 > 质疑并共同改进这个原型。**

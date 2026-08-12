@@ -9,4 +9,13 @@ for agent infrastructure:
 - isolate, shell, and container execution boundaries;
 - recovery, observability, security, and operating trade-offs.
 
-The first series is [`computer/`](computer/).
+## Books
+
+### From Stateful Compute to Agent Computers
+
+Building durable systems and agent workspaces with Cloudflare Durable Objects.
+
+[Book overview →](../file_system_storage/cloudflare_computer/README.md)
+
+The book README contains the article portal, translations, companion articles,
+benchmarks, runnable examples, evidence material, assets, and appendices.
