@@ -138,7 +138,7 @@ Computer 不会把所有 shell 语句都自动发送到 container。应用根据
 和 container WebSocket 路由。为了保证正文在手机上容易阅读，这部分保存在固定版本的
 Git snapshot 中：
 
-> [查看完整 Workspace 与双 backend 接线代码](https://github.com/agent-infra-foundation/agent-infra-book/blob/b8be4cc85603ec5ff3389db00315d47aad5bea99/file_system_storage/cloudflare_computer/examples/dual-mode-website-builder/src/index.ts)
+> [查看完整 Workspace 与双 backend 接线代码](https://github.com/agent-infra-foundation/agent-infra-book/blob/b8be4cc85603ec5ff3389db00315d47aad5bea99/cloudflare/computer/examples/dual-mode-website-builder/src/index.ts)
 
 ---
 
@@ -189,7 +189,7 @@ Computer 默认忽略 container 中的 `node_modules`。
 
 完整的 container 配置同样放在 Git snapshot 中：
 
-> [查看固定版本 Dockerfile](https://github.com/agent-infra-foundation/agent-infra-book/blob/b8be4cc85603ec5ff3389db00315d47aad5bea99/file_system_storage/cloudflare_computer/examples/dual-mode-website-builder/Dockerfile)
+> [查看固定版本 Dockerfile](https://github.com/agent-infra-foundation/agent-infra-book/blob/b8be4cc85603ec5ff3389db00315d47aad5bea99/cloudflare/computer/examples/dual-mode-website-builder/Dockerfile)
 
 ---
 
@@ -229,7 +229,7 @@ Computer 默认忽略 container 中的 `node_modules`。
 
 > **“我的工作流中，有多少操作真的需要 Linux？”**
 
-[完整成本模型与计算过程](https://github.com/agent-infra-foundation/agent-infra-book/blob/b8be4cc85603ec5ff3389db00315d47aad5bea99/file_system_storage/cloudflare_computer/chapters/PART-II.zh-CN.md)
+[完整成本模型与计算过程](https://github.com/agent-infra-foundation/agent-infra-book/blob/b8be4cc85603ec5ff3389db00315d47aad5bea99/cloudflare/computer/chapters/PART-II.zh-CN.md)
 保存在书稿中，便于逐项核对。
 
 ---
@@ -281,11 +281,11 @@ Computer 则负责在两者之间完成 push、执行和 pull。
 
 ## 代码与复现
 
-- [完整可运行项目](https://github.com/agent-infra-foundation/agent-infra-book/tree/b8be4cc85603ec5ff3389db00315d47aad5bea99/file_system_storage/cloudflare_computer/examples/dual-mode-website-builder)
-- [完整 Worker 实现](https://github.com/agent-infra-foundation/agent-infra-book/blob/b8be4cc85603ec5ff3389db00315d47aad5bea99/file_system_storage/cloudflare_computer/examples/dual-mode-website-builder/src/index.ts)
-- [Container Dockerfile](https://github.com/agent-infra-foundation/agent-infra-book/blob/b8be4cc85603ec5ff3389db00315d47aad5bea99/file_system_storage/cloudflare_computer/examples/dual-mode-website-builder/Dockerfile)
-- [本地运行说明](https://github.com/agent-infra-foundation/agent-infra-book/blob/b8be4cc85603ec5ff3389db00315d47aad5bea99/file_system_storage/cloudflare_computer/examples/dual-mode-website-builder/README.md)
-- [完整中文教程与成本计算](https://github.com/agent-infra-foundation/agent-infra-book/blob/b8be4cc85603ec5ff3389db00315d47aad5bea99/file_system_storage/cloudflare_computer/chapters/PART-II.zh-CN.md)
+- [完整可运行项目](https://github.com/agent-infra-foundation/agent-infra-book/tree/b8be4cc85603ec5ff3389db00315d47aad5bea99/cloudflare/computer/examples/dual-mode-website-builder)
+- [完整 Worker 实现](https://github.com/agent-infra-foundation/agent-infra-book/blob/b8be4cc85603ec5ff3389db00315d47aad5bea99/cloudflare/computer/examples/dual-mode-website-builder/src/index.ts)
+- [Container Dockerfile](https://github.com/agent-infra-foundation/agent-infra-book/blob/b8be4cc85603ec5ff3389db00315d47aad5bea99/cloudflare/computer/examples/dual-mode-website-builder/Dockerfile)
+- [本地运行说明](https://github.com/agent-infra-foundation/agent-infra-book/blob/b8be4cc85603ec5ff3389db00315d47aad5bea99/cloudflare/computer/examples/dual-mode-website-builder/README.md)
+- [完整中文教程与成本计算](https://github.com/agent-infra-foundation/agent-infra-book/blob/b8be4cc85603ec5ff3389db00315d47aad5bea99/cloudflare/computer/chapters/PART-II.zh-CN.md)
 
 ---
 
@@ -296,8 +296,8 @@ Computer 则负责在两者之间完成 push、执行和 pull。
 项目把架构分析、可运行实现和实测证据放在同一个仓库中。
 
 - [Star 并关注 Agent Infra Book](https://github.com/agent-infra-foundation/agent-infra-book)
-- [阅读完整的 Cloudflare Computer 专题](https://github.com/agent-infra-foundation/agent-infra-book/tree/main/file_system_storage/cloudflare_computer)
-- [运行双模式网站构建示例](https://github.com/agent-infra-foundation/agent-infra-book/tree/main/file_system_storage/cloudflare_computer/examples/dual-mode-website-builder)
+- [阅读完整的 Cloudflare Computer 专题](https://github.com/agent-infra-foundation/agent-infra-book/tree/main/cloudflare/computer)
+- [运行双模式网站构建示例](https://github.com/agent-infra-foundation/agent-infra-book/tree/main/cloudflare/computer/examples/dual-mode-website-builder)
 
 > **如果你正在构建编码 Agent、沙箱或持久工作区，欢迎阅读、复现并共同完善这个项目。**
 

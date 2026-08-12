@@ -56,7 +56,7 @@ it isolates the proposed storage algorithm inside Durable Object SQLite.
 ## Run on PowerShell
 
 ```powershell
-cd file_system_storage/cloudflare_computer/benchmarks/cas-cdc-cow
+cd cloudflare/computer/benchmarks/cas-cdc-cow
 powershell.exe -ExecutionPolicy Bypass -File .\scripts\run.ps1
 ```
 
@@ -158,7 +158,7 @@ instead compares two measured adapters behind the same Computer RPC and FUSE
 path: fixed 512 KiB chunks versus C3 branches.
 
 ```powershell
-cd file_system_storage/cloudflare_computer/benchmarks/cas-cdc-cow/e2e
+cd cloudflare/computer/benchmarks/cas-cdc-cow/e2e
 npm.cmd run prepare
 npm.cmd run smoke
 npm.cmd run benchmark

@@ -11,9 +11,9 @@ detailed inventory for its own material.
 - [Volume I — The Agent Workspace](sandbox/ephemeral-sandbox/volume-1/README.md)
 - [Kimi Sandbox research dossier](sandbox/kimi/README.md)
 
-## 2. File System Storage
+## 2. Cloudflare
 
-- [From Stateful Compute to Agent Computers](file_system_storage/cloudflare_computer/README.md)
+- [From Stateful Compute to Agent Computers](cloudflare/computer/README.md)
 
 ## Editorial Material
 

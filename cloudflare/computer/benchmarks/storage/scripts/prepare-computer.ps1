@@ -21,7 +21,7 @@ function Find-ComputerRepository {
     $cursor = $cursor.Parent
   }
 
-  throw "Could not find a sibling file_system_storage/cloudflare_computer checkout. Pass -ComputerRepo explicitly."
+  throw "Could not find a sibling cloudflare/computer checkout. Pass -ComputerRepo explicitly."
 }
 
 if ([string]::IsNullOrWhiteSpace($ComputerRepo)) {

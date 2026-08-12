@@ -893,7 +893,7 @@ observability, and production-scale GC before production use.
 
 ```powershell
 # Storage, edit scale, high volume, and 50-agent publication
-cd file_system_storage/cloudflare_computer/benchmarks/cas-cdc-cow
+cd cloudflare/computer/benchmarks/cas-cdc-cow
 npm.cmd run run
 npm.cmd run run:scale
 npm.cmd run run:volume
