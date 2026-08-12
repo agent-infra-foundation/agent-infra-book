@@ -15,7 +15,7 @@ for agent infrastructure:
 
 Building durable systems and agent workspaces with Cloudflare Durable Objects.
 
-[Book overview →](../file_system_storage/cloudflare_computer/README.md)
+[Book overview →](computer/README.md)
 
 The book README contains the article portal, translations, companion articles,
 benchmarks, runnable examples, evidence material, assets, and appendices.

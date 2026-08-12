@@ -44,7 +44,7 @@ Durable Object SQLite.
   6 MiB through cold push and pull.
 
 The complete article, implementation, and recorded results live in the
-[Agent Infra Book](https://github.com/agent-infra-foundation/agent-infra-book/tree/main/file_system_storage/cloudflare_computer).
+[Agent Infra Book](https://github.com/agent-infra-foundation/agent-infra-book/tree/main/cloudflare/computer).
 
 ---
 
@@ -149,7 +149,7 @@ It removes complete duplicate objects, but it does not automatically make
 small edits cheap.
 
 Implementation:
-[`cas-cdc-cow.ts`](https://github.com/agent-infra-foundation/agent-infra-book/blob/30f0a01fe5e8878140a3ffbcd5c07b1245155749/file_system_storage/cloudflare_computer/benchmarks/cas-cdc-cow/src/engines/cas-cdc-cow.ts).
+[`cas-cdc-cow.ts`](https://github.com/agent-infra-foundation/agent-infra-book/blob/30f0a01fe5e8878140a3ffbcd5c07b1245155749/cloudflare/computer/benchmarks/cas-cdc-cow/src/engines/cas-cdc-cow.ts).
 
 ---
 
@@ -187,7 +187,7 @@ In the 50-agent experiment, each agent changed one byte in a different private
 “Exclusive content” includes private pages, branch-only CAS objects, manifests,
 and structural patches. It is not a selectively chosen internal counter.
 
-[See the complete 50-agent result](https://github.com/agent-infra-foundation/agent-infra-book/blob/30f0a01fe5e8878140a3ffbcd5c07b1245155749/file_system_storage/cloudflare_computer/benchmarks/cas-cdc-cow/results/multi-agent-latest.md).
+[See the complete 50-agent result](https://github.com/agent-infra-foundation/agent-infra-book/blob/30f0a01fe5e8878140a3ffbcd5c07b1245155749/cloudflare/computer/benchmarks/cas-cdc-cow/results/multi-agent-latest.md).
 
 ### COW reads and fallbacks
 
@@ -260,7 +260,7 @@ new [A][B][C'][D'][E][F]
 ```
 
 Implementation:
-[`fastcdc.ts`](https://github.com/agent-infra-foundation/agent-infra-book/blob/30f0a01fe5e8878140a3ffbcd5c07b1245155749/file_system_storage/cloudflare_computer/benchmarks/cas-cdc-cow/src/engines/fastcdc.ts).
+[`fastcdc.ts`](https://github.com/agent-infra-foundation/agent-infra-book/blob/30f0a01fe5e8878140a3ffbcd5c07b1245155749/cloudflare/computer/benchmarks/cas-cdc-cow/src/engines/fastcdc.ts).
 
 ### CDC moves cost; it does not erase it
 
@@ -363,7 +363,7 @@ This handles two common failures:
 Fault-injection tests also cover transaction rollback, abandoned-branch GC,
 truncate, and rename retry.
 
-[See recovery and idempotency tests](https://github.com/agent-infra-foundation/agent-infra-book/blob/30f0a01fe5e8878140a3ffbcd5c07b1245155749/file_system_storage/cloudflare_computer/benchmarks/cas-cdc-cow/src/tests/recovery.test.ts).
+[See recovery and idempotency tests](https://github.com/agent-infra-foundation/agent-infra-book/blob/30f0a01fe5e8878140a3ffbcd5c07b1245155749/cloudflare/computer/benchmarks/cas-cdc-cow/src/tests/recovery.test.ts).
 
 ---
 
@@ -418,7 +418,7 @@ noise.
 | BLOBs after insert | 32.00 → 0.19 MiB | **−99.4%** |
 | Final SQLite size | 72.32 → 35.89 MiB | **−50.4%** |
 
-[See the complete paired result](https://github.com/agent-infra-foundation/agent-infra-book/blob/30f0a01fe5e8878140a3ffbcd5c07b1245155749/file_system_storage/cloudflare_computer/benchmarks/cas-cdc-cow/e2e/results/paired-volume-latest.md).
+[See the complete paired result](https://github.com/agent-infra-foundation/agent-infra-book/blob/30f0a01fe5e8878140a3ffbcd5c07b1245155749/cloudflare/computer/benchmarks/cas-cdc-cow/e2e/results/paired-volume-latest.md).
 
 ### Why is initial creation slower?
 
@@ -468,7 +468,7 @@ The result also exposes the next bottleneck:
 C3 dramatically compresses private storage, but Computer's full
 materialization and synchronization remain expensive at higher concurrency.
 
-[See the two-branch presentation result](https://github.com/agent-infra-foundation/agent-infra-book/blob/30f0a01fe5e8878140a3ffbcd5c07b1245155749/file_system_storage/cloudflare_computer/benchmarks/cas-cdc-cow/e2e/results/branches-presentation.md).
+[See the two-branch presentation result](https://github.com/agent-infra-foundation/agent-infra-book/blob/30f0a01fe5e8878140a3ffbcd5c07b1245155749/cloudflare/computer/benchmarks/cas-cdc-cow/e2e/results/branches-presentation.md).
 
 ### What high-volume execution needs next
 
@@ -528,7 +528,7 @@ The correct description is **a runnable prototype with full-pipeline evidence**.
 Run the core checks:
 
 ```powershell
-cd file_system_storage/cloudflare_computer/benchmarks/cas-cdc-cow
+cd cloudflare/computer/benchmarks/cas-cdc-cow
 npm.cmd test
 npm.cmd run typecheck
 ```
@@ -541,11 +541,11 @@ npm.cmd run paired:volume
 npm.cmd run paired:branches
 ```
 
-- [Complete C3 prototype and benchmarks](https://github.com/agent-infra-foundation/agent-infra-book/tree/main/file_system_storage/cloudflare_computer/benchmarks/cas-cdc-cow)
-- [Full English Part III](https://github.com/agent-infra-foundation/agent-infra-book/blob/main/file_system_storage/cloudflare_computer/chapters/PART-III.md)
-- [Computer/FUSE branch adapter](https://github.com/agent-infra-foundation/agent-infra-book/blob/main/file_system_storage/cloudflare_computer/benchmarks/cas-cdc-cow/e2e/template/branch-computer.ts)
-- [50-agent Durable Object test](https://github.com/agent-infra-foundation/agent-infra-book/blob/main/file_system_storage/cloudflare_computer/benchmarks/cas-cdc-cow/src/tests/multi-agent-do.test.ts)
-- [Machine-readable E2E results](https://github.com/agent-infra-foundation/agent-infra-book/tree/main/file_system_storage/cloudflare_computer/benchmarks/cas-cdc-cow/e2e/results)
+- [Complete C3 prototype and benchmarks](https://github.com/agent-infra-foundation/agent-infra-book/tree/main/cloudflare/computer/benchmarks/cas-cdc-cow)
+- [Full English Part III](https://github.com/agent-infra-foundation/agent-infra-book/blob/main/cloudflare/computer/chapters/PART-III.md)
+- [Computer/FUSE branch adapter](https://github.com/agent-infra-foundation/agent-infra-book/blob/main/cloudflare/computer/benchmarks/cas-cdc-cow/e2e/template/branch-computer.ts)
+- [50-agent Durable Object test](https://github.com/agent-infra-foundation/agent-infra-book/blob/main/cloudflare/computer/benchmarks/cas-cdc-cow/src/tests/multi-agent-do.test.ts)
+- [Machine-readable E2E results](https://github.com/agent-infra-foundation/agent-infra-book/tree/main/cloudflare/computer/benchmarks/cas-cdc-cow/e2e/results)
 
 ---
 
@@ -557,9 +557,9 @@ a systems-engineering book about the infrastructure behind coding agents:
 sandboxes, durable workspaces, and execution architecture.
 
 - [Star and follow Agent Infra Book](https://github.com/agent-infra-foundation/agent-infra-book)
-- [Read the Cloudflare Computer series](https://github.com/agent-infra-foundation/agent-infra-book/tree/main/file_system_storage/cloudflare_computer)
-- [Read Part I: Cloudflare Durable Objects](https://github.com/agent-infra-foundation/agent-infra-book/blob/main/file_system_storage/cloudflare_computer/chapters/PART-I.md)
-- [Read Part II: Cut Agent Sandbox Costs by 80%](https://github.com/agent-infra-foundation/agent-infra-book/blob/main/file_system_storage/cloudflare_computer/chapters/PART-II-X-ARTICLE.md)
+- [Read the Cloudflare Computer series](https://github.com/agent-infra-foundation/agent-infra-book/tree/main/cloudflare/computer)
+- [Read Part I: Cloudflare Durable Objects](https://github.com/agent-infra-foundation/agent-infra-book/blob/main/cloudflare/computer/chapters/PART-I.md)
+- [Read Part II: Cut Agent Sandbox Costs by 80%](https://github.com/agent-infra-foundation/agent-infra-book/blob/main/cloudflare/computer/chapters/PART-II-X-ARTICLE.md)
 
 > **If you are building coding agents, durable workspaces, or multi-agent
 > execution systems, reproduce the experiment, challenge it, and help improve

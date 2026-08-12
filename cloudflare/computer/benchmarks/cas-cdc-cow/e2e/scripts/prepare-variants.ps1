@@ -22,7 +22,7 @@ function Find-ComputerRepository {
     }
     $cursor = $cursor.Parent
   }
-  throw "Could not find the sibling file_system_storage/cloudflare_computer checkout."
+  throw "Could not find the sibling cloudflare/computer checkout."
 }
 
 if ([string]::IsNullOrWhiteSpace($ComputerRepo)) {
