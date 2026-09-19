@@ -4,6 +4,8 @@ Technical books and research dossiers about the infrastructure that gives AI
 agents private workspaces, controlled execution, durable state, and safe
 publication.
 
+Core maintainer: Wang Runyuan (@runyuan-wang) — repository maintenance, editorial review, research verification, and maintenance automation.
+
 ## Reader Portal
 
 ### 1. Sandbox
